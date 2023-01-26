@@ -28,7 +28,7 @@ return [
         'contact_person_name' => 'Nume și prenume',
         'other_information' => 'Alte informații',
         'website' => 'Website',
-        'facebook' => 'Facebook'
+        'facebook' => 'Facebook',
 
     ],
     'section' => [

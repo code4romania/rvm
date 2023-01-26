@@ -14,7 +14,7 @@ class OrganisationFactory extends Factory
     public function definition()
     {
         $contactPerson = [
-            'contact_name' => fake()->name,
+            'name' => fake()->name,
             'email' => fake()->email,
             'phone' => fake()->phoneNumber,
         ];
@@ -38,6 +38,8 @@ class OrganisationFactory extends Factory
             'short_description' => fake()->sentence('10'),
             'contact_person' => $contactPerson,
             'other_information' => $otherInfo,
+            'has_branches' => fake()->boolean,
+            'social_services_accreditation' => fake()->boolean,
         ];
     }
 }

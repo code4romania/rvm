@@ -6,6 +6,8 @@ namespace App\Filament\Resources;
 
 use App\Enum\OrganisationType;
 use App\Filament\Resources\OrganisationResource\Pages;
+use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
+use App\Models\Expertise;
 use App\Models\Organisation;
 use Closure;
 use Filament\Forms\Components\FileUpload;
@@ -31,6 +33,7 @@ class OrganisationResource extends Resource
 
     public static function form(Form $form): Form
     {
+//        debug(Organisation::find(1)->expertises);
         return $form
             ->schema([
                 Tabs::make('Heading')
@@ -83,17 +86,18 @@ class OrganisationResource extends Resource
                                     ->helperText(__('organisation.help.description'))
                                     ->columnSpanFull()
                                     ->required(),
-                                FileUpload::make('logo')
-                                    ->label(__('organisation.field.logo'))
-                                    ->helperText(__('organisation.help.logo'))
-                                    ->inlineLabel()
-                                    ->columnSpanFull(),
+                                //TODO fix file upload
+                                //                                FileUpload::make('logo')
+                                //                                    ->label(__('organisation.field.logo'))
+                                //                                    ->helperText(__('organisation.help.logo'))
+                                //                                    ->inlineLabel()
+                                //                                    ->columnSpanFull(),
                                 Section::make(__('organisation.field.contact_person'))
                                     ->schema([
-                                        TextInput::make('contact_person.contact_name')
+                                        TextInput::make('contact_person.name')
                                             ->label(__('organisation.field.contact_person_name'))
                                             ->required(),
-                                        Placeholder::make(''),
+                                        Placeholder::make('empty')->disableLabel(),
                                         TextInput::make('contact_person.email')
                                             ->label(__('organisation.field.email'))
                                             ->email()
@@ -114,13 +118,17 @@ class OrganisationResource extends Resource
                                     ])
                                     ->columns(2),
                             ])->columns(2),
-                        Tabs\Tab::make('Label 2')
+                        Tabs\Tab::make(__('organisation.section.activity'))
                             ->schema([
-                                // ...
+                                Select::make('expenses')
+                                    ->multiple()
+                                    ->options(Expertise::query()->pluck('name', 'id')),
+                                //                                    ->loadStateFromRelationshipsUsing(fn($record)=>$record->expertises)
+
                             ]),
                         Tabs\Tab::make('Label 3')
                             ->schema([
-                                // ...
+                                //                             RelationM
                             ]),
                     ]),
             ])->columns(1);
@@ -182,7 +190,7 @@ class OrganisationResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            VolunteersRelationManager::class,
         ];
     }
 

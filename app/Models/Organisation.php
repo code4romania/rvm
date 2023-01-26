@@ -38,4 +38,14 @@ class Organisation extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function expertises()
+    {
+        return $this->hasManyThrough(Expertise::class, OrganisationExpertise::class, null, 'id');
+    }
+
+    public function volunteers()
+    {
+        return $this->hasMany(Volunteer::class);
+    }
 }
