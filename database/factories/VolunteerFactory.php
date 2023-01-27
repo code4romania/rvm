@@ -25,7 +25,7 @@ class VolunteerFactory extends Factory
             'role' => fake()->randomElement(VolunteerRole::values()),
             'email' => fake()->email,
             'phone' => fake()->phoneNumber,
-            'accreditation' => fake()->boolean
+            'accreditation' => fake()->boolean,
         ];
     }
 }

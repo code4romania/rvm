@@ -26,7 +26,7 @@ class Volunteer extends Model
         'phone',
         'birthday',
         'cnp',
-        'accreditation'
+        'accreditation',
     ];
 
     public function organisation()
@@ -83,7 +83,7 @@ class Volunteer extends Model
             Select::make('role')
                 ->label(__('volunteer.fields.role'))
                 ->options(VolunteerRole::options())
-                ->required()
+                ->required(),
         ];
     }
 }
