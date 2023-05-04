@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->enum('role', VolunteerRole::values());
+            $table->foreignIdFor(\App\Models\City::class)->nullable()->constrained();
+            $table->foreignIdFor(\App\Models\County::class)->nullable()->constrained();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('cnp')->nullable();

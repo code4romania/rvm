@@ -6,7 +6,9 @@ namespace App\Filament\Resources;
 
 use App\Enum\OrganisationType;
 use App\Filament\Resources\OrganisationResource\Pages;
+use App\Filament\Resources\OrganisationResource\RelationManagers\ResourcesRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
+use App\Models\County;
 use App\Models\Expertise;
 use App\Models\Organisation;
 use Closure;
@@ -18,6 +20,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Navigation\NavigationGroup;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -61,6 +64,24 @@ class OrganisationResource extends Resource
                                     ->placeholder(__('organisation.field.choose'))
                                     ->options(range(today()->year, 1950))
                                     ->required(),
+                                Select::make('county_id')
+                                    ->label('County')
+                                    ->options(County::pluck('name', 'id'))
+                                    ->required()
+                                    ->reactive()
+                                    ->searchable()
+                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+
+                                Select::make('city_id')
+                                    ->label('City')
+                                    ->required()
+                                    ->options(
+                                        fn (callable $get) => County::find($get('county_id'))
+                                            ?->cities
+                                            ->pluck('name', 'id')
+                                    )
+                                    ->searchable()
+                                    ->reactive(),
                                 TextInput::make('email')
                                     ->label(__('organisation.field.email_organisation'))
                                     ->email()
@@ -120,15 +141,13 @@ class OrganisationResource extends Resource
                             ])->columns(2),
                         Tabs\Tab::make(__('organisation.section.activity'))
                             ->schema([
-                                Select::make('expenses')
+                                Select::make('expertises')
                                     ->multiple()
-                                    ->options(Expertise::query()->pluck('name', 'id')),
+//                                    ->options(Expertise::query()->pluck('name', 'id'))
+                                    ->relationship('expertises', 'name')
+                                    ->preload(),
                                 //                                    ->loadStateFromRelationshipsUsing(fn($record)=>$record->expertises)
 
-                            ]),
-                        Tabs\Tab::make('Label 3')
-                            ->schema([
-                                //                             RelationM
                             ]),
                     ]),
             ])->columns(1);
@@ -191,6 +210,7 @@ class OrganisationResource extends Resource
     {
         return [
             VolunteersRelationManager::class,
+            ResourcesRelationManager::class,
         ];
     }
 

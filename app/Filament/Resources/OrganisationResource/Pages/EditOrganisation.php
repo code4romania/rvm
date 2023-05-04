@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Filament\Resources\OrganisationResource\Pages;
 
 use App\Filament\Resources\OrganisationResource;
+use App\Filament\Resources\OrganisationResource\RelationManagers\DocumentsRelationManager;
+use App\Filament\Resources\OrganisationResource\RelationManagers\InterventionsRelationManager;
+use App\Filament\Resources\OrganisationResource\RelationManagers\ResourcesRelationManager;
+use App\Filament\Resources\OrganisationResource\RelationManagers\UsersRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -24,6 +28,10 @@ class EditOrganisation extends EditRecord
     {
         return [
             VolunteersRelationManager::class,
+            ResourcesRelationManager::class,
+            InterventionsRelationManager::class,
+            DocumentsRelationManager::class,
+            UsersRelationManager::class,
         ];
     }
 

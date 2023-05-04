@@ -4,38 +4,39 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
-use App\Filament\Resources\VolunteerResource;
-use App\Models\Volunteer;
+use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
 
-class VolunteersRelationManager extends RelationManager
+class InterventionsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'volunteers';
+    protected static string $relationship = 'interventions';
 
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
     {
-      return VolunteerResource::form($form);
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+            ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->columns(Volunteer::getTableColumns())
+            ->columns([
+                Tables\Columns\TextColumn::make('name'),
+            ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->requiresConfirmation()
-                    ->modalHeading(__('organisation.modal.heading'))
-                    ->modalSubheading(__('organisation.modal.subheading'))
-                    ->modalWidth('4xl')
-                    ->slideOver(),
+                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

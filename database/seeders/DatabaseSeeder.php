@@ -21,9 +21,13 @@ class DatabaseSeeder extends Seeder
     {
         $user = User::factory(['email' => 'admin@example.com'])
             ->create();
-        Organisation::factory(20)->hasVolunteers(3, function (array $attributes, Organisation $organisation) {
-            return ['organisation_id' => $organisation->id];
-        })->create();
+        Organisation::factory(20)
+            ->hasVolunteers(3, function (array $attributes, Organisation $organisation) {
+                return ['organisation_id' => $organisation->id];
+            })
+            ->hasResources(3, function (array $attributes, Organisation $organisation) {
+                return ['organisation_id' => $organisation->id];
+            })->create();
         Expertise::factory(10)->create();
     }
 }

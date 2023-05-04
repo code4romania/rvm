@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
+use App\Models\City;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Str;
 
@@ -22,6 +23,7 @@ class OrganisationFactory extends Factory
             'facebook' => '#facebook',
             'website' => '#website',
         ];
+        $city = City::query()->inRandomOrder()->first();
         $name = fake()->company;
 
         return [
@@ -39,6 +41,8 @@ class OrganisationFactory extends Factory
             'contact_person' => $contactPerson,
             'other_information' => $otherInfo,
             'has_branches' => fake()->boolean,
+            'city_id' => $city->id,
+            'county_id' => $city->county_id,
             'social_services_accreditation' => fake()->boolean,
         ];
     }

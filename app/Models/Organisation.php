@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\HasLocation;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class Organisation extends Model
 {
     use HasFactory;
+    use HasLocation;
 
     protected $fillable = [
         'name',
@@ -41,11 +43,26 @@ class Organisation extends Model
 
     public function expertises()
     {
-        return $this->hasManyThrough(Expertise::class, OrganisationExpertise::class, null, 'id');
+        return $this->belongsToMany(Expertise::class);
     }
 
     public function volunteers()
     {
         return $this->hasMany(Volunteer::class);
+    }
+
+    public function resources()
+    {
+        return $this->hasMany(Resource::class);
+    }
+
+    public function interventions()
+    {
+        return $this->hasMany(Intervention::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
     }
 }
