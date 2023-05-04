@@ -38,7 +38,6 @@ return [
         'expertises'=>'Expertiza',
         'branches'=>'Filiale',
 
-
     ],
     'section' => [
         'general_data' => 'Date generale',

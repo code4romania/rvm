@@ -70,13 +70,13 @@ class OrganisationResource extends Resource
                                     ->required()
                                     ->reactive()
                                     ->searchable()
-                                    ->afterStateUpdated(fn(callable $set) => $set('city_id', null)),
+                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                                 Select::make('city_id')
                                     ->label('City')
                                     ->required()
                                     ->options(
-                                        fn(callable $get) => County::find($get('county_id'))
+                                        fn (callable $get) => County::find($get('county_id'))
                                             ?->cities
                                             ->pluck('name', 'id')
                                     )
@@ -167,7 +167,7 @@ class OrganisationResource extends Resource
                                                 return $get('type_of_area') !== OrganisationAreaType::local->value;
                                             })
                                             ->required()
-                                            ->label(__('organisation.field.localities'))
+                                            ->label(__('organisation.field.localities')),
                                     ]),
                                 Section::make(__('organisation.section.resource'))
                                     ->schema([
@@ -204,7 +204,7 @@ class OrganisationResource extends Resource
                                                     ->required(),
                                             ])
                                             ->hidden(function (callable $get) {
-                                                return !$get('has_branches');
+                                                return ! $get('has_branches');
                                             }),
                                     ])
                                     ->label(__('organisation.field.resources')),
@@ -215,7 +215,7 @@ class OrganisationResource extends Resource
                                             ->required()
                                             ->label(__('organisation.field.social_services_accreditation'))
                                             ->reactive(),
-                                    ])
+                                    ]),
                             ]),
                     ]),
             ])->columns(1);

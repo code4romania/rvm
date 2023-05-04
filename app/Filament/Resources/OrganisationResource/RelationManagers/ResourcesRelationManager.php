@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
-use Filament\Forms;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
@@ -29,8 +28,7 @@ class ResourcesRelationManager extends RelationManager
                     ->numeric()
                     ->required(),
                 Textarea::make('description')
-                    ->required()
-
+                    ->required(),
 
             ]);
     }
@@ -56,7 +54,7 @@ class ResourcesRelationManager extends RelationManager
                     ->sortable(),
                 Tables\Columns\TextColumn::make('quantity'),
 
-                ])
+            ])
             ->filters([
                 //
             ])

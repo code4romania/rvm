@@ -36,7 +36,7 @@ class Organisation extends Model
         'short_description',
         'type_of_area',
         'has_branches',
-        'social_services_accreditation'
+        'social_services_accreditation',
 
     ];
 
@@ -74,6 +74,7 @@ class Organisation extends Model
     {
         return $this->hasMany(Branch::class);
     }
+
     public function volunteers(): HasMany
     {
         return $this->hasMany(Volunteer::class);

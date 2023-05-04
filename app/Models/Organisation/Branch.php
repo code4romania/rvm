@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models\Organisation;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 class Branch extends Model
 {
     use HasFactory;
-    protected $fillable=[
+
+    protected $fillable = [
         'contact_person_name',
         'email',
         'phone',
