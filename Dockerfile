@@ -40,7 +40,7 @@ WORKDIR /build
 COPY \
     package.json \
     package-lock.json \
-    tailwind.config.js \
+#    tailwind.config.js \
     vite.config.js \
     ./
 
