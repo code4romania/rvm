@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
@@ -20,9 +22,16 @@ class ResourcesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('quantity')
+                    ->numeric()
+                    ->required(),
+                Textarea::make('description')
+                    ->required()
+
+
             ]);
     }
 
@@ -31,7 +40,23 @@ class ResourcesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-            ])
+                Tables\Columns\IconColumn::make('has_transport')
+                    ->options([
+                        'heroicon-o-x-circle',
+                        'heroicon-o-x' => 'false',
+                        'heroicon-o-check' => 'true',
+
+                    ])
+                    ->colors([
+                        'secondary',
+                        'danger' => 'false',
+                        'success' => 'true',
+                    ])
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('quantity'),
+
+                ])
             ->filters([
                 //
             ])
