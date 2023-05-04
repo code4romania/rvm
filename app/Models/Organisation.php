@@ -20,6 +20,8 @@ class Organisation extends Model
     use HasFactory;
     use HasLocation;
 
+    protected $with = ['city', 'county'];
+
     protected $fillable = [
         'name',
         'alias',
