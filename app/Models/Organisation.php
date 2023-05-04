@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\HasLocation;
+use App\Models\Organisation\Branch;
 use App\Models\Organisation\Expertise;
 use App\Models\Organisation\ResourceType;
 use App\Models\Organisation\RiskCategory;
@@ -34,6 +35,8 @@ class Organisation extends Model
         'description',
         'short_description',
         'type_of_area',
+        'has_branches',
+        'social_services_accreditation'
 
     ];
 
@@ -67,6 +70,10 @@ class Organisation extends Model
         return $this->belongsToMany(ResourceType::class);
     }
 
+    public function branches(): HasMany
+    {
+        return $this->hasMany(Branch::class);
+    }
     public function volunteers(): HasMany
     {
         return $this->hasMany(Volunteer::class);

@@ -14,11 +14,13 @@ use App\Models\Organisation;
 use Closure;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -68,13 +70,13 @@ class OrganisationResource extends Resource
                                     ->required()
                                     ->reactive()
                                     ->searchable()
-                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+                                    ->afterStateUpdated(fn(callable $set) => $set('city_id', null)),
 
                                 Select::make('city_id')
                                     ->label('City')
                                     ->required()
                                     ->options(
-                                        fn (callable $get) => County::find($get('county_id'))
+                                        fn(callable $get) => County::find($get('county_id'))
                                             ?->cities
                                             ->pluck('name', 'id')
                                     )
@@ -149,27 +151,71 @@ class OrganisationResource extends Resource
                                     ->relationship('riskCategories', 'name')
                                     ->preload()
                                     ->label(__('organisation.field.risk_category')),
-                                Radio::make('type_of_area')
-                                    ->label(__('organisation.field.type_of_area'))
-                                    ->options(OrganisationAreaType::options())
-                                    ->reactive()
-                                    ->required(),
-                                Select::make('localities')
-                                    ->multiple()
-                                    ->label(__('organisation.field.localities'))
-                                    ->relationship('localities', 'name')
-                                    ->preload()
-                                    ->hidden(function (callable $get) {
-                                        return $get('type_of_area') !== OrganisationAreaType::local->value;
-                                    })
-                                    ->required()
-                                    ->label(__('organisation.field.localities')),
-                                Select::make('resource_types')
-                                    ->multiple()
-                                    ->relationship('resourceTypes', 'name')
-                                    ->preload()
-                                    ->label(__('organisation.field.risk_category')),
+                                Section::make(__('organisation.section.area_of_activity'))
+                                    ->schema([
+                                        Radio::make('type_of_area')
+                                            ->label(__('organisation.field.type_of_area'))
+                                            ->options(OrganisationAreaType::options())
+                                            ->reactive()
+                                            ->required(),
+                                        Select::make('localities')
+                                            ->multiple()
+                                            ->label(__('organisation.field.localities'))
+                                            ->relationship('localities', 'name')
+                                            ->preload()
+                                            ->hidden(function (callable $get) {
+                                                return $get('type_of_area') !== OrganisationAreaType::local->value;
+                                            })
+                                            ->required()
+                                            ->label(__('organisation.field.localities'))
+                                    ]),
+                                Section::make(__('organisation.section.resource'))
+                                    ->schema([
+                                        Select::make('resource_types')
+                                            ->multiple()
+                                            ->relationship('resourceTypes', 'name')
+                                            ->preload()
+                                            ->label(__('organisation.field.resource_types')),
+                                    ]),
 
+                                Section::make(__('organisation.section.branches'))
+                                    ->description('branches')
+                                    ->schema([
+                                        Toggle::make('has_branches')
+                                            ->required()
+                                            ->label(__('organisation.field.has_branches'))
+                                            ->reactive(),
+                                        Repeater::make('branches')
+                                            ->label(__('organisation.field.branches'))
+                                            ->relationship('branches')
+                                            ->schema([
+                                                TextInput::make('contact_person_name')
+                                                    ->label(__('organisation.field.contact_person_name'))
+                                                    ->required(),
+                                                TextInput::make('address')
+                                                    ->label(__('organisation.field.address'))
+                                                    ->required(),
+                                                TextInput::make('phone')
+                                                    ->label(__('organisation.field.phone'))
+                                                    ->required(),
+                                                TextInput::make('email')
+                                                    ->label(__('organisation.field.email'))
+                                                    ->email()
+                                                    ->required(),
+                                            ])
+                                            ->hidden(function (callable $get) {
+                                                return !$get('has_branches');
+                                            }),
+                                    ])
+                                    ->label(__('organisation.field.resources')),
+                                Section::make(__('organisation.section.other_information'))
+                                    ->description('branches')
+                                    ->schema([
+                                        Toggle::make('social_services_accreditation')
+                                            ->required()
+                                            ->label(__('organisation.field.social_services_accreditation'))
+                                            ->reactive(),
+                                    ])
                             ]),
                     ]),
             ])->columns(1);

@@ -27,8 +27,17 @@ return [
         'phone' => 'Telefon',
         'contact_person_name' => 'Nume și prenume',
         'other_information' => 'Alte informații',
+        'social_services_accreditation' => 'Ești ONG acreditat pentru servicii sociale?',
+        'risk_categories' => 'Categorii de risc',
         'website' => 'Website',
         'facebook' => 'Facebook',
+        'has_branches' => 'Are filiale?',
+        'resource_types' => 'Tipuri de resurse',
+        'type_of_area' => 'Tipul de aria de activitate',
+        'risk_category'=>'Categorie de risc',
+        'expertises'=>'Expertiza',
+        'branches'=>'Filiale',
+
 
     ],
     'section' => [
@@ -39,6 +48,12 @@ return [
         'interventions' => 'Interventii',
         'documents' => 'Documente',
         'users' => 'Utilizatori',
+        'branches' => 'Filiale',
+        'expertises' => 'Expertize',
+        'area_of_activity' => 'Aria de activitate',
+        'localities' => 'Localitati',
+        'other_information'=>'Alte informatii',
+
     ],
     'help' => [
         'short_description' => 'Descrie organizația ta în 200 - 250 caractere. Descrierea va fi vizibilă în alte aplicații, după caz.',
