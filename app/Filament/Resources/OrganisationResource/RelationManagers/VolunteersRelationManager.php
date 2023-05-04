@@ -19,7 +19,7 @@ class VolunteersRelationManager extends RelationManager
 
     public static function form(Form $form): Form
     {
-      return VolunteerResource::form($form);
+        return VolunteerResource::form($form);
     }
 
     public static function table(Table $table): Table

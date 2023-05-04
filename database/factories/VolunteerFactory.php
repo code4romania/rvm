@@ -21,6 +21,7 @@ class VolunteerFactory extends Factory
     public function definition()
     {
         $city = City::query()->inRandomOrder()->first();
+
         return [
             'first_name' => fake()->firstName,
             'last_name' => fake()->lastName,

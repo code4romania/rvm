@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Database\Factories;
+namespace Database\Factories\Organisation;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Expertise>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Organisation\Expertise>
  */
 class ExpertiseFactory extends Factory
 {

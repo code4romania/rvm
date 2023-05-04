@@ -15,10 +15,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('expertise_organisation', function (Blueprint $table) {
+        Schema::create('organisation_risk_category', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Organisation::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Organisation\Expertise::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Organisation\RiskCategory::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organisation_expertises');
+        Schema::dropIfExists('risk_categories');
     }
 };

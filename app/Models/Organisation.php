@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\HasLocation;
+use App\Models\Organisation\Expertise;
+use App\Models\Organisation\RiskCategory;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -44,6 +46,10 @@ class Organisation extends Model
     public function expertises()
     {
         return $this->belongsToMany(Expertise::class);
+    }
+    public function riskCategories()
+    {
+        return $this->belongsToMany(RiskCategory::class);
     }
 
     public function volunteers()

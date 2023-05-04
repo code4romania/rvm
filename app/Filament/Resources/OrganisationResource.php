@@ -9,10 +9,9 @@ use App\Filament\Resources\OrganisationResource\Pages;
 use App\Filament\Resources\OrganisationResource\RelationManagers\ResourcesRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
 use App\Models\County;
-use App\Models\Expertise;
 use App\Models\Organisation;
+use App\Models\Organisation\Expertise;
 use Closure;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
@@ -20,7 +19,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Navigation\NavigationGroup;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -143,11 +141,14 @@ class OrganisationResource extends Resource
                             ->schema([
                                 Select::make('expertises')
                                     ->multiple()
-//                                    ->options(Expertise::query()->pluck('name', 'id'))
                                     ->relationship('expertises', 'name')
-                                    ->preload(),
-                                //                                    ->loadStateFromRelationshipsUsing(fn($record)=>$record->expertises)
-
+                                    ->preload()
+                                    ->label(__('organisation.field.expertises')),
+                                Select::make('risk_category')
+                                    ->multiple()
+                                    ->relationship('riskCategories', 'name')
+                                    ->preload()
+                                    ->label(__('organisation.field.risk_category')),
                             ]),
                     ]),
             ])->columns(1);

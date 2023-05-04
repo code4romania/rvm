@@ -20,6 +20,7 @@ class ResourceFactory extends Factory
     public function definition()
     {
         $city = City::query()->inRandomOrder()->first();
+
         return [
             'name' => fake()->name,
             'quantity' => fake()->numberBetween(),
