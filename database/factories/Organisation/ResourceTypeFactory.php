@@ -7,9 +7,9 @@ namespace Database\Factories\Organisation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Organisation\RiskCategory>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Organisation\ResourceType>
  */
-class RiskCategoryFactory extends Factory
+class ResourceTypeFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,10 +18,10 @@ class RiskCategoryFactory extends Factory
      */
     public function definition()
     {
-        $risks = collect(['Categorie de risc 1', 'Categorie de risc 2', 'Categorie de risc 3', 'Categorie de risc 4']);
+        $element = collect(['Program de pregatire scolara', 'Interventie rapida', 'Voluntari specializati']);
 
         return [
-            'name'=> fake()->randomElement($risks),
+            'name'=> fake()->randomElement($element),
         ];
     }
 }

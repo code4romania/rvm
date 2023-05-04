@@ -6,10 +6,13 @@ namespace App\Models;
 
 use App\Concerns\HasLocation;
 use App\Models\Organisation\Expertise;
+use App\Models\Organisation\ResourceType;
 use App\Models\Organisation\RiskCategory;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Organisation extends Model
 {
@@ -30,6 +33,7 @@ class Organisation extends Model
         'other_information',
         'description',
         'short_description',
+        'type_of_area',
 
     ];
 
@@ -38,36 +42,47 @@ class Organisation extends Model
         'other_information' => AsCollection::class,
     ];
 
-    public function users()
+    public function users(): HasMany
     {
         return $this->hasMany(User::class);
     }
 
-    public function expertises()
+    public function expertises(): BelongsToMany
     {
         return $this->belongsToMany(Expertise::class);
     }
-    public function riskCategories()
+
+    public function localities(): BelongsToMany
+    {
+        return $this->belongsToMany(City::class);
+    }
+
+    public function riskCategories(): BelongsToMany
     {
         return $this->belongsToMany(RiskCategory::class);
     }
 
-    public function volunteers()
+    public function resourceTypes(): BelongsToMany
+    {
+        return $this->belongsToMany(ResourceType::class);
+    }
+
+    public function volunteers(): HasMany
     {
         return $this->hasMany(Volunteer::class);
     }
 
-    public function resources()
+    public function resources(): HasMany
     {
         return $this->hasMany(Resource::class);
     }
 
-    public function interventions()
+    public function interventions(): HasMany
     {
         return $this->hasMany(Intervention::class);
     }
 
-    public function documents()
+    public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
     }

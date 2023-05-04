@@ -16,4 +16,9 @@ class City extends Model
     {
         return $this->belongsTo(County::class);
     }
+
+    public function getNameWithCountyAttribute(): string
+    {
+        return "{$this->name}, {$this->county->name}";
+    }
 }

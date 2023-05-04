@@ -30,5 +30,6 @@ class DatabaseSeeder extends Seeder
             })->create();
         Expertise::factory(10)->create();
         Organisation\RiskCategory::factory(10)->create();
+        Organisation\ResourceType::factory(10)->create();
     }
 }

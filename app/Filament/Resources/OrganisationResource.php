@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationType;
 use App\Filament\Resources\OrganisationResource\Pages;
 use App\Filament\Resources\OrganisationResource\RelationManagers\ResourcesRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
 use App\Models\County;
 use App\Models\Organisation;
-use App\Models\Organisation\Expertise;
 use Closure;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
@@ -149,6 +149,27 @@ class OrganisationResource extends Resource
                                     ->relationship('riskCategories', 'name')
                                     ->preload()
                                     ->label(__('organisation.field.risk_category')),
+                                Radio::make('type_of_area')
+                                    ->label(__('organisation.field.type_of_area'))
+                                    ->options(OrganisationAreaType::options())
+                                    ->reactive()
+                                    ->required(),
+                                Select::make('localities')
+                                    ->multiple()
+                                    ->label(__('organisation.field.localities'))
+                                    ->relationship('localities', 'name')
+                                    ->preload()
+                                    ->hidden(function (callable $get) {
+                                        return $get('type_of_area') !== OrganisationAreaType::local->value;
+                                    })
+                                    ->required()
+                                    ->label(__('organisation.field.localities')),
+                                Select::make('resource_types')
+                                    ->multiple()
+                                    ->relationship('resourceTypes', 'name')
+                                    ->preload()
+                                    ->label(__('organisation.field.risk_category')),
+
                             ]),
                     ]),
             ])->columns(1);
