@@ -37,7 +37,7 @@ class OrganisationFactory extends Factory
             'vat' => fake()->text(6),
             'no_registration' => fake()->text(6),
             'description' => fake()->sentence('10'),
-            'short_description' => fake()->sentence('10'),
+            'address' => fake()->address(),
             'contact_person' => $contactPerson,
             'other_information' => $otherInfo,
             'has_branches' => fake()->boolean,

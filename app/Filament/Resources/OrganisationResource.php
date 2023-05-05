@@ -95,14 +95,14 @@ class OrganisationResource extends Resource
                                 TextInput::make('no_registration')
                                     ->label(__('organisation.field.no_registration'))
                                     ->required(),
-                                Textarea::make('short_description')
-                                    ->label(__('organisation.field.short_description'))
+                                Textarea::make('address')
+                                    ->label(__('organisation.field.address'))
                                     ->maxLength(200)
-                                    ->helperText(__('organisation.help.short_description'))
+                                    ->helperText(__('organisation.help.address'))
                                     ->columnSpanFull()
                                     ->required(),
                                 Textarea::make('description')
-                                    ->label(__('organisation.field.description'))
+                                    ->label(__('organisation.field.short_description'))
                                     ->maxLength(700)
                                     ->helperText(__('organisation.help.description'))
                                     ->columnSpanFull()

@@ -35,7 +35,7 @@ class Organisation extends Model
         'contact_person',
         'other_information',
         'description',
-        'short_description',
+        'address',
         'type_of_area',
         'has_branches',
         'social_services_accreditation',

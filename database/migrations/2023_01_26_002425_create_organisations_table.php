@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string('no_registration')->nullable();
             $table->foreignIdFor(County::class)->nullable()->constrained();
             $table->foreignIdFor(City::class)->nullable()->constrained();
-            $table->text('short_description')->nullable();
+            $table->text('address')->nullable();
             $table->text('description')->nullable();
             $table->json('contact_person')->nullable();
             $table->json('other_information')->nullable();
