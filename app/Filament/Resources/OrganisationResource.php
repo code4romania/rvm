@@ -17,6 +17,7 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -107,12 +108,7 @@ class OrganisationResource extends Resource
                                     ->helperText(__('organisation.help.description'))
                                     ->columnSpanFull()
                                     ->required(),
-                                //TODO fix file upload
-                                //                                FileUpload::make('logo')
-                                //                                    ->label(__('organisation.field.logo'))
-                                //                                    ->helperText(__('organisation.help.logo'))
-                                //                                    ->inlineLabel()
-                                //                                    ->columnSpanFull(),
+                                SpatieMediaLibraryFileUpload::make('logo')->conversion('thumb'),
                                 Section::make(__('organisation.field.contact_person'))
                                     ->schema([
                                         TextInput::make('contact_person.name')
@@ -125,6 +121,9 @@ class OrganisationResource extends Resource
                                             ->required(),
                                         TextInput::make('contact_person.phone')
                                             ->label(__('organisation.field.phone'))
+                                            ->required(),
+                                        TextInput::make('contact_person.role')
+                                            ->label(__('organisation.field.role'))
                                             ->required(),
                                     ])
                                     ->columns(2),

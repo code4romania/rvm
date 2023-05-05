@@ -18,6 +18,7 @@ class OrganisationFactory extends Factory
             'name' => fake()->name,
             'email' => fake()->email,
             'phone' => fake()->phoneNumber,
+            'role' => fake()->jobTitle,
         ];
         $otherInfo = [
             'facebook' => '#facebook',

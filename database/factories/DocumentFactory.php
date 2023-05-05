@@ -19,7 +19,8 @@ class DocumentFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'signature_date' => fake()->date(),
+            'expiration_date' => fake()->futureDate(),
         ];
     }
 }

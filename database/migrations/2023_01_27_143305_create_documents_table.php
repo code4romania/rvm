@@ -17,6 +17,8 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
+            $table->date('signed_at');
+            $table->date('expire_at');
             $table->timestamps();
         });
     }

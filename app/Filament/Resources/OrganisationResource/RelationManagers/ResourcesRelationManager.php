@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
+use App\Models\County;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
@@ -23,6 +25,39 @@ class ResourcesRelationManager extends RelationManager
             ->schema([
                 TextInput::make('name')
                     ->required()
+                    ->maxLength(255),
+                Select::make('category')->options([
+                    'adapost' => 'Adăpostire',
+                    'transport' => 'Transport',
+                    'salvare' => 'Salvare',
+                    'telecomunicatii' => 'Telecomunicații',
+                    'it_c' => 'IT&C',
+                    'other' => 'Altele',
+                ])->required(),
+
+                Select::make('subcategory')
+                    ->label('Subcategory')
+                    ->required()
+                    ->options(
+                        fn (callable $get) =>match ($get('category')) {
+                            'adapost' =>['Corturi','Rulote','Cazare','Altele'],
+                            'transport' =>['Rutier','Maritim','Feroviar','Aerian','Altele'],
+                            'salvare' =>['Câini utilitari','Altele'],
+                            'telecomunicatii' =>['Radiocomunicații','Televiziune','Radiodifuziune','Altele'],
+                            'it_c' =>['Hardware','Software','Altele'],
+                            default =>['Altele'],
+                        }
+                    )
+                    ->hidden(function (callable $get) {
+                        return $get('category') === 'altele';
+                    })
+                    ->searchable()
+                    ->reactive(),
+                TextInput::make('subcategory_other')
+                    ->label('Subcategory other')
+                    ->hidden(function (callable $get) {
+                        return $get('category') !== 'altele';
+                    })
                     ->maxLength(255),
                 TextInput::make('quantity')
                     ->numeric()
@@ -59,7 +94,12 @@ class ResourcesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading(__('organisation.modal.heading'))
+                    ->modalSubheading(__('organisation.modal.subheading'))
+                    ->modalWidth('4xl')
+                    ->slideOver(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
