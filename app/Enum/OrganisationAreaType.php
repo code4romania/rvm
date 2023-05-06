@@ -14,4 +14,8 @@ enum OrganisationAreaType: string
     case regional = 'regional';
     case national = 'national';
     case international = 'international';
+    protected function translationKeyPrefix(): ?string
+    {
+        return 'organisation.field.area_of_activity.types';
+    }
 }

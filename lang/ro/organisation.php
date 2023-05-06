@@ -37,6 +37,29 @@ return [
         'risk_category'=>'Categorie de risc',
         'expertises'=>'Expertiza',
         'branches'=>'Filiale',
+        'address'=>'Adresa',
+        'types'=>[
+            'association'=>'Asociatie',
+            'foundation'=>'Fundatie',
+            'federation'=>'Federatie',
+            'informal_group'=>'Grup informal',
+        ],
+        'area_of_activity'=>[
+            'types'=>[
+                'local'=>'Local',
+                'regional'=>'Regional',
+                'national'=>'National',
+                'international'=>'International',
+            ],
+            'areas'=>'Localitați',
+            'help_text'=>'Poți adăuga mai multe arii de activitate',
+            'add_area'=>'Adaugă aria de activitate',
+        ],
+        'branch'=>[
+            'help_text'=>'Poți adăuga mai multe filiale',
+            'add_area'=>'Adaugă filială',
+        ],
+        'role'=>'Rol',
 
     ],
     'section' => [
@@ -56,7 +79,7 @@ return [
     ],
     'help' => [
         'short_description' => 'Descrie organizația ta în 200 - 250 caractere. Descrierea va fi vizibilă în alte aplicații, după caz.',
-        'description' => 'Adaugă o descriere cât mai cuprinzătoare a organizației tale (maximum 700 caractere).',
+        'description' => 'Adaugă o descriere a organizației tale (maximum 700 caractere).',
         'logo' => 'Încarcă logo-ul organizației tale, la o calitate cât mai bună.',
     ],
 ];

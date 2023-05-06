@@ -14,4 +14,9 @@ enum OrganisationType: string
     case foundation = 'foundation';
     case federation = 'federation';
     case informalGroup = 'informal_group';
+
+    protected function translationKeyPrefix(): ?string
+    {
+        return 'organisation.field.types';
+    }
 }

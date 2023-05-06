@@ -66,7 +66,7 @@ class OrganisationResource extends Resource
                                     ->options(range(today()->year, 1950))
                                     ->required(),
                                 Select::make('county_id')
-                                    ->label('County')
+                                    ->label(__('general.county'))
                                     ->options(County::pluck('name', 'id'))
                                     ->required()
                                     ->reactive()
@@ -74,7 +74,7 @@ class OrganisationResource extends Resource
                                     ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                                 Select::make('city_id')
-                                    ->label('City')
+                                   ->label(__('general.city'))
                                     ->required()
                                     ->options(
                                         fn (callable $get) => County::find($get('county_id'))
@@ -99,7 +99,6 @@ class OrganisationResource extends Resource
                                 Textarea::make('address')
                                     ->label(__('organisation.field.address'))
                                     ->maxLength(200)
-                                    ->helperText(__('organisation.help.address'))
                                     ->columnSpanFull()
                                     ->required(),
                                 Textarea::make('description')
@@ -114,7 +113,9 @@ class OrganisationResource extends Resource
                                         TextInput::make('contact_person.name')
                                             ->label(__('organisation.field.contact_person_name'))
                                             ->required(),
-                                        Placeholder::make('empty')->disableLabel(),
+                                        TextInput::make('contact_person.role')
+                                            ->label(__('organisation.field.role'))
+                                            ->required(),
                                         TextInput::make('contact_person.email')
                                             ->label(__('organisation.field.email'))
                                             ->email()
@@ -122,9 +123,7 @@ class OrganisationResource extends Resource
                                         TextInput::make('contact_person.phone')
                                             ->label(__('organisation.field.phone'))
                                             ->required(),
-                                        TextInput::make('contact_person.role')
-                                            ->label(__('organisation.field.role'))
-                                            ->required(),
+
                                     ])
                                     ->columns(2),
                                 Section::make(__('organisation.field.other_information'))
@@ -142,11 +141,13 @@ class OrganisationResource extends Resource
                             ->schema([
                                 Select::make('expertises')
                                     ->multiple()
+                                    ->helperText(__('general.help.multi_select'))
                                     ->relationship('expertises', 'name')
                                     ->preload()
                                     ->label(__('organisation.field.expertises')),
                                 Select::make('risk_category')
                                     ->multiple()
+                                    ->helperText(__('general.help.multi_select'))
                                     ->relationship('riskCategories', 'name')
                                     ->preload()
                                     ->label(__('organisation.field.risk_category')),
@@ -158,13 +159,13 @@ class OrganisationResource extends Resource
                                             ->reactive()
                                             ->required(),
                                         Repeater::make('areas_of_activity')
-                                            ->label(__('organisation.field.areas_of_activity'))
+                                            ->label(__('organisation.field.area_of_activity.areas'))
                                             ->hidden(function (callable $get) {
                                                 return $get('type_of_area') !== OrganisationAreaType::local->value;
                                             })
                                             ->schema([
                                                 Select::make('county_id')
-                                                    ->label('County')
+                                                    ->label(__('general.county'))
                                                     ->options(County::pluck('name', 'id'))
                                                     ->required()
                                                     ->reactive()
@@ -172,7 +173,7 @@ class OrganisationResource extends Resource
                                                     ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                                                 Select::make('city_id')
-                                                    ->label('City')
+                                                   ->label(__('general.city'))
                                                     ->required()
                                                     ->options(
                                                         fn (callable $get) => County::find($get('county_id'))
@@ -182,20 +183,23 @@ class OrganisationResource extends Resource
                                                     ->searchable()
                                                     ->reactive(),
                                             ])
+                                            //TODO add default
+                                            ->defaultItems(2)
+                                            ->createItemButtonLabel(__('organisation.field.area_of_activity.add_area'))
+                                            ->helperText(__('organisation.field.area_of_activity.help_text'))
                                             ->required()
-                                            ->label(__('organisation.field.areas_of_activity')),
                                     ]),
                                 Section::make(__('organisation.section.resource'))
                                     ->schema([
                                         Select::make('resource_types')
                                             ->multiple()
+                                            ->helperText(__('general.help.multi_select'))
                                             ->relationship('resourceTypes', 'name')
                                             ->preload()
                                             ->label(__('organisation.field.resource_types')),
                                     ]),
 
                                 Section::make(__('organisation.section.branches'))
-                                    ->description('branches')
                                     ->schema([
                                         Toggle::make('has_branches')
                                             ->required()
@@ -216,7 +220,7 @@ class OrganisationResource extends Resource
                                                     ->email()
                                                     ->required(),
                                                 Select::make('county_id')
-                                                    ->label('County')
+                                                    ->label(__('general.county'))
                                                     ->options(County::pluck('name', 'id'))
                                                     ->required()
                                                     ->reactive()
@@ -224,7 +228,7 @@ class OrganisationResource extends Resource
                                                     ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                                                 Select::make('city_id')
-                                                    ->label('City')
+                                                   ->label(__('general.city'))
                                                     ->required()
                                                     ->options(
                                                         fn (callable $get) => County::find($get('county_id'))
@@ -235,13 +239,14 @@ class OrganisationResource extends Resource
                                                     ->reactive(),
 
                                             ])
+                                            ->createItemButtonLabel(__('organisation.field.branch.add_area'))
+                                            ->helperText(__('organisation.field.branch.help_text'))
                                             ->hidden(function (callable $get) {
                                                 return ! $get('has_branches');
                                             }),
                                     ])
                                     ->label(__('organisation.field.resources')),
                                 Section::make(__('organisation.section.other_information'))
-                                    ->description('branches')
                                     ->schema([
                                         Toggle::make('social_services_accreditation')
                                             ->required()

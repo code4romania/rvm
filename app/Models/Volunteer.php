@@ -92,7 +92,7 @@ class Volunteer extends Model
                 ->schema([
 
                     Select::make('county_id')
-                        ->label('County')
+                        ->label(__('general.county'))
                         ->options(County::pluck('name', 'id'))
                         ->required()
                         ->reactive()
@@ -100,7 +100,7 @@ class Volunteer extends Model
                         ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                     Select::make('city_id')
-                        ->label('City')
+                       ->label(__('general.city'))
                         ->required()
                         ->options(
                             fn (callable $get) => County::find($get('county_id'))
