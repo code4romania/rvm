@@ -263,17 +263,18 @@ class OrganisationResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Ong')
+                    ->label(__('organisation.field.name'))
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('type')
+                    ->label(__('organisation.field.type'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Inregistrata')
+                    ->label(__('general.created_at'))
                     ->searchable()
                     ->sortable(),
 
@@ -289,14 +290,17 @@ class OrganisationResource extends Resource
                         'danger' => 'inactive',
                         'success' => 'active',
                     ])
+                    ->label(__('organisation.field.status'))
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('county')
+                Tables\Columns\TextColumn::make('county.name')
+                    ->label(__('general.county'))
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('general.updated_at'))
                     ->searchable()
                     ->sortable(),
             ])

@@ -15,6 +15,6 @@ enum VolunteerRole: string
 
     protected function translationKeyPrefix(): ?string
     {
-        return 'employer.type';
+        return 'volunteer.fields.types';
     }
 }

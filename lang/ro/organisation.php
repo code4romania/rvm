@@ -34,32 +34,37 @@ return [
         'has_branches' => 'Are filiale?',
         'resource_types' => 'Tipuri de resurse',
         'type_of_area' => 'Tipul de aria de activitate',
-        'risk_category'=>'Categorie de risc',
-        'expertises'=>'Expertiza',
-        'branches'=>'Filiale',
-        'address'=>'Adresa',
-        'types'=>[
-            'association'=>'Asociatie',
-            'foundation'=>'Fundatie',
-            'federation'=>'Federatie',
-            'informal_group'=>'Grup informal',
+        'risk_category' => 'Categorie de risc',
+        'expertises' => 'Expertiza',
+        'branches' => 'Filiale',
+        'address' => 'Adresa',
+        'status' => 'Status',
+        'status_action' => [
+            'active' => 'Dezactiveaza',
+            'inactive' => 'Activeaza'
         ],
-        'area_of_activity'=>[
-            'types'=>[
-                'local'=>'Local',
-                'regional'=>'Regional',
-                'national'=>'National',
-                'international'=>'International',
+        'types' => [
+            'association' => 'Asociatie',
+            'foundation' => 'Fundatie',
+            'federation' => 'Federatie',
+            'informal_group' => 'Grup informal',
+        ],
+        'area_of_activity' => [
+            'types' => [
+                'local' => 'Local',
+                'regional' => 'Regional',
+                'national' => 'National',
+                'international' => 'International',
             ],
-            'areas'=>'Localitați',
-            'help_text'=>'Poți adăuga mai multe arii de activitate',
-            'add_area'=>'Adaugă aria de activitate',
+            'areas' => 'Localitați',
+            'help_text' => 'Poți adăuga mai multe arii de activitate',
+            'add_area' => 'Adaugă aria de activitate',
         ],
-        'branch'=>[
-            'help_text'=>'Poți adăuga mai multe filiale',
-            'add_area'=>'Adaugă filială',
+        'branch' => [
+            'help_text' => 'Poți adăuga mai multe filiale',
+            'add_area' => 'Adaugă filială',
         ],
-        'role'=>'Rol',
+        'role' => 'Rol',
 
     ],
     'section' => [
@@ -74,7 +79,7 @@ return [
         'expertises' => 'Expertize',
         'area_of_activity' => 'Aria de activitate',
         'localities' => 'Localitati',
-        'other_information'=>'Alte informatii',
+        'other_information' => 'Alte informatii',
 
     ],
     'help' => [
@@ -82,4 +87,19 @@ return [
         'description' => 'Adaugă o descriere a organizației tale (maximum 700 caractere).',
         'logo' => 'Încarcă logo-ul organizației tale, la o calitate cât mai bună.',
     ],
+
+    'action' => [
+        'change_status' => [
+            'inactive' => [
+                'heading' => 'Activeaza organizatia',
+                'subheading' => 'Esti sigur ca vrei sa activezi organizatia?',
+                'button' => 'Activeaza'
+            ],
+            'active' => [
+                'heading' => 'Dezactiveaza organizatia',
+                'subheading' => 'Esti sigur ca vrei sa dezactivezi organizatia?',
+                'button' => 'Dezactiveaza'
+            ],
+        ]
+    ]
 ];

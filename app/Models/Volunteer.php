@@ -26,6 +26,9 @@ class Volunteer extends Model
         'email',
         'phone',
         'birthday',
+        'county_id',
+        'city_id',
+        'specialization',
         'cnp',
         'accreditation',
     ];

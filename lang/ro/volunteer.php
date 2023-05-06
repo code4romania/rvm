@@ -16,6 +16,11 @@ return [
         'specialization' => 'Specializare',
         'accreditation' => 'Acreditare prim ajutor',
         'updated_at' => 'Ultima actualizare',
+        'types' => [
+            'volunteer' => 'Voluntar',
+            'volunteer_coordinator' => 'Coordonator voluntari',
+        ]
+
     ],
     'modal' => [
         'heading' => 'Adaugă voluntar',
