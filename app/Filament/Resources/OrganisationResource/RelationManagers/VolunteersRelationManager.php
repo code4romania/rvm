@@ -32,8 +32,8 @@ class VolunteersRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->requiresConfirmation()
-                    ->modalHeading(__('organisation.modal.heading'))
-                    ->modalSubheading(__('organisation.modal.subheading'))
+                    ->modalHeading(__('volunteer.modal.heading'))
+                    ->modalSubheading(__('volunteer.modal.subheading'))
                     ->modalWidth('4xl')
                     ->slideOver(),
             ])

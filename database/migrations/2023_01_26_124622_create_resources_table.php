@@ -5,8 +5,6 @@ declare(strict_types=1);
 use App\Models\City;
 use App\Models\County;
 use App\Models\Organisation;
-use App\Models\Resource\Category;
-use App\Models\Resource\Subcategory;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,9 +21,9 @@ return new class extends Migration
         Schema::create('resources', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Organisation::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Category::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Subcategory::class)->constrained()->cascadeOnDelete();
-            $table->string('resource_type');
+            $table->foreignId('category_id')->constrained('resource_categories')->cascadeOnDelete();
+            $table->foreignId('subcategory_id')->constrained('resource_subcategories')->cascadeOnDelete();
+            $table->string('resource_type')->nullable();
             $table->json('attributes')->nullable();
             $table->string('name');
             $table->integer('quantity');

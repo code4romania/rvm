@@ -12,6 +12,8 @@ class Subcategory extends Model
 {
     use HasFactory;
 
+    protected $table = 'resource_subcategories';
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

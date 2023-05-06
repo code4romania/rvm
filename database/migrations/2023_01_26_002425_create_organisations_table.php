@@ -38,6 +38,7 @@ return new class extends Migration
             $table->json('contact_person')->nullable();
             $table->json('other_information')->nullable();
             $table->enum('type_of_area', OrganisationAreaType::values());
+            $table->json('areas_of_activity')->nullable();
             $table->boolean('has_branches')->default(false);
             $table->boolean('social_services_accreditation')->default(false);
             $table->softDeletes();

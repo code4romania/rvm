@@ -29,7 +29,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('cnp')->nullable();
             $table->date('birthday')->nullable();
-            $table->boolean('accreditation');
+            $table->boolean('accreditation')->nullable();
+            $table->string('specialization')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

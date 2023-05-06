@@ -12,6 +12,8 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $table = 'resource_categories';
+
     public function subcategories(): HasMany
     {
         return $this->hasMany(Subcategory::class);

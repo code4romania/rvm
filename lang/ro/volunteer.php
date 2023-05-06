@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 return [
+
     'fields' => [
         'name' => 'Nume',
         'last_name' => 'Nume',
@@ -13,7 +14,7 @@ return [
         'phone' => 'Telefon',
         'role' => 'Rol',
         'specialization' => 'Specializare',
-        'accreditation' => 'Acreditare',
+        'accreditation' => 'Acreditare prim ajutor',
         'updated_at' => 'Ultima actualizare',
     ],
     'modal' => [

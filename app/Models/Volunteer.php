@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enum\VolunteerRole;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -76,14 +77,39 @@ class Volunteer extends Model
             TextInput::make('email')
                 ->label(__('volunteer.fields.email'))
                 ->email(),
+
             TextInput::make('phone')
                 ->label(__('volunteer.fields.phone')),
-            Toggle::make('accreditation')
-                ->label(__('volunteer.fields.accreditation')),
+            TextInput::make('specialization')
+                ->label(__('volunteer.fields.specialization')),
             Select::make('role')
                 ->label(__('volunteer.fields.role'))
                 ->options(VolunteerRole::options())
                 ->required(),
+            Toggle::make('accreditation')
+                ->label(__('volunteer.fields.accreditation')),
+            Section::make(__('Localizare'))
+                ->schema([
+
+                    Select::make('county_id')
+                        ->label('County')
+                        ->options(County::pluck('name', 'id'))
+                        ->required()
+                        ->reactive()
+                        ->searchable()
+                        ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+
+                    Select::make('city_id')
+                        ->label('City')
+                        ->required()
+                        ->options(
+                            fn (callable $get) => County::find($get('county_id'))
+                                ?->cities
+                                ->pluck('name', 'id')
+                        )
+                        ->searchable()
+                        ->reactive(),
+                ]),
         ];
     }
 }

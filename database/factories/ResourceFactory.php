@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\City;
+use App\Models\Resource\Subcategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,6 +21,7 @@ class ResourceFactory extends Factory
     public function definition()
     {
         $city = City::query()->inRandomOrder()->first();
+        $subcategory = Subcategory::query()->inRandomOrder()->first();
 
         return [
             'name' => fake()->name,
@@ -31,6 +33,8 @@ class ResourceFactory extends Factory
             'contact_email' => fake()->email,
             'city_id' => $city->id,
             'county_id' => $city->county_id,
+            'subcategory_id' => $subcategory?->id,
+            'category_id' => $subcategory?->category_id,
             'observation' => fake()->sentence(10),
         ];
     }

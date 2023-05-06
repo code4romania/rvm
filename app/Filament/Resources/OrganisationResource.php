@@ -157,16 +157,35 @@ class OrganisationResource extends Resource
                                             ->options(OrganisationAreaType::options())
                                             ->reactive()
                                             ->required(),
-                                        Select::make('localities')
-                                            ->multiple()
-                                            ->label(__('organisation.field.localities'))
-                                            ->relationship('localities', 'name')
-                                            ->preload()
+                                        Repeater::make('areas_of_activity')
+                                            ->label(__('organisation.field.areas_of_activity'))
                                             ->hidden(function (callable $get) {
+                                                debug($get('type_of_area'));
+
                                                 return $get('type_of_area') !== OrganisationAreaType::local->value;
                                             })
+                                            ->schema([
+                                                Select::make('county_id')
+                                                    ->label('County')
+                                                    ->options(County::pluck('name', 'id'))
+                                                    ->required()
+                                                    ->reactive()
+                                                    ->searchable()
+                                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+
+                                                Select::make('city_id')
+                                                    ->label('City')
+                                                    ->required()
+                                                    ->options(
+                                                        fn (callable $get) => County::find($get('county_id'))
+                                                            ?->cities
+                                                            ->pluck('name', 'id')
+                                                    )
+                                                    ->searchable()
+                                                    ->reactive(),
+                                            ])
                                             ->required()
-                                            ->label(__('organisation.field.localities')),
+                                            ->label(__('organisation.field.areas_of_activity')),
                                     ]),
                                 Section::make(__('organisation.section.resource'))
                                     ->schema([
@@ -191,9 +210,6 @@ class OrganisationResource extends Resource
                                                 TextInput::make('contact_person_name')
                                                     ->label(__('organisation.field.contact_person_name'))
                                                     ->required(),
-                                                TextInput::make('address')
-                                                    ->label(__('organisation.field.address'))
-                                                    ->required(),
                                                 TextInput::make('phone')
                                                     ->label(__('organisation.field.phone'))
                                                     ->required(),
@@ -201,6 +217,25 @@ class OrganisationResource extends Resource
                                                     ->label(__('organisation.field.email'))
                                                     ->email()
                                                     ->required(),
+                                                Select::make('county_id')
+                                                    ->label('County')
+                                                    ->options(County::pluck('name', 'id'))
+                                                    ->required()
+                                                    ->reactive()
+                                                    ->searchable()
+                                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+
+                                                Select::make('city_id')
+                                                    ->label('City')
+                                                    ->required()
+                                                    ->options(
+                                                        fn (callable $get) => County::find($get('county_id'))
+                                                            ?->cities
+                                                            ->pluck('name', 'id')
+                                                    )
+                                                    ->searchable()
+                                                    ->reactive(),
+
                                             ])
                                             ->hidden(function (callable $get) {
                                                 return ! $get('has_branches');
