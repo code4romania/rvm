@@ -21,6 +21,97 @@ class DatabaseSeeder extends Seeder
     {
         $user = User::factory(['email' => 'admin@example.com'])
             ->create();
+        $resourceCategory = [
+            [
+                'name' => 'Adăpostire',
+                'subcategory' => [
+                    [
+                        'name' => 'Corturi',
+                    ],
+                    [
+                        'name' => 'Rulote',
+                    ],
+                    [
+                        'name' => 'Cazare',
+                    ],
+                    [
+                        'name' => 'Altele',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Transport',
+                'subcategory' => [
+                    [
+                        'name' => 'Rutier',
+                    ],
+                    [
+                        'name' => 'Maritim',
+                    ],
+                    [
+                        'name' => 'Feroviar',
+                    ],
+                    [
+                        'name' => 'Aerian',
+                    ],
+                    [
+                        'name' => 'Altele',
+                    ],
+                ],
+
+            ],
+            [
+                'name' => 'Salvare',
+                'subcategory' => [
+                    [
+                        'name' => 'Câini utilitari',
+                    ],
+                    [
+                        'name' => 'Altele',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Telecomunicații',
+                'subcategory' => [
+                    [
+                        'name' => 'Radiocomunicații',
+                    ],
+                    [
+                        'name' => 'Radiocomunicații',
+                    ],
+                    [
+                        'name' => 'Radiodifuziune',
+                    ],
+                    [
+                        'name' => 'Altele',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'IT&C',
+                'subcategory' => [
+                    [
+                        'name' => 'Hardware',
+                    ],
+                    [
+                        'name' => 'Software',
+                    ],
+                    [
+                        'name' => 'Altele',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Altele',
+                'subcategory' => [
+                    [
+                        'name' => 'Altele',
+                    ],
+                ],
+            ],
+        ];
+
         Organisation::factory(20)
             ->hasVolunteers(3, function (array $attributes, Organisation $organisation) {
                 return ['organisation_id' => $organisation->id];
