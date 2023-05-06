@@ -160,8 +160,6 @@ class OrganisationResource extends Resource
                                         Repeater::make('areas_of_activity')
                                             ->label(__('organisation.field.areas_of_activity'))
                                             ->hidden(function (callable $get) {
-                                                debug($get('type_of_area'));
-
                                                 return $get('type_of_area') !== OrganisationAreaType::local->value;
                                             })
                                             ->schema([
