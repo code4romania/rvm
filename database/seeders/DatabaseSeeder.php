@@ -8,6 +8,9 @@ namespace Database\Seeders;
 use App\Models\Organisation;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +21,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        if (app()->environment('production')) {
+            Schema::withoutForeignKeyConstraints(function () {
+                DB::unprepared(
+                    File::get(database_path('data/example_dump.sql'))
+                );
+            });
+            return;
+        }
         $user = User::factory(['email' => 'admin@example.com'])
             ->create();
         $this->call([OrganisationActivitySeed::class, ResourceCategorySeed::class]);
@@ -28,5 +39,6 @@ class DatabaseSeeder extends Seeder
             ->hasResources(3, function (array $attributes, Organisation $organisation) {
                 return ['organisation_id' => $organisation->id];
             })->create();
+
     }
 }
