@@ -4,7 +4,7 @@
 -- https://tableplus.com/
 --
 -- Database: rvm
--- Generation Time: 2023-05-06 15:18:50.2480
+-- Generation Time: 2023-05-08 04:59:48.2440
 -- -------------------------------------------------------------
 
 
@@ -73,12 +73,15 @@ CREATE TABLE `counties` (
 DROP TABLE IF EXISTS `documents`;
 CREATE TABLE `documents` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `organisation_id` bigint unsigned NOT NULL,
   `signed_at` date NOT NULL,
   `expire_at` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  PRIMARY KEY (`id`),
+  KEY `documents_organisation_id_foreign` (`organisation_id`),
+  CONSTRAINT `documents_organisation_id_foreign` FOREIGN KEY (`organisation_id`) REFERENCES `organisations` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `expertise_organisation`;
 CREATE TABLE `expertise_organisation` (
@@ -119,9 +122,12 @@ CREATE TABLE `failed_jobs` (
 DROP TABLE IF EXISTS `interventions`;
 CREATE TABLE `interventions` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `organisation_id` bigint unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `interventions_organisation_id_foreign` (`organisation_id`),
+  CONSTRAINT `interventions_organisation_id_foreign` FOREIGN KEY (`organisation_id`) REFERENCES `organisations` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `media`;
@@ -148,7 +154,7 @@ CREATE TABLE `media` (
   UNIQUE KEY `media_uuid_unique` (`uuid`),
   KEY `media_model_type_model_id_index` (`model_type`,`model_id`),
   KEY `media_order_column_index` (`order_column`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE `migrations` (
@@ -156,7 +162,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `organisation_resource_type`;
 CREATE TABLE `organisation_resource_type` (
@@ -259,13 +265,26 @@ CREATE TABLE `resource_subcategories` (
   `category_id` bigint unsigned NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `resources_type` json DEFAULT NULL,
+  `custom_attributes` json DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `resource_subcategories_category_id_foreign` (`category_id`),
   CONSTRAINT `resource_subcategories_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `resource_categories` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `resource_subcategory_types`;
+CREATE TABLE `resource_subcategory_types` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `subcategory_id` bigint unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `resource_subcategory_types_subcategory_id_foreign` (`subcategory_id`),
+  CONSTRAINT `resource_subcategory_types_subcategory_id_foreign` FOREIGN KEY (`subcategory_id`) REFERENCES `resource_subcategories` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `resource_types`;
 CREATE TABLE `resource_types` (
@@ -282,17 +301,13 @@ CREATE TABLE `resources` (
   `organisation_id` bigint unsigned NOT NULL,
   `category_id` bigint unsigned NOT NULL,
   `subcategory_id` bigint unsigned NOT NULL,
-  `resource_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type_id` bigint unsigned DEFAULT NULL,
+  `other_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `attributes` json DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `quantity` int NOT NULL,
-  `type` enum('tip1','tip2') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `has_transport` tinyint(1) NOT NULL DEFAULT '0',
   `county_id` bigint unsigned DEFAULT NULL,
   `city_id` bigint unsigned DEFAULT NULL,
-  `contact_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `contact_phone` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `contact_email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contact` json NOT NULL,
   `observation` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -300,13 +315,15 @@ CREATE TABLE `resources` (
   KEY `resources_organisation_id_foreign` (`organisation_id`),
   KEY `resources_category_id_foreign` (`category_id`),
   KEY `resources_subcategory_id_foreign` (`subcategory_id`),
+  KEY `resources_type_id_foreign` (`type_id`),
   KEY `resources_county_id_foreign` (`county_id`),
   KEY `resources_city_id_foreign` (`city_id`),
   CONSTRAINT `resources_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `resource_categories` (`id`) ON DELETE CASCADE,
   CONSTRAINT `resources_city_id_foreign` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`),
   CONSTRAINT `resources_county_id_foreign` FOREIGN KEY (`county_id`) REFERENCES `counties` (`id`),
   CONSTRAINT `resources_organisation_id_foreign` FOREIGN KEY (`organisation_id`) REFERENCES `organisations` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `resources_subcategory_id_foreign` FOREIGN KEY (`subcategory_id`) REFERENCES `resource_subcategories` (`id`) ON DELETE CASCADE
+  CONSTRAINT `resources_subcategory_id_foreign` FOREIGN KEY (`subcategory_id`) REFERENCES `resource_subcategories` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `resources_type_id_foreign` FOREIGN KEY (`type_id`) REFERENCES `resource_subcategory_types` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `risk_categories`;
@@ -323,13 +340,16 @@ CREATE TABLE `users` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `organisation_id` bigint unsigned DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`)
+  UNIQUE KEY `users_email_unique` (`email`),
+  KEY `users_organisation_id_foreign` (`organisation_id`),
+  CONSTRAINT `users_organisation_id_foreign` FOREIGN KEY (`organisation_id`) REFERENCES `organisations` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `volunteers`;
@@ -17407,84 +17427,106 @@ INSERT INTO `counties` (`id`, `siruta`, `name`) VALUES
 (51, 519, 'Călărași'),
 (52, 528, 'Giurgiu');
 
+INSERT INTO `documents` (`id`, `organisation_id`, `signed_at`, `expire_at`, `created_at`, `updated_at`) VALUES
+(1, 20, '2023-05-08', '2023-05-19', '2023-05-08 01:51:21', '2023-05-08 01:51:21');
+
 INSERT INTO `expertises` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (1, 'Prevenție', NULL, NULL),
 (2, 'Intervenție', NULL, NULL),
 (3, 'Reconstructie', NULL, NULL);
 
+INSERT INTO `media` (`id`, `model_type`, `model_id`, `uuid`, `collection_name`, `name`, `file_name`, `mime_type`, `disk`, `conversions_disk`, `size`, `manipulations`, `custom_properties`, `generated_conversions`, `responsive_images`, `order_column`, `created_at`, `updated_at`) VALUES
+(1, 'App\\Models\\Document', 1, '1808fd8f-7884-4344-8dc5-dee204d441df', 'default', '1', 'wDBMLZFrgNEi58JAmAhDhfYDZBrpyA-metaMS5wbmc=-.png', 'image/png', 'public', 'public', 14554, '[]', '[]', '{\"thumb\": true}', '[]', 1, '2023-05-08 01:51:21', '2023-05-08 01:51:22');
+
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '2014_10_11_000000_create_siruta_tables', 1),
-(2, '2014_10_12_000000_create_users_table', 1),
-(3, '2014_10_12_100000_create_password_resets_table', 1),
-(4, '2019_08_19_000000_create_failed_jobs_table', 1),
-(5, '2019_12_14_000001_create_personal_access_tokens_table', 1),
-(6, '2023_01_25_124622_create_resource_categories_table', 1),
-(7, '2023_01_25_124622_create_resource_subcategories_table', 1),
-(8, '2023_01_26_002425_create_organisations_table', 1),
-(9, '2023_01_26_124507_create_volunteers_table', 1),
-(10, '2023_01_26_124622_create_resources_table', 1),
-(11, '2023_01_26_160804_create_expertises_table', 1),
-(12, '2023_01_26_161851_create_organisation_expertises_table', 1),
-(13, '2023_01_27_142129_create_interventions_table', 1),
-(14, '2023_01_27_143305_create_documents_table', 1),
-(15, '2023_05_04_014723_create_risk_categories_table', 1),
-(16, '2023_05_04_014725_create_city_organisation_table', 1),
-(17, '2023_05_04_014725_create_organisation_risk_category_table', 1),
-(18, '2023_05_04_023518_create_resource_types_table', 1),
-(19, '2023_05_04_023519_create_organisation_resource_type_table', 1),
-(20, '2023_05_04_024732_create_branches_table', 1),
-(21, '2023_05_05_090055_create_media_table', 1);
+(2, '2014_10_11_002425_create_organisations_table', 1),
+(3, '2014_10_12_000000_create_users_table', 1),
+(4, '2014_10_12_100000_create_password_resets_table', 1),
+(5, '2019_08_19_000000_create_failed_jobs_table', 1),
+(6, '2019_12_14_000001_create_personal_access_tokens_table', 1),
+(7, '2023_01_25_124622_create_resource_categories_table', 1),
+(8, '2023_01_25_124622_create_resource_subcategories_table', 1),
+(9, '2023_01_25_124622_create_types_table', 1),
+(10, '2023_01_26_124507_create_volunteers_table', 1),
+(11, '2023_01_26_124622_create_resources_table', 1),
+(12, '2023_01_26_160804_create_expertises_table', 1),
+(13, '2023_01_26_161851_create_organisation_expertises_table', 1),
+(14, '2023_01_27_142129_create_interventions_table', 1),
+(15, '2023_01_27_143305_create_documents_table', 1),
+(16, '2023_05_04_014723_create_risk_categories_table', 1),
+(17, '2023_05_04_014725_create_city_organisation_table', 1),
+(18, '2023_05_04_014725_create_organisation_risk_category_table', 1),
+(19, '2023_05_04_023518_create_resource_types_table', 1),
+(20, '2023_05_04_023519_create_organisation_resource_type_table', 1),
+(21, '2023_05_04_024732_create_branches_table', 1),
+(22, '2023_05_05_090055_create_media_table', 1);
 
 INSERT INTO `organisations` (`id`, `name`, `alias`, `type`, `status`, `email`, `phone`, `year`, `vat`, `no_registration`, `county_id`, `city_id`, `address`, `description`, `contact_person`, `other_information`, `type_of_area`, `areas_of_activity`, `has_branches`, `social_services_accreditation`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 'Szekely-Constantin', 'szekely-constantin', 'association', 'inactive', 'ariadna57@yahoo.com', '0741972434', '1991', 'Id ab.', 'Id.', 29, 131899, 'P-ța Frasinului 6B, Mun. Țăndărei, Mureș, CP 363951', 'Modi nemo quia sit molestiae ipsum facilis aut debitis recusandae quam fugiat voluptatem et.', '{\"name\": \"Zina Filimon\", \"role\": \"General Practitioner\", \"email\": \"gentiana17@hotmail.com\", \"phone\": \"0358459845\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 1, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(2, 'Iancu, Pop and Turcu', 'iancu-pop-and-turcu', 'foundation', 'active', 'olazar@dragomir.org', '0789467722', '2006', 'Est.', 'Neque.', 9, 43670, 'Str. Învățătorului 9A, Mun. Baia Sprie, Iași, CP 294233', 'Ut aut reiciendis accusantium non rerum nihil dolore qui.', '{\"name\": \"Geta Tudor\", \"role\": \"Wind Instrument Repairer\", \"email\": \"maftei.lavinia@yahoo.com\", \"phone\": \"0362688972\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(3, 'Bucur, Popescu and Antal', 'bucur-popescu-and-antal', 'foundation', 'active', 'kcatana@yahoo.com', '0718529817', '1986', 'Ex.', 'Odit.', 5, 28479, 'B-dul. Mesteacănului nr. 5, bl. 1, sc. A, et. 1, ap. 75, Mun. Năvodari, Iași, CP 703772', 'Officiis facilis odio molestiae quis temporibus praesentium unde fugit rerum aut dolores perspiciatis quia.', '{\"name\": \"ing. Mugur Rotaru\", \"role\": \"Automotive Specialty Technician\", \"email\": \"kovacs.aneta@gmail.com\", \"phone\": \"0350935805\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(4, 'Simon Group', 'simon-group', 'federation', 'active', 'mniculescu@hotmail.com', '0233198031', '2009', 'Optio.', 'Sed.', 11, 53087, 'P-ța Frunzișului nr. 1B, bl. C, sc. C, et. 1, ap. 33, Filiași, Timiș, CP 318051', 'Asperiores ut vel qui illum officiis cumque totam aut.', '{\"name\": \"Agnos Voinea\", \"role\": \"Nonfarm Animal Caretaker\", \"email\": \"gabriel.tudor@neacsu.org\", \"phone\": \"0264137001\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(5, 'Niculae-Marcu', 'niculae-marcu', 'federation', 'active', 'sima.mona@mocanu.com', '0273991118', '1988', 'Autem.', 'Sunt.', 8, 40820, 'Str. Padiș 6, Mun. Focșani, Giurgiu, CP 645006', 'Temporibus quis qui voluptas dolore perspiciatis laudantium blanditiis asperiores voluptates a explicabo.', '{\"name\": \"Caius Pasca\", \"role\": \"Industrial Production Manager\", \"email\": \"petcu.cleopatra@moldovan.info\", \"phone\": \"0794747685\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(6, 'Nicolae Inc', 'nicolae-inc', 'foundation', 'active', 'jpetcu@hotmail.com', '0316601620', '2001', 'Qui.', 'Saepe.', 19, 85671, 'Splaiul Albert Einstein 9A, Slănic, Covasna, CP 977433', 'Sed est quia sequi dolores est et et ut.', '{\"name\": \"Horea Paduraru\", \"role\": \"Foreign Language Teacher\", \"email\": \"theodor.sarbu@alexandru.com\", \"phone\": \"0263915253\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(7, 'Pasca PLC', 'pasca-plc', 'foundation', 'active', 'gratian.bucur@yahoo.com', '0753731067', '1977', 'Et.', 'Atque.', 5, 27141, 'B-dul. Traian 8A, Mun. Târgu Lăpuș, Bistrița Năsăud, CP 750702', 'Nobis non impedit ipsa possimus et autem ut laborum omnis voluptates rerum repellendus alias.', '{\"name\": \"Giorgian Grigore\", \"role\": \"Judge\", \"email\": \"speranta.ursu@parvu.com\", \"phone\": \"0342337614\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(8, 'Alexandrescu-Savu', 'alexandrescu-savu', 'federation', 'inactive', 'cdobre@manea.com', '0237179913', '2012', 'Dolor.', 'Et.', 24, 107564, 'Splaiul Jiului nr. 581, bl. C, et. 9, ap. 92, Mun. Șomcuta Mare, Olt, CP 977708', 'Deleniti ea voluptatem cum eos est vel.', '{\"name\": \"Alma Martin\", \"role\": \"Tile Setter OR Marble Setter\", \"email\": \"iuliu49@yahoo.com\", \"phone\": \"0316000036\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(9, 'Toader-Banu', 'toader-banu', 'federation', 'inactive', 'emanoil.cristea@yahoo.com', '0264183702', '2007', 'Sit.', 'Ullam.', 22, 98355, 'Aleea Louis Pasteur nr. 6, bl. 9, sc. B, et. 79, ap. 75, Mun. Slănic-Moldova, Tulcea, CP 459998', 'Et at magni libero velit nobis esse quibusdam harum sed.', '{\"name\": \"Valeria Iliescu\", \"role\": \"Fabric Pressers\", \"email\": \"georgiana.cozma@ispas.com\", \"phone\": \"0772312778\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(10, 'Dan Inc', 'dan-inc', 'association', 'inactive', 'mina37@bratu.com', '0770152888', '1985', 'Illum.', 'Quia.', 4, 21668, 'Splaiul Crișan nr. 6/5, bl. B, sc. D, et. 4, ap. 6, Mun. Gheorgheni, Bacău, CP 141314', 'Cum ducimus aliquam perspiciatis voluptatem molestias porro possimus aspernatur facere excepturi.', '{\"name\": \"dr. Zaharia Panait\", \"role\": \"Real Estate Broker\", \"email\": \"roman.damian@yahoo.com\", \"phone\": \"0264148580\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(11, 'Cucu Ltd', 'cucu-ltd', 'informal_group', 'active', 'panait.moga@gmail.com', '0242972025', '1994', 'Omnis.', 'Ipsa.', 12, 56274, 'B-dul. Brăduțului nr. 87, bl. 69, sc. A, et. 92, ap. 3, Mun. Călimănești, Vaslui, CP 660181', 'Beatae tenetur occaecati ea dolores ad natus quae laboriosam.', '{\"name\": \"dr. Magdalena Sirbu\", \"role\": \"Program Director\", \"email\": \"silvia26@gmail.com\", \"phone\": \"0239159909\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 1, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(12, 'Dumitru LLC', 'dumitru-llc', 'foundation', 'inactive', 'codrin.neamtu@hotmail.com', '0782723150', '1989', 'Illum.', 'Vel.', 18, 81166, 'Aleea Mihai Viteazul 1, Mun. Vișeu de Sus, Covasna, CP 865497', 'Aut et ab ullam sint numquam modi.', '{\"name\": \"dl. Mădălin Olaru\", \"role\": \"Anesthesiologist\", \"email\": \"jstroe@banu.com\", \"phone\": \"0798530905\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(13, 'Grecu-Ciobanu', 'grecu-ciobanu', 'association', 'inactive', 'neacsu.corvin@yahoo.com', '0747908696', '1973', 'Cum.', 'Aut.', 51, 105455, 'Calea Herculane 13, Miercurea Sibiului, Mureș, CP 484360', 'Tenetur dolore autem rerum aspernatur omnis ipsam magni veritatis perferendis.', '{\"name\": \"Carmen Soare\", \"role\": \"Casting Machine Set-Up Operator\", \"email\": \"mirabela.radulescu@ciocan.com\", \"phone\": \"0231421264\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(14, 'Giurgiu LLC', 'giurgiu-llc', 'foundation', 'inactive', 'nica.stefan@gmail.com', '0332758510', '1989', 'Eos.', 'Aut.', 13, 61899, 'Splaiul Louis Pasteur nr. 398, bl. D, ap. 4, Mun. Vatra Dornei, Tulcea, CP 968150', 'Amet distinctio minus dolorum aliquam praesentium officia voluptatibus.', '{\"name\": \"Georgeta Olariu\", \"role\": \"Professor\", \"email\": \"mariuca.tanase@yahoo.com\", \"phone\": \"0772841437\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 1, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(15, 'Chirila, Bunea and Varga', 'chirila-bunea-and-varga', 'association', 'inactive', 'molnar.stefana@gmail.com', '0787821894', '1990', 'Sunt.', 'A.', 35, 155591, 'Aleea Meșterilor 0B, Mun. Sulina, Botoșani, CP 728908', 'Est earum est repudiandae quis iure tempore autem magnam cupiditate rerum doloremque cumque.', '{\"name\": \"Cătălin Petrea\", \"role\": \"Director Of Talent Acquisition\", \"email\": \"ilinca49@hotmail.com\", \"phone\": \"0362697156\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(16, 'Sabau-Miu', 'sabau-miu', 'federation', 'active', 'omolnar@yahoo.com', '0360823891', '1996', 'Neque.', 'Culpa.', 22, 99432, 'Str. Salcâmilor 4, Mun. Târgoviște, Alba, CP 680518', 'In et ut enim voluptas quia voluptatem.', '{\"name\": \"Florin Kovacs\", \"role\": \"Hazardous Materials Removal Worker\", \"email\": \"covaci.daciana@yahoo.com\", \"phone\": \"0762973126\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 0, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(17, 'Adam LLC', 'adam-llc', 'informal_group', 'active', 'theodor.stoian@vintila.com', '0312701525', '2017', 'Et.', 'Ut.', 13, 61899, 'Str. Meșterilor nr. 6B, bl. 6, sc. C, et. 0, ap. 3, Vicovu de Sus, Satu Mare, CP 495714', 'Nostrum reiciendis et quas et nesciunt harum autem sunt qui quis labore aut suscipit.', '{\"name\": \"Filip Morar\", \"role\": \"Home\", \"email\": \"moprea@ardelean.org\", \"phone\": \"0744609481\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(18, 'Neacsu Group', 'neacsu-group', 'informal_group', 'inactive', 'romina.visan@paduraru.com', '0339660991', '2014', 'Porro.', 'Unde.', 30, 136982, 'B-dul. Cloșca nr. 8B, bl. D, ap. 91, Mun. Horezu, Galați, CP 888227', 'Earum sequi quaerat provident aut molestiae illo officiis accusantium nemo tempore iste aut.', '{\"name\": \"Betina Vasiliu\", \"role\": \"Driver-Sales Worker\", \"email\": \"david.aurora@hotmail.com\", \"phone\": \"0231699955\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(19, 'Macovei LLC', 'macovei-llc', 'association', 'inactive', 'codin96@bejan.com', '0213895950', '1994', 'Ut.', 'Eaque.', 19, 86302, 'Str. Memorandumului 9A, Mun. Călan, Bistrița Năsăud, CP 718826', 'Ullam quo nulla non deserunt voluptatibus dolorem voluptatem reiciendis velit accusamus doloremque ipsum.', '{\"name\": \"Crin Costin\", \"role\": \"Metal-Refining Furnace Operator\", \"email\": \"serban24@filimon.org\", \"phone\": \"0312087907\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(20, 'Iorga, Constantinescu and Micu', 'iorga-constantinescu-and-micu', 'association', 'active', 'wconstantin@yahoo.com', '0315938085', '1977', 'Eum.', 'Rerum.', 30, 137292, 'Str. Croitorilor 530, Sfântu Gheorghe, Botoșani, CP 349667', 'Recusandae ex voluptatem quis rerum quia debitis.', '{\"name\": \"Iustinian Suciu\", \"role\": \"Brattice Builder\", \"email\": \"edgar09@bodea.com\", \"phone\": \"0728412063\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01');
+(1, 'Ciocan Group', 'ciocan-group', 'association', 'active', 'anica.milea@bunea.com', '0259209458', '1971', 'Fugit.', 'Qui.', 9, 44122, 'Calea Franklin Delano Rosevelt 5/9, Vicovu de Sus, Sălaj, CP 773339', 'Cupiditate eos nisi consequatur et et amet consequatur aut suscipit sit rerum eum.', '{\"name\": \"Anatolie Petre\", \"role\": \"Fire Fighter\", \"email\": \"dungureanu@chirila.com\", \"phone\": \"0335527991\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 1, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(2, 'Gabor, Sima and Morar', 'gabor-sima-and-morar', 'federation', 'inactive', 'grigore.nae@nita.biz', '0765948566', '2006', 'Est.', 'Odio.', 35, 158494, 'Calea Meșterilor nr. 4, bl. D, sc. C, et. 9, ap. 49, Mun. Ocna Sibiului, Botoșani, CP 276317', 'Quia consequatur sint alias dicta sit amet ipsam quasi natus et aut possimus aut.', '{\"name\": \"Francisc Costin\", \"role\": \"Shipping and Receiving Clerk\", \"email\": \"wanghel@hotmail.com\", \"phone\": \"0242174448\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(3, 'Biro, Enache and Istrate', 'biro-enache-and-istrate', 'association', 'inactive', 'szekely.virginia@hotmail.com', '0358644037', '2023', 'Modi.', 'Ut.', 13, 62253, 'Str. Castanilor nr. 918, bl. C, et. 22, ap. 0, Mun. Victoria, Teleorman, CP 152387', 'Dolore est est officia velit voluptate alias aliquid voluptatibus nulla.', '{\"name\": \"Remus Ispas\", \"role\": \"MARCOM Director\", \"email\": \"georgia.miu@blaga.com\", \"phone\": \"0339187958\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(4, 'Lupu and Sons', 'lupu-and-sons', 'federation', 'inactive', 'manolache.stelian@hotmail.com', '0351405452', '1992', 'Id.', 'Quas.', 35, 157898, 'Calea Sinaia 7, Mun. Țicleni, Bihor, CP 825871', 'Est est aut sint quo quae tempore soluta libero consectetur saepe magnam quod.', '{\"name\": \"dr. Teodora Sarbu\", \"role\": \"Substance Abuse Social Worker\", \"email\": \"miron.veres@yahoo.com\", \"phone\": \"0749553689\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(5, 'Horvath PLC', 'horvath-plc', 'foundation', 'active', 'mtoader@maftei.com', '0250095301', '2018', 'Vero.', 'Sit.', 27, 121938, 'Calea Florilor 350, Mun. Cavnic, Constanța, CP 758242', 'Ut sunt molestias officia praesentium cupiditate architecto nam voluptatem iure rerum illum.', '{\"name\": \"Valter Preda\", \"role\": \"Sales Person\", \"email\": \"nsimionescu@negrea.com\", \"phone\": \"0747203435\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(6, 'Stoian-Dumitrache', 'stoian-dumitrache', 'federation', 'inactive', 'costea.panait@yahoo.com', '0705264537', '2010', 'Eos.', 'Nam.', 33, 147116, 'Calea Mihai Viteazul nr. 9B, bl. C, et. 9, ap. 57, Mun. Salcea, Dâmbovița, CP 518552', 'Consequuntur sint earum labore temporibus accusantium amet amet inventore explicabo et eos cum.', '{\"name\": \"Mitruț Iliescu\", \"role\": \"Patrol Officer\", \"email\": \"simion.florea@groza.com\", \"phone\": \"0780832967\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 1, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(7, 'Oprea LLC', 'oprea-llc', 'association', 'inactive', 'negoita.sabrina@yahoo.com', '0369944851', '1997', 'Qui.', 'Ut ut.', 39, 175126, 'Splaiul Henri Coandă 75, Babadag, Călărași, CP 227438', 'Provident nobis unde consequatur ab corrupti sit non voluptas animi dicta non ratione inventore.', '{\"name\": \"Zeno Teodorescu\", \"role\": \"GED Teacher\", \"email\": \"octav95@moldovan.biz\", \"phone\": \"0337968535\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(8, 'Manole-Toth', 'manole-toth', 'federation', 'active', 'gsolomon@paraschiv.com', '0360768112', '1987', 'Quam.', 'Et.', 10, 47444, 'Splaiul Herculane nr. 6A, bl. 6, ap. 31, Mun. Ineu, Vrancea, CP 595162', 'Mollitia aliquam quo dolorem natus id dolores corporis ad aut.', '{\"name\": \"Elena Alexandrescu\", \"role\": \"Athletic Trainer\", \"email\": \"bstaicu@necula.org\", \"phone\": \"0312718419\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 1, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(9, 'Burlacu-Milea', 'burlacu-milea', 'federation', 'active', 'roberta.groza@alexa.com', '0747857463', '2013', 'Ipsam.', 'Quas.', 16, 74439, 'P-ța Mihai Eminescu 67, Vlăhița, Arad, CP 910181', 'Sit eligendi doloremque magni ut ut eius dolores ex sed optio.', '{\"name\": \"dl. Laurențiu Bejan\", \"role\": \"Metal Molding Operator\", \"email\": \"preda.cristian@simion.info\", \"phone\": \"0763110188\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 0, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(10, 'Macovei-Pintilie', 'macovei-pintilie', 'foundation', 'inactive', 'zenovia95@manolache.com', '0362304950', '2004', 'Et.', 'Ipsum.', 20, 88314, 'Aleea Castanilor 9, Tismana, Botoșani, CP 275044', 'Rem explicabo ipsum et voluptas rerum ullam sapiente.', '{\"name\": \"dr. Olimpia Dumitrascu\", \"role\": \"Gaming Dealer\", \"email\": \"iliescu.casiana@mircea.com\", \"phone\": \"0796959215\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(11, 'Moldoveanu-Mihaila', 'moldoveanu-mihaila', 'informal_group', 'active', 'adam.pascu@ion.com', '0720770426', '2001', 'Aut.', 'Sit.', 26, 120487, 'Splaiul Unirii 4B, Frasin, Călărași, CP 181755', 'Corrupti in alias aut non sunt nesciunt recusandae qui mollitia autem et ea dolor.', '{\"name\": \"Emil Stanciu\", \"role\": \"Freight Inspector\", \"email\": \"marcheta82@tudose.com\", \"phone\": \"0246723265\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(12, 'Nistor-Ichim', 'nistor-ichim', 'informal_group', 'inactive', 'uichim@groza.org', '0713611084', '1971', 'Id.', 'Velit.', 32, 144946, 'Str. Cloșca nr. 325, bl. 51, et. 59, ap. 9, Iași, Sălaj, CP 834217', 'Quia qui maiores in et libero possimus doloremque amet vel quia necessitatibus qui.', '{\"name\": \"Constanța Petcu\", \"role\": \"Camera Operator\", \"email\": \"lucretiu.cosma@yahoo.com\", \"phone\": \"0751537321\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(13, 'Bota, Moldovan and Crisan', 'bota-moldovan-and-crisan', 'foundation', 'inactive', 'farcas.maria@dumitru.com', '0344292305', '1985', 'Ea.', 'Qui.', 24, 107822, 'Aleea J.J Rousseau nr. 5, bl. B, sc. B, et. 71, ap. 56, Popești-Leordeni, Hunedoara, CP 268751', 'Est delectus dicta consequatur omnis vero occaecati vitae et ab non praesentium adipisci.', '{\"name\": \"Gianina Marian\", \"role\": \"Home\", \"email\": \"eliza.muntean@yahoo.com\", \"phone\": \"0277713325\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(14, 'Gheorghita, Dragoi and Dumitriu', 'gheorghita-dragoi-and-dumitriu', 'federation', 'active', 'catalin97@panait.net', '0758263182', '2003', 'Et.', 'Ut ut.', 3, 13221, 'Aleea Vlad Țepeș 40, Comănești, Buzău, CP 754262', 'Enim reiciendis recusandae quia earum quibusdam quia dolorem corrupti optio ea ex et qui.', '{\"name\": \"Anda Mazilu\", \"role\": \"Able Seamen\", \"email\": \"chiriac.teea@paraschiv.info\", \"phone\": \"0256047096\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(15, 'Banica, Neagu and Baciu', 'banica-neagu-and-baciu', 'foundation', 'active', 'roxelana.rosca@hotmail.com', '0759859285', '2018', 'Enim.', 'Et.', 8, 41738, 'Splaiul Croitorilor nr. 9/7, bl. C, ap. 97, Mun. Bârlad, Argeș, CP 494607', 'Veniam eius nostrum temporibus eveniet dolore repellat consequatur non atque.', '{\"name\": \"ing. Iancu Botezatu\", \"role\": \"Restaurant Cook\", \"email\": \"kmarginean@gmail.com\", \"phone\": \"0750878628\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(16, 'Ardeleanu Group', 'ardeleanu-group', 'federation', 'inactive', 'horia52@gmail.com', '0746495189', '1972', 'Sunt.', 'Nulla.', 28, 129692, 'Calea Traian 264, Iași, Covasna, CP 528316', 'Maiores sit ut voluptatibus culpa recusandae facere ut tempore recusandae neque.', '{\"name\": \"Luca Moga\", \"role\": \"Control Valve Installer\", \"email\": \"victor.molnar@gmail.com\", \"phone\": \"0753500461\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 0, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(17, 'Visan-Iancu', 'visan-iancu', 'informal_group', 'inactive', 'pmusat@pavel.com', '0700816166', '2001', 'Omnis.', 'Harum.', 18, 77867, 'Aleea Ion Creangă 9A, Săliște, Neamț, CP 613295', 'Temporibus hic quibusdam quis sit error enim et sint aperiam.', '{\"name\": \"d-na. Margareta Lungu\", \"role\": \"Head Nurse\", \"email\": \"eiancu@dragan.com\", \"phone\": \"0217234457\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 0, 1, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(18, 'Dascalu and Sons', 'dascalu-and-sons', 'federation', 'inactive', 'rnedelcu@gmail.com', '0783023769', '2005', 'Illum.', 'Ut.', 26, 114676, 'P-ța Mihai Eminescu nr. 0B, bl. 1, ap. 7, Mun. Fălticeni, Argeș, CP 189860', 'Modi dolore expedita totam iste in minus velit et alias quia odit totam.', '{\"name\": \"d-na. Cătălina Tomescu\", \"role\": \"Anthropologist OR Archeologist\", \"email\": \"simon.filip@hotmail.com\", \"phone\": \"0276927631\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 1, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(19, 'Ichim-Gheorghe', 'ichim-gheorghe', 'foundation', 'active', 'alexa.iulia@gmail.com', '0725453876', '2000', 'Omnis.', 'Sunt.', 10, 46091, 'Str. Petrache Poenaru nr. 9/2, bl. 3, ap. 66, Luduș, Timiș, CP 192592', 'Tempora eligendi eum praesentium nobis est sequi consequatur quia atque delectus minima alias aperiam.', '{\"name\": \"Ieremia Dumitriu\", \"role\": \"Mathematical Science Teacher\", \"email\": \"codin.ignat@gmail.com\", \"phone\": \"0774465895\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(20, 'Neagoe, Dumitrascu and Grigorescu', 'neagoe-dumitrascu-and-grigorescu', 'federation', 'active', 'gheorghiu.miron@dragan.info', '0379194887', '1976', 'Animi.', 'Et.', 2, 11101, 'Str. Unirii 4/2, Mun. Vălenii de Munte, Vaslui, CP 262727', 'Totam esse accusantium minus beatae quia excepturi.', '{\"name\": \"Dorian Munteanu\", \"role\": \"Human Resources Specialist\", \"email\": \"wsandor@gmail.com\", \"phone\": \"0233797964\"}', '{\"website\": \"#website\", \"facebook\": \"#facebook\"}', 'local', NULL, 1, 0, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49');
 
 INSERT INTO `resource_categories` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
-(1, 'Adăpostire', 'adapostire', '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(2, 'Transport', 'transport', '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(3, 'Salvare', 'salvare', '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(4, 'Telecomunicații', 'telecomunicatii', '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(5, 'IT&C', 'itc', '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(6, 'Altele', 'altele', '2023-05-06 12:12:59', '2023-05-06 12:12:59');
+(1, 'Adăpostire', 'adapostire', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(2, 'Transport', 'transport', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(3, 'Salvare', 'salvare', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(4, 'Telecomunicații', 'telecomunicatii', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(5, 'IT&C', 'itc', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(6, 'Altele', 'altele', '2023-05-08 01:49:48', '2023-05-08 01:49:48');
 
-INSERT INTO `resource_subcategories` (`id`, `category_id`, `name`, `slug`, `resources_type`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Corturi', 'corturi', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(2, 1, 'Rulote', 'rulote', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(3, 1, 'Cazare', 'cazare', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(4, 1, 'Altele', 'altele', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(5, 2, 'Rutier', 'rutier', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(6, 2, 'Maritim', 'maritim', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(7, 2, 'Feroviar', 'feroviar', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(8, 2, 'Aerian', 'aerian', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(9, 2, 'Altele', 'altele', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(10, 3, 'Câini utilitari', 'caini-utilitari', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(11, 3, 'Altele', 'altele', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(12, 4, 'Radiocomunicații', 'radiocomunicatii', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(13, 4, 'Radiocomunicații', 'radiocomunicatii', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(14, 4, 'Radiodifuziune', 'radiodifuziune', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(15, 4, 'Altele', 'altele', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(16, 5, 'Hardware', 'hardware', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(17, 5, 'Software', 'software', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(18, 5, 'Altele', 'altele', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59'),
-(19, 6, 'Altele', 'altele', NULL, '2023-05-06 12:12:59', '2023-05-06 12:12:59');
+INSERT INTO `resource_subcategories` (`id`, `category_id`, `name`, `slug`, `custom_attributes`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Corturi', 'corturi', '[{\"name\": \"dimension\", \"type\": \"text\"}, {\"name\": \"capacity\", \"type\": \"text\"}, {\"name\": \"quantity\", \"type\": \"text\"}, {\"name\": \"relocation_resource\", \"type\": \"checkbox\"}, {\"name\": \"has_transport\", \"type\": \"checkbox\"}]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(2, 1, 'Rulote', 'rulote', '[{\"name\": \"dimension\", \"type\": \"text\"}, {\"name\": \"capacity\", \"type\": \"text\"}, {\"name\": \"quantity\", \"type\": \"text\"}]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(3, 1, 'Cazare', 'cazare', '[]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(4, 1, 'Altele', 'altele', '[]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(5, 2, 'Rutier', 'rutier', '[{\"name\": \"dimension\", \"type\": \"text\"}, {\"name\": \"capacity\", \"type\": \"text\"}, {\"name\": \"quantity\", \"type\": \"text\"}]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(6, 2, 'Maritim', 'maritim', '[{\"name\": \"capacity\", \"type\": \"text\"}, {\"name\": \"quantity\", \"type\": \"text\"}]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(7, 2, 'Feroviar', 'feroviar', '[{\"name\": \"capacity\", \"type\": \"text\"}, {\"name\": \"quantity\", \"type\": \"text\"}]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(8, 2, 'Aerian', 'aerian', '[{\"name\": \"capacity\", \"type\": \"text\"}, {\"name\": \"quantity\", \"type\": \"text\"}]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(9, 2, 'Altele', 'altele', '[]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(10, 3, 'Câini utilitari', 'caini-utilitari', '[{\"name\": \"dog_name\", \"type\": \"text\"}, {\"name\": \"volunteer_name\", \"type\": \"text\"}, {\"name\": \"volunteer_specialization\", \"type\": \"text\"}, {\"name\": \"has_trailer\", \"type\": \"checkbox\"}, {\"name\": \"has_carriage\", \"type\": \"checkbox\"}, {\"name\": \"has_transport\", \"type\": \"checkbox\"}]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(11, 3, 'Altele', 'altele', '[]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(12, 4, 'Radiocomunicații', 'radiocomunicatii', '[{\"name\": \"tech_type\", \"type\": \"text\"}]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(13, 4, 'Televiziune', 'televiziune', '[{\"name\": \"area\", \"type\": \"select\", \"options\": [\"Nationala\", \"Locala\"]}]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(14, 4, 'Radiodifuziune', 'radiodifuziune', '[]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(15, 4, 'Altele', 'altele', '[]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(16, 5, 'Hardware', 'hardware', '[]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(17, 5, 'Software', 'software', '[]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(18, 5, 'Altele', 'altele', '[]', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(19, 6, 'Altele', 'altele', '[]', '2023-05-08 01:49:48', '2023-05-08 01:49:48');
+
+INSERT INTO `resource_subcategory_types` (`id`, `subcategory_id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Iarna', 'iarna', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(2, 1, 'Vara', 'vara', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(3, 1, 'Gonflabil', 'gonflabil', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(4, 1, 'Pe structura metalică', 'pe-structura-metalica', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(5, 1, 'Utilat', 'utilat', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(6, 1, 'Neutilat', 'neutilat', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(7, 1, 'Altul', 'altul', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(8, 5, 'Masina', 'masina', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(9, 5, 'Duba', 'duba', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(10, 5, 'Camion', 'camion', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(11, 5, 'Altele', 'altele', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(12, 10, 'Căutare în mediul urban', 'cautare-in-mediul-urban', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(13, 10, 'Căutare în mediu natural', 'cautare-in-mediu-natural', '2023-05-08 01:49:48', '2023-05-08 01:49:48');
 
 INSERT INTO `resource_types` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (1, 'Programe de pregătire în școli', NULL, NULL),
@@ -17496,67 +17538,67 @@ INSERT INTO `resource_types` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (7, 'Ajutor umanitar', NULL, NULL),
 (8, 'Altele', NULL, NULL);
 
-INSERT INTO `resources` (`id`, `organisation_id`, `category_id`, `subcategory_id`, `resource_type`, `attributes`, `name`, `quantity`, `type`, `has_transport`, `county_id`, `city_id`, `contact_name`, `contact_phone`, `contact_email`, `observation`, `created_at`, `updated_at`) VALUES
-(1, 1, 3, 11, NULL, NULL, 'd-șoara Narcisa Dinca', 900699271, 'tip1', 1, 3, 17361, 'Tatiana Mocanu', '0771351956', 'dmoga@yahoo.com', 'Expedita ut fuga placeat voluptate rem quia odit voluptatem dolorem libero ut earum.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(2, 1, 4, 15, NULL, NULL, 'Mărioara Cosma', 1318293900, 'tip2', 0, 15, 67513, 'Iuliu Sarbu', '0779276367', 'flaviu58@yahoo.com', 'Neque sint aut inventore et consectetur iusto quibusdam ullam sunt eaque.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(3, 1, 4, 13, NULL, NULL, 'dr. Sebastian Ghita', 1753034249, 'tip2', 1, 1, 8746, 'Călin Calin', '0756586191', 'ileana.marin@tudorache.org', 'Autem odio voluptatem aspernatur dolores voluptatem aut voluptas soluta ratione inventore.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(4, 2, 5, 17, NULL, NULL, 'Haralamb Albu', 1164850860, 'tip2', 1, 1, 3850, 'Denisa Paraschiv', '0799505170', 'cazimir.preda@yahoo.com', 'Similique vitae incidunt ut minus sequi et quas officiis labore et incidunt aperiam vitae.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(5, 2, 3, 11, NULL, NULL, 'Emanuel Dumitrache', 1062055831, 'tip1', 0, 18, 80347, 'dl. Cosmin Barbu', '0723151247', 'cerasela.costin@hotmail.com', 'Pariatur mollitia ea libero aut et nihil voluptas ut cupiditate.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(6, 2, 2, 6, NULL, NULL, 'dr. Daria Sarbu', 644021815, 'tip1', 0, 23, 102570, 'Severin Cretu', '0784718919', 'radu.vicentiu@cojocaru.com', 'Ut molestiae rerum in sit sit earum.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(7, 3, 2, 9, NULL, NULL, 'Dorli Anghel', 712665716, 'tip1', 0, 16, 71634, 'Codin Gabor', '0730056215', 'negrea.nicoleta@hotmail.com', 'Reiciendis perspiciatis est maiores laudantium labore dolore aut praesentium quae aspernatur soluta.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(8, 3, 4, 14, NULL, NULL, 'dr. Francisc Marian', 803179140, 'tip2', 1, 26, 116885, 'Saveta Crisan', '0797610835', 'anghel.bratu@yahoo.com', 'Sint sunt sint cum totam voluptatem distinctio repudiandae consequuntur magnam dicta.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(9, 3, 2, 8, NULL, NULL, 'Gabriela Soare', 1172697773, 'tip1', 0, 27, 120940, 'd-na. Anamaria Chivu', '0244295634', 'doina79@gmail.com', 'Ratione officia veritatis ullam libero earum eius fuga.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(10, 4, 4, 14, NULL, NULL, 'Salomea Iancu', 1388704943, 'tip2', 1, 39, 176613, 'Octavia Mazilu', '0772434831', 'lgrosu@pintilie.com', 'Alias sit aut a dolor praesentium nobis nulla debitis voluptatem.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(11, 4, 4, 14, NULL, NULL, 'Petruța Suciu', 1561135331, 'tip2', 0, 4, 20625, 'Luminița Farcas', '0239772749', 'ariadna48@marin.com', 'Et ducimus necessitatibus repellat cupiditate soluta non iusto unde enim eligendi.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(12, 4, 1, 2, NULL, NULL, 'Mina Nistor', 2051345839, 'tip2', 1, 21, 94027, 'dl. Denis Ganea', '0370793235', 'augustina14@gmail.com', 'Veritatis aperiam similique nihil omnis nihil consectetur modi.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(13, 5, 5, 18, NULL, NULL, 'Sandu Mircea', 1323948513, 'tip1', 0, 52, 106014, 'Robert Dumitrascu', '0710638584', 'zcristescu@bejan.net', 'Ratione doloribus quis placeat dolor repellendus dolor est quibusdam corrupti.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(14, 5, 5, 17, NULL, NULL, 'Patricia Ursu', 1824867512, 'tip2', 0, 39, 178661, 'ing. Julieta Dumitrache', '0262152559', 'paulica45@cretu.net', 'Sit nobis non impedit totam minus suscipit aperiam.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(15, 5, 2, 8, NULL, NULL, 'Nicoleta Costache', 1911755309, 'tip1', 0, 16, 74915, 'dl. Cedrin Man', '0364553380', 'fion@oancea.info', 'Dolor alias nemo autem et et nemo quo et.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(16, 6, 2, 8, NULL, NULL, 'Tamara Ignat', 1013121712, 'tip1', 0, 20, 86874, 'Consuela Iosif', '0317248048', 'pop.manole@yahoo.com', 'Id in earum et dolor molestiae vero odio.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(17, 6, 5, 18, NULL, NULL, 'd-na. Sonia Costin', 540607570, 'tip1', 1, 36, 160243, 'Flaviu Iordache', '0257539071', 'despina57@gmail.com', 'Voluptatem ipsa deserunt est at dignissimos culpa sapiente.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(18, 6, 4, 15, NULL, NULL, 'Adela Marginean', 124931256, 'tip1', 0, 3, 18536, 'dl. Lică Sandor', '0744335286', 'ladislau.nistor@popovici.org', 'Voluptates modi suscipit est quo perspiciatis veritatis sed et voluptates qui.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(19, 7, 5, 16, NULL, NULL, 'Adi Simion', 656868877, 'tip2', 1, 12, 58053, 'Andrei Mihalache', '0340129850', 'mirabela76@radu.org', 'Et sed sit et reiciendis nostrum eum.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(20, 7, 1, 2, NULL, NULL, 'Aglaia Ciocan', 1772177530, 'tip2', 0, 15, 65850, 'Ovidiu Moraru', '0346060777', 'livia59@nitu.org', 'Molestiae ut odio quia porro aliquid ipsam deserunt.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(21, 7, 1, 1, NULL, NULL, 'Anca Sava', 1548896102, 'tip2', 1, 33, 148783, 'Ilarie Florescu', '0373502527', 'adi.matei@adam.info', 'Adipisci corrupti ex minus commodi perferendis porro doloribus.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(22, 8, 1, 2, NULL, NULL, 'Erica Milea', 1864706873, 'tip2', 1, 37, 166397, 'dr. Doru Georgescu', '0363312158', 'ortansa.kiss@hotmail.com', 'Aliquam hic aliquid ut rem consectetur quas soluta nesciunt aut natus sapiente.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(23, 8, 1, 1, NULL, NULL, 'Francisc Diaconescu', 942691810, 'tip2', 1, 4, 22790, 'dl. Grațian Avram', '0790065565', 'ion.anghel@mirea.com', 'Reprehenderit voluptatibus est culpa qui in dolor sed quasi aperiam.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(24, 8, 1, 3, NULL, NULL, 'Ghenadie Olaru', 521919368, 'tip1', 1, 34, 151996, 'Tiberiu Negoita', '0753646391', 'dumitrascu.romulus@gmail.com', 'Et unde ipsum iusto voluptas doloribus ut nulla eum in omnis.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(25, 9, 3, 11, NULL, NULL, 'd-na. Olimpia Aldea', 85971487, 'tip2', 0, 36, 160181, 'Valter Trif', '0249436263', 'florea.cedrin@yahoo.com', 'Quam quibusdam omnis maxime ex distinctio earum expedita enim magnam tempora iste ipsa animi.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(26, 9, 4, 15, NULL, NULL, 'Voicu Grigorescu', 1030917795, 'tip1', 0, 17, 75203, 'Vasilică Gavrila', '0795987160', 'romeo28@simionescu.biz', 'Quaerat nisi unde mollitia odit tempore ex eligendi veniam ex esse voluptatem.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(27, 9, 3, 10, NULL, NULL, 'Mihail Gherman', 419331904, 'tip1', 0, 20, 87102, 'ing. Adela Banu', '0240755855', 'bunea.paulina@yahoo.com', 'Sint nulla asperiores in error minima non blanditiis consequatur enim ut ut.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(28, 10, 2, 7, NULL, NULL, 'Codrin Ganea', 437316046, 'tip2', 0, 1, 7687, 'Eduard Moise', '0274079915', 'iurie51@dobrescu.com', 'Numquam voluptatem aut enim sit quam illum eligendi.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(29, 10, 4, 13, NULL, NULL, 'Sebastian Ivascu', 1285644645, 'tip2', 1, 33, 147893, 'Valentin Cristescu', '0214094956', 'dafina52@yahoo.com', 'Asperiores eaque quia in est recusandae ex ipsum cumque.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(30, 10, 2, 5, NULL, NULL, 'Cătălin Cretu', 965216806, 'tip1', 0, 37, 162069, 'Leopoldina Mocanu', '0218088894', 'knica@stefanescu.net', 'Nesciunt aperiam nobis sint incidunt ea repudiandae sit itaque velit quia error.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(31, 11, 4, 14, NULL, NULL, 'dr. Petruța Stefan', 84435940, 'tip2', 1, 7, 36685, 'ing. Sabina Ignat', '0359812726', 'jean.mihailescu@costin.com', 'Vel quos quaerat eos perspiciatis inventore corrupti quibusdam aperiam id explicabo.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(32, 11, 6, 19, NULL, NULL, 'd-șoara Voichița Musat', 1080545874, 'tip2', 0, 25, 113536, 'ing. Alice Nemes', '0713910080', 'gal.veta@mihaila.net', 'Possimus officiis non assumenda odio dignissimos ut tenetur alias recusandae voluptatem.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(33, 11, 6, 19, NULL, NULL, 'Matilda Manolache', 1758480038, 'tip2', 1, 29, 133054, 'Daniel Mateescu', '0790658329', 'mirela.ene@nistor.com', 'Officia quod velit nulla reprehenderit et ipsum molestiae necessitatibus necessitatibus qui voluptas.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(34, 12, 4, 15, NULL, NULL, 'Dafina Florea', 1146144880, 'tip1', 1, 5, 28889, 'Nicu Petcu', '0374835317', 'laurian.florescu@hotmail.com', 'Est ut voluptas neque ut cum maiores.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(35, 12, 2, 6, NULL, NULL, 'Gențiana Moldovan', 1036795674, 'tip1', 0, 15, 66526, 'Fabian Iliescu', '0364043126', 'catrina62@banu.com', 'Repudiandae qui officia quos qui omnis deserunt non minima porro et.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(36, 12, 6, 19, NULL, NULL, 'dr. Georgian Dumitriu', 1523887572, 'tip1', 1, 27, 121457, 'Remus Munteanu', '0333534812', 'alistar58@groza.org', 'Enim voluptates modi ad velit et officia officiis consequuntur.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(37, 13, 4, 12, NULL, NULL, 'Evanghelina Maftei', 447586675, 'tip2', 0, 28, 127723, 'Alberta Pintea', '0336556804', 'marin.ghenadie@yahoo.com', 'Sunt inventore adipisci sunt quibusdam ut vel.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(38, 13, 4, 14, NULL, NULL, 'ing. Roza Tanase', 682035692, 'tip2', 0, 10, 45138, 'Gică Dinca', '0350854751', 'smicu@sandu.info', 'Necessitatibus eum aspernatur non assumenda adipisci eligendi velit magni voluptatem tenetur.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(39, 13, 5, 17, NULL, NULL, 'Frusina Tataru', 754486055, 'tip2', 1, 16, 73585, 'dl. Darius Ispas', '0219964575', 'adelina.ardeleanu@szekely.com', 'Nihil dolores vero voluptates nemo nesciunt nisi doloremque magnam facilis.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(40, 14, 5, 18, NULL, NULL, 'Pavel Pirvu', 1522818832, 'tip2', 0, 38, 174236, 'Marcela Lungu', '0755601763', 'angel.gabor@nechita.info', 'Rerum in accusamus id quis aut aut totam non corrupti similique dicta esse excepturi.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(41, 14, 4, 14, NULL, NULL, 'Axinte David', 158537782, 'tip2', 1, 13, 60678, 'Costel Matei', '0743178431', 'anisoara.barbulescu@hotmail.com', 'Fuga voluptatem molestiae est repellat dolorem iste quisquam.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(42, 14, 1, 1, NULL, NULL, 'dr. Romanița Rus', 1083801419, 'tip2', 0, 22, 99557, 'Angela Dinca', '0344206319', 'codin.chivu@yahoo.com', 'Maxime et sequi dolor maxime facere in iure excepturi molestiae consequatur molestiae.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(43, 15, 3, 11, NULL, NULL, 'Aurel Panait', 51065596, 'tip2', 0, 22, 96922, 'Florian Grigorescu', '0791600102', 'adonis17@dascalu.net', 'Accusamus ab vero optio unde et est.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(44, 15, 3, 11, NULL, NULL, 'Giorgian Pintilie', 2107451586, 'tip1', 0, 3, 16169, 'Anamaria Ardeleanu', '0789744945', 'rafila75@cazacu.org', 'Expedita sunt deserunt debitis qui est dolorum non quia laborum minima quaerat repellendus.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(45, 15, 2, 9, NULL, NULL, 'Eugenia Toader', 930032344, 'tip1', 0, 29, 134407, 'Rareș Nicolescu', '0760605827', 'gabi.baciu@hotmail.com', 'Dolores dolor mollitia est corporis iusto aut ut enim aut nostrum nobis facere.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(46, 16, 2, 6, NULL, NULL, 'Florea Aldea', 1489890097, 'tip2', 1, 18, 79442, 'Flaviu Dragoi', '0762034779', 'dstoian@gmail.com', 'Fugiat quia beatae qui ut suscipit laudantium.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(47, 16, 5, 18, NULL, NULL, 'Domnica Achim', 725869797, 'tip1', 0, 3, 16007, 'Alexandrina Rotaru', '0765380315', 'opris.valeriu@yahoo.com', 'Cumque aut perspiciatis eum perspiciatis expedita iure voluptatem qui earum molestiae eos.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(48, 16, 4, 15, NULL, NULL, 'Răzvan Badea', 1781944779, 'tip2', 0, 16, 72230, 'Ernest Bodea', '0351400785', 'iserban@catana.com', 'Repellat delectus necessitatibus quia in ea at sequi vero dolores.', '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(49, 17, 4, 13, NULL, NULL, 'Beniamin Kiss', 171909186, 'tip1', 0, 1, 6459, 'Dora Milea', '0773192766', 'leontina.bunea@hotmail.com', 'Fuga consequuntur repellat qui amet quasi aut minima exercitationem vero deserunt sapiente.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(50, 17, 2, 6, NULL, NULL, 'Bartolomeu Ursu', 1408155234, 'tip1', 1, 2, 10104, 'Camelia Stan', '0364479261', 'gheorghita.todor@gmail.com', 'Corporis dicta necessitatibus repellat non veniam error ipsa eos impedit deserunt.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(51, 17, 4, 14, NULL, NULL, 'Otilia Lazar', 91267345, 'tip2', 1, 19, 83473, 'ing. Vanesa Mazilu', '0260214374', 'mazilu.florentin@gmail.com', 'Distinctio aperiam beatae ut consectetur distinctio ducimus deserunt labore voluptate et numquam.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(52, 18, 4, 14, NULL, NULL, 'Sava Manole', 958548991, 'tip1', 0, 35, 158966, 'Adelaida Catana', '0717839258', 'emil.ungureanu@gmail.com', 'Ut et iste veniam quam vel alias qui.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(53, 18, 2, 8, NULL, NULL, 'Livia Popescu', 1135403047, 'tip1', 1, 4, 21891, 'Lucreția Albu', '0792300931', 'wrosu@hotmail.com', 'Ullam id sed labore mollitia non aut quis voluptas.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(54, 18, 5, 17, NULL, NULL, 'Jean Grigore', 738364090, 'tip1', 0, 39, 176720, 'Vincențiu Chirita', '0234126210', 'cecilia.vlad@mihai.net', 'Rerum molestiae nobis labore et sit labore.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(55, 19, 4, 12, NULL, NULL, 'Dumitru Dragomir', 1497306883, 'tip2', 1, 4, 25479, 'ing. Gențiana Veres', '0745411779', 'stela.nicolescu@tudose.biz', 'Quisquam autem qui velit ab veritatis iste voluptatem quaerat.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(56, 19, 2, 9, NULL, NULL, 'Olimpiu Manea', 249788798, 'tip2', 1, 30, 136606, 'Fabian Mocanu', '0310166482', 'mihai.jenel@martin.com', 'Velit deleniti ipsam enim quia doloribus quis quam veritatis aperiam aut.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(57, 19, 5, 16, NULL, NULL, 'Iasmina Miron', 33615325, 'tip2', 1, 15, 68280, 'Dorinel Molnar', '0795561629', 'bota.valter@gmail.com', 'Voluptatem eum enim enim neque harum sapiente voluptate rem.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(58, 20, 4, 12, NULL, NULL, 'Răducu Ene', 1576054247, 'tip2', 1, 37, 164464, 'Alberta Manolache', '0752007279', 'ispas.artemisa@hotmail.com', 'Eos omnis accusamus hic soluta qui fugiat accusantium ea quo est sit.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(59, 20, 4, 15, NULL, NULL, 'dr. Blanduzia Adam', 1280201597, 'tip2', 1, 20, 91214, 'ing. Dominic Negru', '0780044428', 'sandu.gratian@hotmail.com', 'Assumenda exercitationem ut aut voluptatum at quod dicta quaerat iusto.', '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(60, 20, 3, 11, NULL, NULL, 'Anghel Dinu', 481979332, 'tip2', 1, 5, 31609, 'Dorli Adam', '0360390604', 'grigore.carmen@hotmail.com', 'Aut a aut sit et quia blanditiis fugit soluta nisi vero aut accusamus molestiae.', '2023-05-06 12:13:01', '2023-05-06 12:13:01');
+INSERT INTO `resources` (`id`, `organisation_id`, `category_id`, `subcategory_id`, `type_id`, `other_type`, `attributes`, `name`, `county_id`, `city_id`, `contact`, `observation`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, 7, NULL, NULL, NULL, 'ing. Lazăr Dascalu', 38, 172563, '{\"email\": \"ardelean.tiberiu@gmail.com\", \"phone\": \"0311112873\", \"person\": \"Alex Morar\"}', 'Earum qui similique molestiae sed adipisci repellat rerum doloremque et.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(2, 1, 2, 9, NULL, NULL, NULL, 'Nicușor Cristescu', 37, 164277, '{\"email\": \"sabin.stoica@hotmail.com\", \"phone\": \"0755941865\", \"person\": \"Olimpia Toth\"}', 'Molestiae ipsum aperiam voluptatem quia qui accusantium ea hic voluptas.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(3, 1, 1, 1, 5, NULL, NULL, 'dl. Felix Munteanu', 25, 112227, '{\"email\": \"teofil.niculae@yahoo.com\", \"phone\": \"0778241384\", \"person\": \"d-na. Betina Cristescu\"}', 'Molestiae eos possimus doloremque quod velit sit illum unde vel.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(4, 2, 2, 9, NULL, NULL, NULL, 'Lia Badea', 20, 88270, '{\"email\": \"moise.voichita@gmail.com\", \"phone\": \"0796317746\", \"person\": \"Mitruț Simon\"}', 'Exercitationem veniam enim laboriosam corrupti rem iusto harum voluptatem autem aut quis sint reiciendis.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(5, 2, 4, 12, NULL, NULL, NULL, 'Laura Fodor', 1, 7311, '{\"email\": \"pasca.pompilia@manea.org\", \"phone\": \"0733510241\", \"person\": \"Sebastian Pintilie\"}', 'Voluptatem perferendis aut voluptas voluptas dolorem corporis velit deserunt.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(6, 2, 4, 13, NULL, NULL, NULL, 'd-șoara Laura Martin', 33, 147679, '{\"email\": \"melina31@banu.biz\", \"phone\": \"0275414881\", \"person\": \"Relu Ionita\"}', 'Veritatis quibusdam vero ipsam sequi aut ipsam doloribus et corrupti recusandae in possimus sunt.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(7, 3, 1, 3, NULL, NULL, NULL, 'Casandra Varga', 21, 94795, '{\"email\": \"balint.emil@gmail.com\", \"phone\": \"0335310203\", \"person\": \"Ieremia Ardelean\"}', 'Magnam fuga est ab sint cum sint quia excepturi quae voluptates et ipsam.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(8, 3, 1, 1, 6, NULL, NULL, 'Paula Covaci', 25, 113135, '{\"email\": \"flora31@sandu.com\", \"phone\": \"0798333347\", \"person\": \"Mitică David\"}', 'Laudantium rem doloremque corrupti rerum veritatis dolores vitae perspiciatis qui minus molestiae dolor.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(9, 3, 5, 16, NULL, NULL, NULL, 'dr. Anastasia Bogdan', 16, 69982, '{\"email\": \"marioara19@yahoo.com\", \"phone\": \"0778860378\", \"person\": \"Diana Radulescu\"}', 'Cumque hic nesciunt ea facilis nesciunt excepturi neque voluptatibus architecto.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(10, 4, 5, 18, NULL, NULL, NULL, 'Mihnea Opris', 12, 56363, '{\"email\": \"teohari.alexandrescu@yahoo.com\", \"phone\": \"0778140090\", \"person\": \"Todor Gheorghita\"}', 'Sit et ex veritatis perspiciatis non fugit qui aut impedit.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(11, 4, 2, 7, NULL, NULL, NULL, 'ing. Nelu Dragoi', 4, 26029, '{\"email\": \"parvu.ilinca@gmail.com\", \"phone\": \"0782254603\", \"person\": \"Grațiela Iacob\"}', 'Voluptas veritatis quam quia aut quam error voluptas sed fugiat aliquam.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(12, 4, 4, 15, NULL, NULL, NULL, 'Pompiliu Bejan', 25, 110731, '{\"email\": \"nechita.tincuta@nica.org\", \"phone\": \"0791411300\", \"person\": \"Todor Petcu\"}', 'Quia nesciunt sed ullam unde ratione officiis vero.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(13, 5, 3, 11, NULL, NULL, NULL, 'Cristea Petrescu', 35, 159375, '{\"email\": \"alberta.bucur@banica.org\", \"phone\": \"0249272669\", \"person\": \"Aurel Vaduva\"}', 'Non error quaerat ullam ea qui neque nesciunt tempora provident voluptas ut doloribus quis.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(14, 5, 5, 18, NULL, NULL, NULL, 'Isabela Gabor', 3, 14218, '{\"email\": \"ludmila.antal@necula.biz\", \"phone\": \"0251101919\", \"person\": \"d-na. Tudosia Cojocaru\"}', 'Quibusdam et labore qui necessitatibus labore exercitationem aliquid.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(15, 5, 1, 4, NULL, NULL, NULL, 'Dochia Nicolae', 4, 21212, '{\"email\": \"florenta77@filimon.biz\", \"phone\": \"0212407811\", \"person\": \"Cristea Ardeleanu\"}', 'Explicabo labore laudantium cumque aut veniam ut.', '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(16, 6, 6, 19, NULL, NULL, NULL, 'Sandu Trandafir', 6, 34119, '{\"email\": \"iancu.sandu@dima.com\", \"phone\": \"0760724187\", \"person\": \"d-șoara Irina Molnar\"}', 'Voluptas doloribus maxime sed impedit facere iure modi ut eius quam asperiores ipsum.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(17, 6, 6, 19, NULL, NULL, NULL, 'Denis Adam', 5, 27221, '{\"email\": \"dominic85@yahoo.com\", \"phone\": \"0767395615\", \"person\": \"Lia Tudorache\"}', 'Nemo iusto est vero earum est optio quos fuga qui distinctio atque dignissimos adipisci.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(18, 6, 2, 7, NULL, NULL, NULL, 'Octaviana Ivan', 4, 24070, '{\"email\": \"lascar.gal@yahoo.com\", \"phone\": \"0765593634\", \"person\": \"Fabiana Stroe\"}', 'Hic illum nostrum repellat tenetur consectetur consectetur ut impedit natus id enim.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(19, 7, 4, 15, NULL, NULL, NULL, 'Arina Rus', 38, 170122, '{\"email\": \"florescu.malvina@dumitrascu.com\", \"phone\": \"0707101062\", \"person\": \"Severina Dragomir\"}', 'Ex est enim natus quas excepturi ex est et.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(20, 7, 5, 18, NULL, NULL, NULL, 'Pompiliu Marian', 32, 144946, '{\"email\": \"ecazacu@toth.org\", \"phone\": \"0259300652\", \"person\": \"Olivia Nastase\"}', 'Sed ex culpa architecto inventore dolore natus tempore sed consectetur modi.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(21, 7, 5, 17, NULL, NULL, NULL, 'Răducu Horvath', 15, 67014, '{\"email\": \"constanta32@yahoo.com\", \"phone\": \"0749765120\", \"person\": \"Teodor Buda\"}', 'Aperiam minima commodi animi velit quaerat perferendis accusamus est accusantium odit soluta ab excepturi.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(22, 8, 4, 13, NULL, NULL, NULL, 'Lorin Albu', 16, 74949, '{\"email\": \"stoica.antoniu@pintea.com\", \"phone\": \"0784461312\", \"person\": \"d-na. Leana Dragan\"}', 'Facilis voluptate maxime voluptatum ipsa in aut inventore sed sint perferendis veritatis.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(23, 8, 6, 19, NULL, NULL, NULL, 'Silviu Cazacu', 26, 114364, '{\"email\": \"angela.irimia@hotmail.com\", \"phone\": \"0759101477\", \"person\": \"Teona Radoi\"}', 'Amet ea alias expedita alias provident iure totam aut veniam aspernatur ut minus.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(24, 8, 1, 4, NULL, NULL, NULL, 'ing. Beniamin Muntean', 35, 158494, '{\"email\": \"hgrigoras@chirila.com\", \"phone\": \"0237297780\", \"person\": \"ing. Astrid Costea\"}', 'Quos voluptates est sequi deserunt saepe sint magnam et architecto voluptatum.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(25, 9, 2, 6, NULL, NULL, NULL, 'Doriana Sandor', 1, 3994, '{\"email\": \"simon.ilona@gmail.com\", \"phone\": \"0783392925\", \"person\": \"Nicolaie Gal\"}', 'Corrupti blanditiis unde sit voluptatem aut id distinctio.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(26, 9, 4, 12, NULL, NULL, NULL, 'Marinela Gherman', 3, 14334, '{\"email\": \"luminita45@crisan.com\", \"phone\": \"0748176374\", \"person\": \"Rafila Radoi\"}', 'Non recusandae explicabo quaerat dignissimos dolores necessitatibus qui amet suscipit sequi.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(27, 9, 4, 13, NULL, NULL, NULL, 'Catrina Roman', 29, 131764, '{\"email\": \"cornel.mirea@gmail.com\", \"phone\": \"0762682508\", \"person\": \"Loredana Dobre\"}', 'Quaerat unde at sit et facilis beatae aut consequatur labore voluptas ut officia.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(28, 10, 1, 1, 2, NULL, NULL, 'Gheorghe Rotaru', 13, 62716, '{\"email\": \"opris.virginia@gmail.com\", \"phone\": \"0775901550\", \"person\": \"Carina Trifan\"}', 'Consequatur iste iste doloribus placeat et fugit non voluptates consequatur dolore rerum accusantium non.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(29, 10, 1, 3, NULL, NULL, NULL, 'Iasmina Dobrescu', 3, 17110, '{\"email\": \"nemes.decebal@varga.org\", \"phone\": \"0703480697\", \"person\": \"Oana Opris\"}', 'Aliquam enim dolor qui quis assumenda aut debitis amet commodi animi dolores rerum.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(30, 10, 2, 8, NULL, NULL, NULL, 'Adonis Niculae', 34, 152699, '{\"email\": \"adam.octavian@gmail.com\", \"phone\": \"0770767772\", \"person\": \"Nicolaie Micu\"}', 'Iste et iure id cum aut nemo nostrum velit velit laudantium dolorem occaecati ut.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(31, 11, 2, 9, NULL, NULL, NULL, 'Marcela Dogaru', 18, 79996, '{\"email\": \"marioara46@mircea.org\", \"phone\": \"0274810693\", \"person\": \"Sava Lupu\"}', 'Et fugiat nihil dolores et veniam eum.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(32, 11, 5, 16, NULL, NULL, NULL, 'ing. Grațian Bogdan', 8, 42370, '{\"email\": \"rotaru.vladimir@gmail.com\", \"phone\": \"0747208451\", \"person\": \"Anaida Lungu\"}', 'Laudantium similique quidem laudantium tenetur veritatis magnam est consectetur.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(33, 11, 1, 4, NULL, NULL, NULL, 'dl. Nicodim Soare', 3, 13720, '{\"email\": \"edinu@gmail.com\", \"phone\": \"0738128253\", \"person\": \"Arian Rosca\"}', 'Eaque exercitationem occaecati quia perferendis quas nihil.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(34, 12, 5, 16, NULL, NULL, NULL, 'Alistar Grosu', 1, 3645, '{\"email\": \"aristita.costache@parvu.com\", \"phone\": \"0764346009\", \"person\": \"Zamfir Sandor\"}', 'Dolorem dignissimos consequatur excepturi velit culpa et asperiores accusantium doloremque velit.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(35, 12, 1, 3, NULL, NULL, NULL, 'Daniel Popescu', 12, 55712, '{\"email\": \"tdavid@nitu.com\", \"phone\": \"0746835574\", \"person\": \"ing. Ligia Istrate\"}', 'Et maxime doloremque veniam aut et accusantium.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(36, 12, 5, 16, NULL, NULL, NULL, 'Horia Petrea', 4, 22745, '{\"email\": \"timotei19@munteanu.com\", \"phone\": \"0365739705\", \"person\": \"d-șoara Maricica Tudorache\"}', 'Tempora et laborum est voluptas cupiditate molestiae error facere suscipit eum rem ipsum velit.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(37, 13, 3, 10, 13, NULL, NULL, 'Lelia Turcu', 28, 126237, '{\"email\": \"pavel11@dima.com\", \"phone\": \"0755115084\", \"person\": \"Cezara Tudorache\"}', 'Nemo vel nisi id et sapiente sint culpa voluptate eum quo eaque.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(38, 13, 3, 11, NULL, NULL, NULL, 'Romulus Pavel', 9, 44532, '{\"email\": \"hdragoi@anton.com\", \"phone\": \"0720855097\", \"person\": \"Anca Ignat\"}', 'Sit iure impedit accusantium ut quia tempore consequatur omnis at dolores ab.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(39, 13, 4, 12, NULL, NULL, NULL, 'Paulina Damian', 23, 101779, '{\"email\": \"oradu@visan.biz\", \"phone\": \"0791279532\", \"person\": \"Marian Staicu\"}', 'Exercitationem rerum repellendus reprehenderit corrupti eius libero laudantium modi.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(40, 14, 5, 18, NULL, NULL, NULL, 'Nichifor Alexe', 16, 71867, '{\"email\": \"rcroitoru@yahoo.com\", \"phone\": \"0705009995\", \"person\": \"Vanesa Petrescu\"}', 'Eligendi consequuntur adipisci cum minus officia pariatur dicta qui odio optio earum.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(41, 14, 1, 3, NULL, NULL, NULL, 'Mugur Nicolescu', 26, 119732, '{\"email\": \"fzaharia@grigorescu.com\", \"phone\": \"0721059024\", \"person\": \"ing. Mariana Grigore\"}', 'Molestias expedita est animi et sint et et quia impedit libero et est.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(42, 14, 2, 8, NULL, NULL, NULL, 'dr. Șerban Oancea', 39, 177619, '{\"email\": \"ntudose@dobrescu.com\", \"phone\": \"0259564216\", \"person\": \"Dariana Dumitrache\"}', 'Atque voluptatum consequatur asperiores explicabo ipsum assumenda temporibus.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(43, 15, 4, 15, NULL, NULL, NULL, 'dr. Carmina Mocanu', 11, 51886, '{\"email\": \"ghita.bradut@toma.org\", \"phone\": \"0336642936\", \"person\": \"Svetlana Ignat\"}', 'Eum ipsa natus aperiam consectetur nihil consequuntur accusamus occaecati nesciunt nostrum at velit.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(44, 15, 4, 13, NULL, NULL, NULL, 'Brăduț Nedelcu', 1, 1375, '{\"email\": \"inocentiu.chiriac@tamas.biz\", \"phone\": \"0797303339\", \"person\": \"Achim Cristea\"}', 'Odio et nam nobis cum veritatis voluptate.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(45, 15, 6, 19, NULL, NULL, NULL, 'dl. Emil Mihaila', 35, 155270, '{\"email\": \"aureliana.dumitrache@gmail.com\", \"phone\": \"0262419153\", \"person\": \"Teohari Musat\"}', 'Aliquid ipsam eius iure ipsam itaque eveniet porro quaerat accusamus sequi vel.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(46, 16, 1, 1, 6, NULL, NULL, 'ing. Tiberiu Puiu', 29, 133232, '{\"email\": \"florea49@hotmail.com\", \"phone\": \"0735028527\", \"person\": \"Ina Adam\"}', 'Odio laboriosam necessitatibus nihil animi qui ducimus explicabo sint in.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(47, 16, 5, 16, NULL, NULL, NULL, 'Veta Alexandrescu', 9, 44177, '{\"email\": \"augustina79@gheorghiu.com\", \"phone\": \"0781725725\", \"person\": \"Fiodor Paraschiv\"}', 'Id cum quae ratione nihil laborum assumenda est eum et.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(48, 16, 2, 6, NULL, NULL, NULL, 'Viviana Draghici', 16, 71901, '{\"email\": \"tiberiu.sandor@bunea.info\", \"phone\": \"0743267175\", \"person\": \"Alina Peter\"}', 'Iusto aspernatur neque tempore dolor velit sequi inventore est rem explicabo quia et quam.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(49, 17, 1, 1, 4, NULL, NULL, 'Sinică Manea', 36, 161348, '{\"email\": \"xenia.enache@yahoo.com\", \"phone\": \"0718491838\", \"person\": \"Jan Paraschiv\"}', 'Minima pariatur laboriosam voluptates magni placeat est iusto vero enim voluptatum.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(50, 17, 2, 6, NULL, NULL, NULL, 'Stanca Tudorache', 3, 19953, '{\"email\": \"estera.paraschiv@yahoo.com\", \"phone\": \"0762664558\", \"person\": \"Frederic Nemes\"}', 'Rem vel deleniti et sed eaque odit iusto rerum ex in nobis.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(51, 17, 4, 14, NULL, NULL, NULL, 'Henrieta Filimon', 1, 4552, '{\"email\": \"petre.eusebia@barbulescu.biz\", \"phone\": \"0363747489\", \"person\": \"ing. Suzana Dogaru\"}', 'Doloremque vel neque et voluptatum quaerat sed ut.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(52, 18, 1, 2, NULL, NULL, NULL, 'Paulina Nicolae', 20, 87816, '{\"email\": \"nvisan@nicoara.com\", \"phone\": \"0252350640\", \"person\": \"d-șoara Aglaia Marin\"}', 'Beatae quibusdam quia excepturi quam atque amet voluptatem sint inventore deserunt.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(53, 18, 3, 10, 12, NULL, NULL, 'Consuela Olariu', 5, 30121, '{\"email\": \"sfilimon@hotmail.com\", \"phone\": \"0728965021\", \"person\": \"Zenobia Toader\"}', 'Quo magnam incidunt quia rerum enim facere doloribus repellat.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(54, 18, 2, 9, NULL, NULL, NULL, 'Catinca Moraru', 6, 32839, '{\"email\": \"agavrila@stefanescu.com\", \"phone\": \"0365464780\", \"person\": \"Constanța Stan\"}', 'Nobis quisquam nesciunt voluptate ducimus neque nostrum laborum et quae unde quia.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(55, 19, 4, 12, NULL, NULL, NULL, 'Melania Visan', 17, 76905, '{\"email\": \"ilarie34@martin.com\", \"phone\": \"0256605057\", \"person\": \"Ileana Alexa\"}', 'Delectus assumenda commodi necessitatibus praesentium et modi sunt nesciunt.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(56, 19, 2, 7, NULL, NULL, NULL, 'dr. Agnos Simon', 24, 107163, '{\"email\": \"radulescu.ghita@maftei.com\", \"phone\": \"0355772264\", \"person\": \"Bernard Parvu\"}', 'Voluptate maxime enim ut voluptas corporis recusandae rerum tenetur ex porro sunt porro.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(57, 19, 2, 8, NULL, NULL, NULL, 'Avram Bodea', 39, 178028, '{\"email\": \"kpetcu@hotmail.com\", \"phone\": \"0732819589\", \"person\": \"Ileana Blaga\"}', 'Magnam adipisci quia quae voluptas quos aliquam aut necessitatibus impedit dolorum ab eos.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(58, 20, 1, 3, NULL, NULL, NULL, 'dl. Adrian Iliescu', 15, 67871, '{\"email\": \"theodor.sandu@istrate.com\", \"phone\": \"0314199108\", \"person\": \"dr. Teea Gheorghe\"}', 'A nostrum quod expedita atque voluptate unde.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(59, 20, 1, 2, NULL, NULL, NULL, 'ing. Theodor Micu', 24, 107350, '{\"email\": \"alice37@banica.net\", \"phone\": \"0762270260\", \"person\": \"Constanța Ivan\"}', 'Aperiam et reiciendis rerum quia a atque sed voluptatem.', '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(60, 20, 4, 12, NULL, NULL, NULL, 'Patricia Dinca', 17, 76790, '{\"email\": \"achim.ion@hotmail.com\", \"phone\": \"0736837177\", \"person\": \"d-na. Florica Turcu\"}', 'Ducimus reprehenderit et debitis quo quisquam voluptatibus voluptates ut dolores inventore laboriosam.', '2023-05-08 01:49:49', '2023-05-08 01:49:49');
 
 INSERT INTO `risk_categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (1, 'Inundatii', NULL, NULL),
@@ -17572,70 +17614,70 @@ INSERT INTO `risk_categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (11, 'Caniculă', NULL, NULL),
 (12, 'Altele', NULL, NULL);
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Mihai Toader', 'admin@example.com', '2023-05-06 12:12:59', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '24Uon6jqKy', '2023-05-06 12:12:59', '2023-05-06 12:12:59');
+INSERT INTO `users` (`id`, `name`, `email`, `organisation_id`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Marian Banu', 'admin@example.com', NULL, '2023-05-08 01:49:48', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '0YVJwA9Ilk', '2023-05-08 01:49:48', '2023-05-08 01:49:48');
 
 INSERT INTO `volunteers` (`id`, `organisation_id`, `first_name`, `last_name`, `role`, `city_id`, `county_id`, `email`, `phone`, `cnp`, `birthday`, `accreditation`, `specialization`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Claudiu', 'Pasca', 'volunteer_coordinator', 155788, 35, 'nadia.radu@sima.com', '0271305918', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(2, 1, 'Iancu', 'Grosu', 'volunteer', 28567, 5, 'bucur.moraru@gmail.com', '0335499720', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(3, 1, 'Melina', 'Covaci', 'volunteer_coordinator', 170051, 38, 'laurian22@hotmail.com', '0375787411', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(4, 2, 'Sabrina', 'Nicolescu', 'volunteer', 101699, 52, 'irimia.laura@costache.com', '0729350417', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(5, 2, 'Doru', 'Pavel', 'volunteer', 29010, 5, 'petrut04@yahoo.com', '0364903254', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(6, 2, 'Sergiu', 'Dobrescu', 'volunteer', 171325, 38, 'mitica.munteanu@florea.com', '0233243037', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(7, 3, 'Mădălin', 'Stoian', 'volunteer_coordinator', 82760, 18, 'achim.jean@sandor.com', '0799651367', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(8, 3, 'Marga', 'Nica', 'volunteer', 126095, 28, 'gratiana.aldea@yahoo.com', '0237510072', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(9, 3, 'Corina', 'Horvath', 'volunteer', 50825, 11, 'martin.oltean@neagu.com', '0248585848', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(10, 4, 'Manuela', 'Petcu', 'volunteer_coordinator', 14717, 3, 'imanole@groza.net', '0795064808', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(11, 4, 'Octav', 'Varga', 'volunteer_coordinator', 39122, 7, 'gheorghe.sarbu@yahoo.com', '0213615290', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(12, 4, 'Isabela', 'Petcu', 'volunteer_coordinator', 38241, 7, 'qionita@maxim.info', '0726776534', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(13, 5, 'Oana', 'Bunea', 'volunteer', 157077, 35, 'jan.sandor@gmail.com', '0271696098', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(14, 5, 'Marcu', 'Stefan', 'volunteer_coordinator', 48566, 10, 'mirela.sirbu@yahoo.com', '0757539089', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(15, 5, 'Grațian', 'Cojocaru', 'volunteer', 176828, 39, 'ymoise@yahoo.com', '0751237918', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(16, 6, 'Olga', 'Oltean', 'volunteer_coordinator', 6477, 1, 'nitu.severina@hotmail.com', '0769012584', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(17, 6, 'Vasile', 'Oprea', 'volunteer', 54172, 11, 'nora41@gmail.com', '0312285332', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(18, 6, 'Marina', 'Balint', 'volunteer', 121750, 27, 'stana.iordache@costache.biz', '0758950604', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(19, 7, 'George', 'Dobrescu', 'volunteer_coordinator', 171450, 38, 'siordache@bodea.com', '0768579247', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(20, 7, 'Damian', 'Sabau', 'volunteer_coordinator', 145444, 32, 'olimpiu.pintea@gmail.com', '0341156130', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(21, 7, 'Octavia', 'Oltean', 'volunteer_coordinator', 145710, 32, 'elena.oancea@hotmail.com', '0334201943', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(22, 8, 'Filofteia', 'Puiu', 'volunteer_coordinator', 102516, 23, 'bmunteanu@blaga.org', '0751405486', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(23, 8, 'Iustinian', 'Chiriac', 'volunteer', 40198, 8, 'calin.mihai@gmail.com', '0776992472', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(24, 8, 'Stana', 'Aldea', 'volunteer', 54975, 12, 'jean78@gal.com', '0760121495', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(25, 9, 'Gregorian', 'Musat', 'volunteer', 83767, 19, 'consuela40@yahoo.com', '0334980929', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(26, 9, 'Luca', 'Alexandrescu', 'volunteer_coordinator', 145408, 32, 'filimon.nicolaie@stefan.com', '0771375292', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(27, 9, 'Silvian', 'Alexa', 'volunteer', 166075, 37, 'ugherman@pintilie.org', '0726100470', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(28, 10, 'Petrișor', 'Tomescu', 'volunteer', 44113, 9, 'wapostol@yahoo.com', '0253090049', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(29, 10, 'Monalisa', 'Parvu', 'volunteer', 114854, 26, 'pana.sever@yahoo.com', '0267561453', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(30, 10, 'Floarea', 'Groza', 'volunteer', 27310, 5, 'daniel17@yahoo.com', '0376579159', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(31, 11, 'Fabia', 'Chiriac', 'volunteer', 71714, 16, 'adelaida08@yahoo.com', '0786553140', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(32, 11, 'Teea', 'Nita', 'volunteer_coordinator', 42156, 8, 'marioara61@hotmail.com', '0314069618', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(33, 11, 'Beatrice', 'Sabau', 'volunteer_coordinator', 158555, 35, 'tudose.gratiela@gmail.com', '0788136660', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(34, 12, 'Emil', 'Maxim', 'volunteer', 19926, 3, 'yrotaru@szabo.com', '0759323926', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(35, 12, 'Alexandru', 'Grosu', 'volunteer_coordinator', 101804, 51, 'anton.sava@florescu.com', '0379687594', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(36, 12, 'Nechifor', 'Sabau', 'volunteer', 10131, 2, 'marcu.ungureanu@yahoo.com', '0379041083', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(37, 13, 'Demetra', 'Danila', 'volunteer', 130099, 28, 'rpreda@gmail.com', '0735811979', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(38, 13, 'Floarea', 'Panait', 'volunteer', 139312, 30, 'iancu.neacsu@yahoo.com', '0355875518', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(39, 13, 'Alex', 'Stanciu', 'volunteer_coordinator', 147125, 33, 'sonia80@hotmail.com', '0746840434', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(40, 14, 'Estera', 'Sandor', 'volunteer', 98248, 22, 'mihai.giorgian@yahoo.com', '0761883013', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(41, 14, 'Veniamin', 'Popovici', 'volunteer', 48254, 10, 'marcel.tanase@grigoras.com', '0724275073', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(42, 14, 'Dorli', 'Nicolescu', 'volunteer', 12652, 2, 'antim.dobre@yahoo.com', '0340620720', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(43, 15, 'Anda', 'Szabo', 'volunteer_coordinator', 122463, 27, 'cornea.florin@florescu.biz', '0786026431', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(44, 15, 'Milena', 'Musat', 'volunteer_coordinator', 26939, 5, 'emilian24@gmail.com', '0363360790', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(45, 15, 'Ieremia', 'Nicolae', 'volunteer_coordinator', 33373, 6, 'ichim.bernard@sarbu.org', '0756280755', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(46, 16, 'Janina', 'Militaru', 'volunteer', 29314, 5, 'vstefanescu@pavel.com', '0763887704', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(47, 16, 'Catinca', 'Dragomir', 'volunteer_coordinator', 58384, 12, 'apostol.diana@mateescu.com', '0706283426', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(48, 16, 'Ilarion', 'Bodea', 'volunteer', 26608, 5, 'gianina.catana@dogaru.com', '0735259636', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:00', '2023-05-06 12:13:00'),
-(49, 17, 'Edmond', 'Chis', 'volunteer_coordinator', 25503, 4, 'nicolescu.antonela@gmail.com', '0355375793', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(50, 17, 'Dumitrana', 'Antal', 'volunteer_coordinator', 51261, 11, 'fniculescu@gavrila.biz', '0342735137', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(51, 17, 'Larisa', 'Solomon', 'volunteer', 35312, 6, 'ilarie.dogaru@yahoo.com', '0788924592', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(52, 18, 'Ilarion', 'Istrate', 'volunteer', 15947, 3, 'omanolache@yahoo.com', '0700913184', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(53, 18, 'Veta', 'Niculescu', 'volunteer_coordinator', 105400, 51, 'aristita94@kovacs.com', '0772562640', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(54, 18, 'Mirabela', 'Dumitrescu', 'volunteer', 51831, 11, 'mina.albu@hotmail.com', '0702838693', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(55, 19, 'Adrian', 'Ardeleanu', 'volunteer', 112673, 25, 'maxim.oancea@buda.net', '0775670324', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(56, 19, 'Anghel', 'Grigoras', 'volunteer', 120940, 27, 'paul.lungu@radulescu.info', '0219885610', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(57, 19, 'Dina', 'Filip', 'volunteer_coordinator', 46796, 10, 'balan.lica@yahoo.com', '0245101041', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(58, 20, 'Mugurel', 'Peter', 'volunteer', 105133, 52, 'paun.laurentia@yahoo.com', '0717734184', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(59, 20, 'Norbert', 'Martin', 'volunteer_coordinator', 57083, 12, 'maximilian89@petcu.com', '0799299236', NULL, NULL, 0, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01'),
-(60, 20, 'Noemi', 'Matei', 'volunteer', 152911, 34, 'marin.robertina@hotmail.com', '0245483953', NULL, NULL, 1, NULL, NULL, '2023-05-06 12:13:01', '2023-05-06 12:13:01');
+(1, 1, 'Voicu', 'Georgescu', 'volunteer', 170907, 38, 'laurentiu22@cazacu.com', '0780162794', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(2, 1, 'Radu', 'Muntean', 'volunteer', 41569, 8, 'colaru@nitu.com', '0742709007', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(3, 1, 'Romina', 'Ciocan', 'volunteer_coordinator', 29957, 5, 'cretu.gregorian@trif.com', '0243845321', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(4, 2, 'Lazăr', 'Stefanescu', 'volunteer', 144045, 32, 'alexandrescu.ludovica@hotmail.com', '0367690999', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(5, 2, 'Ludovic', 'Ciocan', 'volunteer', 178322, 39, 'nicodim12@hotmail.com', '0351434308', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(6, 2, 'Constantin', 'Mihai', 'volunteer', 47408, 10, 'yrosca@achim.org', '0247557295', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(7, 3, 'Haralamb', 'Petrescu', 'volunteer', 154184, 34, 'carolina.enache@banica.com', '0711891172', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(8, 3, 'Beniamin', 'Stefanescu', 'volunteer_coordinator', 136143, 29, 'dobrescu.cezar@gmail.com', '0311141947', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(9, 3, 'Ioanina', 'Groza', 'volunteer_coordinator', 130375, 28, 'florenta77@marcu.info', '0760136971', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(10, 4, 'Alis', 'Bota', 'volunteer_coordinator', 170587, 38, 'man.anghel@popa.com', '0701747139', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(11, 4, 'Aurică', 'Kovacs', 'volunteer_coordinator', 152742, 34, 'cornelia.trif@iliescu.com', '0235071226', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(12, 4, 'Ecaterina', 'Calin', 'volunteer', 25647, 4, 'letitia40@mirea.net', '0787510177', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(13, 5, 'Emilia', 'Paraschiv', 'volunteer_coordinator', 67997, 15, 'cipriana99@botezatu.com', '0794606778', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(14, 5, 'Cătălin', 'Dascalu', 'volunteer', 33550, 6, 'bmihalache@mihaila.info', '0365480533', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(15, 5, 'Teea', 'Alexe', 'volunteer_coordinator', 152715, 34, 'edmond.balint@moldoveanu.com', '0773845183', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(16, 6, 'Petronela', 'Anton', 'volunteer', 159776, 36, 'cipriana74@stroe.com', '0318870796', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(17, 6, 'Silvian', 'Gheorghiu', 'volunteer_coordinator', 109336, 24, 'gabor.ioana@hotmail.com', '0741868444', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(18, 6, 'Simion', 'Diaconescu', 'volunteer', 117783, 26, 'lazar.ladislau@yahoo.com', '0358964087', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:48', '2023-05-08 01:49:48'),
+(19, 7, 'Dorin', 'Florescu', 'volunteer_coordinator', 106407, 24, 'gheorghiu.petru@hotmail.com', '0740050699', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(20, 7, 'Nicușor', 'Necula', 'volunteer', 105909, 52, 'dumitru19@gheorghita.com', '0723369974', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(21, 7, 'Evelina', 'Constantinescu', 'volunteer', 158369, 35, 'lmilea@hotmail.com', '0274929847', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(22, 8, 'Jana', 'Ion', 'volunteer_coordinator', 151905, 34, 'ghita.aurora@gmail.com', '0716560139', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(23, 8, 'Victor', 'Micu', 'volunteer_coordinator', 79503, 18, 'lelia20@musat.biz', '0368620192', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(24, 8, 'Gianina', 'Sava', 'volunteer', 65850, 15, 'emarginean@gmail.com', '0270376873', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(25, 9, 'Ileana', 'Maftei', 'volunteer', 8675, 1, 'aglaia55@ungureanu.info', '0775605746', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(26, 9, 'Stelian', 'Catana', 'volunteer_coordinator', 17307, 3, 'sabrina38@nita.info', '0271776368', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(27, 9, 'Titus', 'Barbu', 'volunteer_coordinator', 31912, 5, 'inocentiu48@hotmail.com', '0777020450', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(28, 10, 'Adonis', 'Ghita', 'volunteer_coordinator', 75392, 17, 'giurgiu.amza@diaconescu.com', '0372603937', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(29, 10, 'Nichifor', 'Dragan', 'volunteer_coordinator', 53906, 11, 'neagu.andreea@hotmail.com', '0318640203', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(30, 10, 'Lorin', 'Necula', 'volunteer', 119821, 26, 'stancu.bucur@burlacu.com', '0705016865', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(31, 11, 'Sinică', 'Burlacu', 'volunteer_coordinator', 82118, 18, 'didina.adam@gmail.com', '0376749874', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(32, 11, 'Ludovic', 'Nita', 'volunteer', 11931, 2, 'nicusor.tomescu@gmail.com', '0274157039', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(33, 11, 'Petrică', 'Moise', 'volunteer_coordinator', 128757, 28, 'rnicolae@bucur.biz', '0723237542', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(34, 12, 'Ieremia', 'Dobre', 'volunteer_coordinator', 37734, 7, 'cristescu.dochia@covaci.biz', '0354383686', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(35, 12, 'Gelu', 'Pop', 'volunteer_coordinator', 105856, 51, 'qnagy@man.info', '0719561172', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(36, 12, 'Edmond', 'Mihai', 'volunteer_coordinator', 79237, 18, 'moise.paula@hotmail.com', '0374612058', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(37, 13, 'Gabi', 'Matei', 'volunteer_coordinator', 177067, 39, 'constantin.valentina@voicu.com', '0245626688', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(38, 13, 'Vincențiu', 'Micu', 'volunteer_coordinator', 129754, 28, 'valentina24@dumitriu.com', '0703542686', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(39, 13, 'Emilian', 'Gal', 'volunteer_coordinator', 101421, 52, 'ladislau.oancea@gmail.com', '0726667851', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(40, 14, 'Emanoil', 'Moldovan', 'volunteer', 104369, 51, 'bstanciu@yahoo.com', '0732648090', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(41, 14, 'Petre', 'Morar', 'volunteer_coordinator', 36916, 7, 'fkiss@gmail.com', '0713245029', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(42, 14, 'Adriana', 'Matei', 'volunteer', 168808, 38, 'casian36@gmail.com', '0796315584', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(43, 15, 'Alexandru', 'Iordache', 'volunteer_coordinator', 51868, 11, 'amalia66@hotmail.com', '0768723252', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(44, 15, 'Adriana', 'Micu', 'volunteer_coordinator', 42968, 9, 'vasiliu.evelina@suciu.com', '0318047072', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(45, 15, 'Iancu', 'Danciu', 'volunteer_coordinator', 45762, 10, 'hnica@hotmail.com', '0708841717', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(46, 16, 'Nicuță', 'Man', 'volunteer_coordinator', 105892, 52, 'pana.ion@pasca.org', '0708077262', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(47, 16, 'Lili', 'Mazilu', 'volunteer_coordinator', 86222, 19, 'dnitu@yahoo.com', '0310929217', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(48, 16, 'Leontin', 'Mazilu', 'volunteer_coordinator', 97866, 22, 'ilie49@yahoo.com', '0265929739', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(49, 17, 'Fiodor', 'Trandafir', 'volunteer', 91893, 20, 'stela.marinescu@hotmail.com', '0272318384', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(50, 17, 'Timea', 'Simion', 'volunteer_coordinator', 100727, 21, 'macovei.marioara@gmail.com', '0700471370', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(51, 17, 'Irinel', 'Badea', 'volunteer', 67880, 15, 'vlad.constantin@gmail.com', '0354899691', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(52, 18, 'Emilian', 'Micu', 'volunteer', 148907, 33, 'cezara.mirea@yahoo.com', '0252392295', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(53, 18, 'Lică', 'Ivan', 'volunteer_coordinator', 173720, 38, 'relu17@gmail.com', '0378219074', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(54, 18, 'Bianca', 'Marcu', 'volunteer', 126193, 28, 'georgescu.horatiu@yahoo.com', '0266250603', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(55, 19, 'Cezara', 'Radulescu', 'volunteer', 14753, 3, 'fodor.david@groza.com', '0765802375', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(56, 19, 'Codruț', 'Chiriac', 'volunteer', 148701, 33, 'dcristea@hotmail.com', '0330762418', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(57, 19, 'Aura', 'Ardelean', 'volunteer', 128481, 28, 'tgrigorescu@oltean.biz', '0317113419', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(58, 20, 'Rica', 'Grecu', 'volunteer', 51430, 11, 'moldovan.aureliana@hotmail.com', '0712703473', NULL, NULL, 1, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(59, 20, 'Nichifor', 'Vaduva', 'volunteer', 104403, 15, 'chirita.natalia@hotmail.com', '0745645828', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49'),
+(60, 20, 'Ghenadie', 'Nastase', 'volunteer', 15288, 3, 'amazilu@hotmail.com', '0714879021', NULL, NULL, 0, NULL, NULL, '2023-05-08 01:49:49', '2023-05-08 01:49:49');
 
 
 
