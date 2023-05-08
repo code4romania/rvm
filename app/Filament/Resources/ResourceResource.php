@@ -18,6 +18,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 
@@ -191,7 +192,7 @@ class ResourceResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])->filtersLayout(Layout::AboveContent);
     }
 
     public static function getRelations(): array
@@ -209,4 +210,5 @@ class ResourceResource extends Resource
             'edit' => Pages\EditResource::route('/{record}/edit'),
         ];
     }
+
 }

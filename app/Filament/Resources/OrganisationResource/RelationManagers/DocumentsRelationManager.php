@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 
 class DocumentsRelationManager extends RelationManager
 {
@@ -20,9 +22,9 @@ class DocumentsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\DatePicker::make('signed_at')->required(),
+                Forms\Components\DatePicker::make('expire_at')->required(),
+                SpatieMediaLibraryFileUpload::make('protocol')->conversion('thumb')->columnSpanFull(),
             ]);
     }
 
@@ -30,7 +32,9 @@ class DocumentsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                TextColumn::make('protocol')->placeholder('Protocol de colaborare'),
+                TextColumn::make('signed_at')->date(),
+                TextColumn::make('expire_at')->date(),
             ])
             ->filters([
                 //

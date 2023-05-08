@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
@@ -20,9 +21,10 @@ class UsersRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
+                TextInput::make('name')->required()->autofocus()->label(__('Name')),
+                TextInput::make('email')->email()->required()->label(__('Email')),
+                TextInput::make('password')->password()->autocomplete('new-password')->required()->label(__('Password')),
+
             ]);
     }
 
@@ -30,7 +32,12 @@ class UsersRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('role')
+                    ->sortable(),
             ])
             ->filters([
                 //
