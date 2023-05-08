@@ -22,7 +22,7 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-               TextInput::make('name')->required()->autofocus()->label(__('Name')),
+                TextInput::make('name')->required()->autofocus()->label(__('Name')),
                 TextInput::make('email')->email()->required()->label(__('Email')),
                 TextInput::make('password')->password()->autocomplete('new-password')->required()->label(__('Password')),
 

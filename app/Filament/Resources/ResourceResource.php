@@ -73,7 +73,7 @@ class ResourceResource extends Resource
                     )
                     ->hidden(function (callable $get) {
                         return Subcategory::find($get('subcategory_id'))
-                                ?->types->count() == 0;
+                            ?->types->count() == 0;
                     })
                     ->searchable()
                     ->reactive(),
@@ -81,7 +81,7 @@ class ResourceResource extends Resource
                     ->label(__('resource.fields.type_other'))
                     ->hidden(function (callable $get) {
                         return Subcategory::find($get('subcategory_id'))
-                                ?->types->count() > 0;
+                            ?->types->count() > 0;
                     })
                     ->maxLength(255),
 
@@ -210,5 +210,4 @@ class ResourceResource extends Resource
             'edit' => Pages\EditResource::route('/{record}/edit'),
         ];
     }
-
 }

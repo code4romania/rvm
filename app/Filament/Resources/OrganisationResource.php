@@ -324,7 +324,7 @@ class OrganisationResource extends Resource
             ResourcesRelationManager::class,
             InterventionsRelationManager::class,
             UsersRelationManager::class,
-            DocumentsRelationManager::class
+            DocumentsRelationManager::class,
         ];
     }
 

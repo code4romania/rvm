@@ -16,11 +16,9 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
-use Illuminate\Database\Eloquent\Builder;
 
 class ResourcesRelationManager extends RelationManager
 {
@@ -88,25 +86,25 @@ class ResourcesRelationManager extends RelationManager
                         if ($attributes) {
                             return $attributes->map(
                                 function ($attribute) {
-                                switch ($attribute['type']) {
-                                    case 'text':
-                                        return TextInput::make('attributes.' . $attribute['name'])
-                                            ->label(__('resource.attributes.' . $attribute['name']))
-                                            ->required()
-                                            ->maxLength(255);
-                                    case 'checkbox':
-                                        return Checkbox::make('attributes.' . $attribute['name'])
-                                            ->label(__('resource.attributes.' . $attribute['name']));
-                                    case 'select':
-                                        return Select::make('attributes.' . $attribute['name'])
-                                            ->label(__('resource.attributes.' . $attribute['name']))
-                                            ->required()
-                                            ->options(
-                                                collect($attribute['options'])
-                                                    ->mapWithKeys(fn ($option) => [$option => $option])
-                                            );
+                                    switch ($attribute['type']) {
+                                        case 'text':
+                                            return TextInput::make('attributes.' . $attribute['name'])
+                                                ->label(__('resource.attributes.' . $attribute['name']))
+                                                ->required()
+                                                ->maxLength(255);
+                                        case 'checkbox':
+                                            return Checkbox::make('attributes.' . $attribute['name'])
+                                                ->label(__('resource.attributes.' . $attribute['name']));
+                                        case 'select':
+                                            return Select::make('attributes.' . $attribute['name'])
+                                                ->label(__('resource.attributes.' . $attribute['name']))
+                                                ->required()
+                                                ->options(
+                                                    collect($attribute['options'])
+                                                        ->mapWithKeys(fn ($option) => [$option => $option])
+                                                );
+                                    }
                                 }
-                            }
                             )->toArray();
                         }
 
@@ -194,19 +192,20 @@ class ResourcesRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
-
     }
+
     protected function getTableFiltersFormWidth(): string
     {
         return '4xl';
     }
+
     protected function getTableFiltersLayout(): ?string
     {
         return Layout::AboveContent;
     }
+
     protected function shouldPersistTableFiltersInSession(): bool
     {
         return true;
     }
-
 }
