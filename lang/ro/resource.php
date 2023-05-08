@@ -15,7 +15,7 @@ return [
         'subcategory' => 'Subcategorie',
         'type' => 'Tip',
         'type_other' => 'Alt tip',
-        'relocation_resource' => 'Resursă poate fi relocata',
+        'organisation'=> 'Organizație',
     ],
     'attributes' => [
         'dog_name' => 'Numele câinelui',
@@ -29,6 +29,8 @@ return [
         'has_transport' => 'Are transport',
         'tech_type' => 'Tipul tehnicii',
         'area' => 'Areia de acoperire',
+        'relocation_resource' => 'Resursă poate fi relocata',
+
     ],
     'modal' => [
         'heading' => 'Adaugă o resursa nouă',

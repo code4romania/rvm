@@ -50,4 +50,9 @@ class Resource extends Model
     {
         return $this->belongsTo(Type::class);
     }
+
+    public function organisation(): BelongsTo
+    {
+        return $this->belongsTo(Organisation::class);
+    }
 }
