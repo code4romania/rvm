@@ -21,9 +21,54 @@ class ResourceCategorySeed extends Seeder
                 'subcategory' => [
                     [
                         'name' => 'Corturi',
+                        'types' => [
+                            'Iarna',
+                            'Vara',
+                            'Gonflabil',
+                            'Pe structura metalică',
+                            'Utilat',
+                            'Neutilat',
+                            'Altul',
+                        ],
+                        'custom_attributes' => [
+                            [
+                                'name' => 'dimension',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'capacity',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'quantity',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'relocation_resource',
+                                'type' => 'checkbox',
+                            ],
+                            [
+                                'name' => 'has_transport',
+                                'type' => 'checkbox',
+                            ],
+                        ],
                     ],
                     [
                         'name' => 'Rulote',
+                        'custom_attributes' => [
+                            [
+                                'name' => 'dimension',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'capacity',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'quantity',
+                                'type' => 'text',
+                            ],
+                        ],
                     ],
                     [
                         'name' => 'Cazare',
@@ -38,15 +83,65 @@ class ResourceCategorySeed extends Seeder
                 'subcategory' => [
                     [
                         'name' => 'Rutier',
+                        'types' => [
+                            'Masina',
+                            'Duba',
+                            'Camion',
+                            'Altele',
+                        ],
+                        'custom_attributes' => [
+                            [
+                                'name' => 'dimension',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'capacity',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'quantity',
+                                'type' => 'text',
+                            ],
+                        ],
                     ],
                     [
                         'name' => 'Maritim',
+                        'custom_attributes' => [
+                            [
+                                'name' => 'capacity',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'quantity',
+                                'type' => 'text',
+                            ],
+                        ],
                     ],
                     [
                         'name' => 'Feroviar',
+                        'custom_attributes' => [
+                            [
+                                'name' => 'capacity',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'quantity',
+                                'type' => 'text',
+                            ],
+                        ],
                     ],
                     [
                         'name' => 'Aerian',
+                        'custom_attributes' => [
+                            [
+                                'name' => 'capacity',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'quantity',
+                                'type' => 'text',
+                            ],
+                        ],
                     ],
                     [
                         'name' => 'Altele',
@@ -59,6 +154,37 @@ class ResourceCategorySeed extends Seeder
                 'subcategory' => [
                     [
                         'name' => 'Câini utilitari',
+                        'types' => [
+                            'Căutare în mediul urban',
+                            'Căutare în mediu natural',
+                        ],
+                        'custom_attributes' => [
+                            [
+                                'name' => 'dog_name',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'volunteer_name',
+                                'type' => 'text',
+                            ],
+                            [
+                                'name' => 'volunteer_specialization',
+                                'type' => 'text',
+                            ],
+
+                            [
+                                'name' => 'has_trailer',
+                                'type' => 'checkbox',
+                            ],
+                            [
+                                'name' => 'has_carriage',
+                                'type' => 'checkbox',
+                            ],
+                            [
+                                'name' => 'has_transport',
+                                'type' => 'checkbox',
+                            ],
+                        ],
                     ],
                     [
                         'name' => 'Altele',
@@ -70,9 +196,25 @@ class ResourceCategorySeed extends Seeder
                 'subcategory' => [
                     [
                         'name' => 'Radiocomunicații',
+                        'custom_attributes' => [
+                            [
+                                'name' => 'tech_type',
+                                'type' => 'text',
+                            ],
+                        ],
                     ],
                     [
-                        'name' => 'Radiocomunicații',
+                        'name' => 'Televiziune',
+                        'custom_attributes' => [
+                            [
+                                'name' => 'area',
+                                'type' => 'select',
+                                'options' => [
+                                    'Nationala',
+                                    'Locala',
+                                ],
+                            ],
+                        ],
                     ],
                     [
                         'name' => 'Radiodifuziune',
@@ -111,10 +253,17 @@ class ResourceCategorySeed extends Seeder
                 'slug' => \Illuminate\Support\Str::slug($item['name']),
             ]);
             foreach ($item['subcategory'] as $subcategory) {
-                $category->subcategories()->create([
+                $subcategoryMode = $category->subcategories()->create([
                     'name' => $subcategory['name'],
                     'slug' => \Illuminate\Support\Str::slug($subcategory['name']),
+                    'custom_attributes' => $subcategory['custom_attributes'] ?? [],
                 ]);
+                foreach ($subcategory['types'] ?? [] as $type) {
+                    $subcategoryMode->types()->create([
+                        'name' => $type,
+                        'slug' => \Illuminate\Support\Str::slug($type),
+                    ]);
+                }
             }
         }
     }

@@ -19,7 +19,7 @@ return [
         'types' => [
             'volunteer' => 'Voluntar',
             'volunteer_coordinator' => 'Coordonator voluntari',
-        ]
+        ],
 
     ],
     'modal' => [

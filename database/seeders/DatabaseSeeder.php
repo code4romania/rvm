@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
                     File::get(database_path('data/example_dump.sql'))
                 );
             });
+
             return;
         }
         $user = User::factory(['email' => 'admin@example.com'])
@@ -39,6 +40,5 @@ class DatabaseSeeder extends Seeder
             ->hasResources(3, function (array $attributes, Organisation $organisation) {
                 return ['organisation_id' => $organisation->id];
             })->create();
-
     }
 }

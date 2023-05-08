@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 return [
     'county' => 'Județ',
     'city' => 'Localitate',
@@ -7,5 +10,5 @@ return [
     'help' => [
         'multi_select' => 'Selectează toate opțiunile care se aplică, pe rând',
 
-    ]
+    ],
 ];

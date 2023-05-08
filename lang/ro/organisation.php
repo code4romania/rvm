@@ -41,7 +41,7 @@ return [
         'status' => 'Status',
         'status_action' => [
             'active' => 'Dezactiveaza',
-            'inactive' => 'Activeaza'
+            'inactive' => 'Activeaza',
         ],
         'types' => [
             'association' => 'Asociatie',
@@ -93,13 +93,13 @@ return [
             'inactive' => [
                 'heading' => 'Activeaza organizatia',
                 'subheading' => 'Esti sigur ca vrei sa activezi organizatia?',
-                'button' => 'Activeaza'
+                'button' => 'Activeaza',
             ],
             'active' => [
                 'heading' => 'Dezactiveaza organizatia',
                 'subheading' => 'Esti sigur ca vrei sa dezactivezi organizatia?',
-                'button' => 'Dezactiveaza'
+                'button' => 'Dezactiveaza',
             ],
-        ]
-    ]
+        ],
+    ],
 ];

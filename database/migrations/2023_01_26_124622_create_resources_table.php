@@ -23,19 +23,14 @@ return new class extends Migration
             $table->foreignIdFor(Organisation::class)->constrained()->cascadeOnDelete();
             $table->foreignId('category_id')->constrained('resource_categories')->cascadeOnDelete();
             $table->foreignId('subcategory_id')->constrained('resource_subcategories')->cascadeOnDelete();
-            $table->string('resource_type')->nullable();
+            $table->foreignId('type_id')->nullable()->constrained('resource_subcategory_types')->cascadeOnDelete();
+            $table->string('other_type')->nullable();
             $table->json('attributes')->nullable();
             $table->string('name');
-            $table->integer('quantity');
-            $table->enum('type', ['tip1', 'tip2']);
-            $table->boolean('has_transport')->default(false);
             $table->foreignIdFor(County::class)->nullable()->constrained();
             $table->foreignIdFor(City::class)->nullable()->constrained();
-            $table->string('contact_name');
-            $table->string('contact_phone');
-            $table->string('contact_email');
+            $table->json('contact');
             $table->text('observation')->nullable();
-
             $table->timestamps();
         });
     }

@@ -11,7 +11,6 @@ use App\Filament\Resources\OrganisationResource\RelationManagers\InterventionsRe
 use App\Filament\Resources\OrganisationResource\RelationManagers\ResourcesRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\UsersRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
-use App\Models\Organisation;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -22,18 +21,19 @@ class EditOrganisation extends EditRecord
     protected function getActions(): array
     {
         $recordStatus = self::getRecord()->status;
+
         return [
             Actions\DeleteAction::make(),
             Actions\Action::make('change_status')
                 ->action(function () {
                     $record = self::getRecord();
-                    $record->status =($record->status == OrganisationStatus::active->value) ? OrganisationStatus::inactive->value : OrganisationStatus::active->value;
+                    $record->status = ($record->status == OrganisationStatus::active->value) ? OrganisationStatus::inactive->value : OrganisationStatus::active->value;
                     $record->save();
                 })->label(__('organisation.action.change_status.' . $recordStatus . '.button'))
                 ->requiresConfirmation()
                 ->modalHeading(__('organisation.action.change_status.' . $recordStatus . '.heading'))
                 ->modalSubheading(__('organisation.action.change_status.' . $recordStatus . '.subheading'))
-                ->modalButton(__('organisation.action.change_status.' . $recordStatus . '.button'))
+                ->modalButton(__('organisation.action.change_status.' . $recordStatus . '.button')),
         ];
     }
 

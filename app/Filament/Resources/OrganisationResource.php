@@ -12,7 +12,6 @@ use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelat
 use App\Models\County;
 use App\Models\Organisation;
 use Closure;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
@@ -74,7 +73,7 @@ class OrganisationResource extends Resource
                                     ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                                 Select::make('city_id')
-                                   ->label(__('general.city'))
+                                    ->label(__('general.city'))
                                     ->required()
                                     ->options(
                                         fn (callable $get) => County::find($get('county_id'))
@@ -173,7 +172,7 @@ class OrganisationResource extends Resource
                                                     ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                                                 Select::make('city_id')
-                                                   ->label(__('general.city'))
+                                                    ->label(__('general.city'))
                                                     ->required()
                                                     ->options(
                                                         fn (callable $get) => County::find($get('county_id'))
@@ -187,7 +186,7 @@ class OrganisationResource extends Resource
                                             ->defaultItems(2)
                                             ->createItemButtonLabel(__('organisation.field.area_of_activity.add_area'))
                                             ->helperText(__('organisation.field.area_of_activity.help_text'))
-                                            ->required()
+                                            ->required(),
                                     ]),
                                 Section::make(__('organisation.section.resource'))
                                     ->schema([
@@ -228,7 +227,7 @@ class OrganisationResource extends Resource
                                                     ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                                                 Select::make('city_id')
-                                                   ->label(__('general.city'))
+                                                    ->label(__('general.city'))
                                                     ->required()
                                                     ->options(
                                                         fn (callable $get) => County::find($get('county_id'))

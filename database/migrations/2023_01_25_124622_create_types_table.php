@@ -15,12 +15,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('resource_subcategories', function (Blueprint $table) {
+        Schema::create('resource_subcategory_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained('resource_categories')->cascadeOnDelete();
+            $table->foreignId('subcategory_id')->constrained('resource_subcategories')->cascadeOnDelete();
             $table->string('name');
             $table->string('slug');
-            $table->json('custom_attributes')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('resource_subcategories');
+        Schema::dropIfExists('types');
     }
 };

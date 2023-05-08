@@ -103,7 +103,7 @@ class Volunteer extends Model
                         ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                     Select::make('city_id')
-                       ->label(__('general.city'))
+                        ->label(__('general.city'))
                         ->required()
                         ->options(
                             fn (callable $get) => County::find($get('county_id'))

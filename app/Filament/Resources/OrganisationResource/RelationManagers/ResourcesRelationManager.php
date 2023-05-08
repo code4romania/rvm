@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
 use App\Models\County;
+use App\Models\Resource\Category;
+use App\Models\Resource\Subcategory;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -27,75 +29,122 @@ class ResourcesRelationManager extends RelationManager
             ->schema([
                 TextInput::make('name')
                     ->required()
+                    ->label(__('resource.fields.name'))
                     ->maxLength(255),
-                Select::make('category')->options([
-                    'adapost' => 'Adăpostire',
-                    'transport' => 'Transport',
-                    'salvare' => 'Salvare',
-                    'telecomunicatii' => 'Telecomunicații',
-                    'it_c' => 'IT&C',
-                    'other' => 'Altele',
-                ])->reactive()
+                Select::make('category_id')
+                    ->relationship('category', 'name')
+                    ->reactive()
+                    ->label(__('resource.fields.category'))
                     ->required(),
 
-                Select::make('subcategory')
+                Select::make('subcategory_id')
                     ->label('Subcategory')
                     ->required()
+                    ->label(__('resource.fields.subcategory'))
                     ->options(
-                        fn (callable $get) => match ($get('category')) {
-                            'adapost' => ['corturi' => 'Corturi', 'rulota' => 'Rulote', 'cazare' => 'Cazare', 'altele' => 'Altele'],
-                            'transport' => ['rutier' => 'Rutier', 'maritim' => 'Maritim', 'feroviar' => 'Feroviar', 'aerian' => 'Aerian', 'altele' => 'Altele'],
-                            'salvare' => ['caini_utilitari' => 'Câini utilitari', 'Altele'],
-                            'telecomunicatii' => ['Radiocomunicații', 'Televiziune', 'Radiodifuziune', 'Altele'],
-                            'it_c' => ['Hardware', 'Software', 'Altele'],
-                            default => ['Altele'],
+                        function (callable $get, callable $set) {
+                            $set('type_id', null);
+
+                            return Category::find($get('category_id'))
+                                ?->subcategories
+                                ->pluck('name', 'id');
+                        }
+                    )
+                    ->searchable()
+                    ->reactive(),
+
+                Select::make('type_id')
+                    ->label(__('resource.fields.type'))
+                    ->options(
+                        function (callable $get) {
+                            return Subcategory::find($get('subcategory_id'))
+                                ?->types
+                                ->pluck('name', 'id');
                         }
                     )
                     ->hidden(function (callable $get) {
-                        return $get('category') === 'altele';
+                        return Subcategory::find($get('subcategory_id'))
+                            ?->types->count() == 0;
                     })
                     ->searchable()
                     ->reactive(),
-                Select::make('resource_type')
-                    ->label('Resource type')
-                    ->required()
-                    ->options(
-                        fn (callable $get) => match ($get('subcategory')) {
-                            'corturi' => ['Iarna', 'Vara', 'Gonflabil', 'Pe structura metalică', 'Utilat', 'Neutilat', 'Altul'],
-                            'rutier' => ['Masina', 'Duba', 'Camion', 'Altele'],
-                            'caini_utilitari' => ['Căutare în mediul urban', 'Căutare în mediu natural'],
-                            default => ['Altele'],
+                TextInput::make('type_other')
+                    ->label(__('resource.fields.type_other'))
+                    ->hidden(function (callable $get) {
+                        return Subcategory::find($get('subcategory_id'))
+                            ?->types->count() > 0;
+                    })
+                    ->maxLength(255),
+
+                Section::make('attributes')->heading(__('resource.fields.attributes'))
+                    ->schema(function (callable $get) {
+                        $attributes = collect(Subcategory::find($get('subcategory_id'))
+                            ?->custom_attributes);
+                        if ($attributes) {
+                            return $attributes->map(
+                                function ($attribute) {
+                                switch ($attribute['type']) {
+                                    case 'text':
+                                        return TextInput::make('attributes.' . $attribute['name'])
+                                            ->label(__('resource.attributes.' . $attribute['name']))
+                                            ->required()
+                                            ->maxLength(255);
+                                    case 'checkbox':
+                                        return Checkbox::make('attributes.' . $attribute['name'])
+                                            ->label(__('resource.attributes.' . $attribute['name']));
+                                    case 'select':
+                                        return Select::make('attributes.' . $attribute['name'])
+                                            ->label(__('resource.attributes.' . $attribute['name']))
+                                            ->required()
+                                            ->options(
+                                                collect($attribute['options'])
+                                                    ->mapWithKeys(fn ($option) => [$option => $option])
+                                            );
+                                }
+                            }
+                            )->toArray();
                         }
-                    )
-                    ->hidden(function (callable $get) {
-                        return $get('category') == 'altele';
-                    })
-                    ->searchable()
-                    ->reactive(),
-                // TODO check de ce nu afiseaza inputurile de mai jos
-                //// TODO handel on change remove completed
-                TextInput::make('resource_type')
-                    ->label('Resource type')
-                    ->hidden(function (callable $get) {
-                        return $get('subcategory') !== 'rulota';
-                    })
-                    ->maxLength(255),
 
-                TextInput::make('subcategory_other')
-                    ->label('Subcategory other')
-                    ->hidden(function (callable $get) {
-                        return $get('category') !== 'altele';
-                    })
-                    ->maxLength(255),
+                        return [];
+                    })->hidden(function (callable $get) {
+                        return Subcategory::find($get('subcategory_id'))
+                                ?->custom_attributes == null;
+                    }),
 
-                //corturi
-                //use getCourturi
-                //use getRulota
-                //use Transport rutier
-                //use Transport Maritim /Aerian
-                //use Caini_utilitari
-                //use Radiocomunicații
-                //use Televiziune / Radiodifuziune
+                Section::make(__('resource.fields.localisation'))
+                    ->schema([
+
+                        Select::make('county_id')
+                            ->label(__('general.county'))
+                            ->options(County::pluck('name', 'id'))
+                            ->required()
+                            ->reactive()
+                            ->searchable()
+                            ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+
+                        Select::make('city_id')
+                            ->label(__('general.city'))
+                            ->required()
+                            ->options(
+                                fn (callable $get) => County::find($get('county_id'))
+                                    ?->cities
+                                    ->pluck('name', 'id')
+                            )
+                            ->searchable()
+                            ->reactive(),
+                    ]),
+                Section::make(__('resource.fields.contact'))
+                    ->schema([
+                        TextInput::make('contact.person')
+                            ->label(__('resource.fields.contact_name'))
+                            ->required(),
+                        TextInput::make('contact.phone')->label(__('resource.fields.contact_phone')),
+                        TextInput::make('contact.email')->label(__('resource.fields.contact_email')),
+
+                    ]),
+                Textarea::make('observation')
+                    ->label(__('resource.fields.observation'))
+                    ->columnSpanFull()->required(),
 
             ]);
     }
@@ -128,8 +177,8 @@ class ResourcesRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->requiresConfirmation()
-                    ->modalHeading(__('organisation.modal.heading'))
-                    ->modalSubheading(__('organisation.modal.subheading'))
+                    ->modalHeading(__('resource.modal.heading'))
+                    ->modalSubheading(__('resource.modal.subheading'))
                     ->modalWidth('4xl')
                     ->slideOver(),
             ])
@@ -140,287 +189,5 @@ class ResourcesRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }
-
-    private static function getCorturi()
-    {
-        return [
-            TextInput::make('dimension'),
-            TextInput::make('capacity'),
-            TextInput::make('quantity'),
-            Section::make(__('Localizare'))
-                ->schema([
-
-                    Select::make('county_id')
-                        ->label(__('general.county'))
-                        ->options(County::pluck('name', 'id'))
-                        ->required()
-                        ->reactive()
-                        ->searchable()
-                        ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
-
-                    Select::make('city_id')
-                       ->label(__('general.city'))
-                        ->required()
-                        ->options(
-                            fn (callable $get) => County::find($get('county_id'))
-                                ?->cities
-                                ->pluck('name', 'id')
-                        )
-                        ->searchable()
-                        ->reactive(),
-                    Checkbox::make('relocation_resource'),
-                    Checkbox::make('has_transport'),
-                ]),
-
-            Section::make(__('Contact'))
-                ->schema([
-                    TextInput::make('contact_person'),
-                    TextInput::make('contact_phone'),
-                    TextInput::make('contact_email'),
-
-                ]),
-            Textarea::make('observation')
-                ->required(),
-        ];
-    }
-
-    private static function getRulote()
-    {
-        return [
-            TextInput::make('dimension'),
-            TextInput::make('capacity'),
-            TextInput::make('quantity'),
-            Section::make(__('Localizare'))
-                ->schema([
-
-                    Select::make('county_id')
-                        ->label(__('general.county'))
-                        ->options(County::pluck('name', 'id'))
-                        ->required()
-                        ->reactive()
-                        ->searchable()
-                        ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
-
-                    Select::make('city_id')
-                       ->label(__('general.city'))
-                        ->required()
-                        ->options(
-                            fn (callable $get) => County::find($get('county_id'))
-                                ?->cities
-                                ->pluck('name', 'id')
-                        )
-                        ->searchable()
-                        ->reactive(),
-                ]),
-
-            Section::make(__('Contact'))
-                ->schema([
-                    TextInput::make('contact_person'),
-                    TextInput::make('contact_phone'),
-                    TextInput::make('contact_email'),
-                ]),
-            Textarea::make('observation')
-                ->required()];
-    }
-
-    private static function getTransportRutier()
-    {
-        return [
-            TextInput::make('capacity'),
-            TextInput::make('quantity'),
-            Section::make(__('Localizare'))
-                ->schema([
-
-                    Select::make('county_id')
-                        ->label(__('general.county'))
-                        ->options(County::pluck('name', 'id'))
-                        ->required()
-                        ->reactive()
-                        ->searchable()
-                        ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
-
-                    Select::make('city_id')
-                       ->label(__('general.city'))
-                        ->required()
-                        ->options(
-                            fn (callable $get) => County::find($get('county_id'))
-                                ?->cities
-                                ->pluck('name', 'id')
-                        )
-                        ->searchable()
-                        ->reactive(),
-                ]),
-
-            Section::make(__('Contact'))
-                ->schema([
-                    TextInput::make('contact_person'),
-                    TextInput::make('contact_phone'),
-                    TextInput::make('contact_email'),
-                ]),
-            Textarea::make('observation')
-                ->required(),
-
-        ];
-    }
-
-    private static function getMaritim()
-    {
-        return [
-            TextInput::make('capacity'),
-            TextInput::make('quantity'),
-            Section::make(__('Localizare'))
-                ->schema([
-
-                    Select::make('county_id')
-                        ->label(__('general.county'))
-                        ->options(County::pluck('name', 'id'))
-                        ->required()
-                        ->reactive()
-                        ->searchable()
-                        ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
-
-                    Select::make('city_id')
-                       ->label(__('general.city'))
-                        ->required()
-                        ->options(
-                            fn (callable $get) => County::find($get('county_id'))
-                                ?->cities
-                                ->pluck('name', 'id')
-                        )
-                        ->searchable()
-                        ->reactive(),
-                ]),
-
-            Section::make(__('Contact'))
-                ->schema([
-                    TextInput::make('contact_person'),
-                    TextInput::make('contact_phone'),
-                    TextInput::make('contact_email'),
-                ]),
-            Textarea::make('observation')
-                ->required(),
-
-        ];
-    }
-
-    private static function getCainiUtilitari()
-    {
-        return [
-            TextInput::make('dog_name'),
-            TextInput::make('volunteer_name'),
-            TextInput::make('volunteer_specialization'),
-            Section::make(__('Localizare'))
-                ->schema([
-
-                    Select::make('county_id')
-                        ->label(__('general.county'))
-                        ->options(County::pluck('name', 'id'))
-                        ->required()
-                        ->reactive()
-                        ->searchable()
-                        ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
-
-                    Select::make('city_id')
-                       ->label(__('general.city'))
-                        ->required()
-                        ->options(
-                            fn (callable $get) => County::find($get('county_id'))
-                                ?->cities
-                                ->pluck('name', 'id')
-                        )
-                        ->searchable()
-                        ->reactive(),
-                ]),
-            Checkbox::make('has_trailer'),
-            Checkbox::make('has_carriage'),
-            Checkbox::make('has_transport')
-                ->label('Has transport')
-                ->required(),
-
-            Section::make(__('Contact'))
-                ->schema([
-                    TextInput::make('contact_person'),
-                    TextInput::make('contact_phone'),
-                    TextInput::make('contact_email'),
-                ]),
-            Textarea::make('observation')
-                ->required(),
-        ];
-    }
-
-    public static function getRadiocomunicații()
-    {
-        return [
-
-            TextInput::make('tech_type'),
-            Section::make(__('Localizare'))
-                ->schema([
-
-                    Select::make('county_id')
-                        ->label(__('general.county'))
-                        ->options(County::pluck('name', 'id'))
-                        ->required()
-                        ->reactive()
-                        ->searchable()
-                        ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
-
-                    Select::make('city_id')
-                       ->label(__('general.city'))
-                        ->required()
-                        ->options(
-                            fn (callable $get) => County::find($get('county_id'))
-                                ?->cities
-                                ->pluck('name', 'id')
-                        )
-                        ->searchable()
-                        ->reactive(),
-                ]),
-            Section::make(__('Contact'))
-                ->schema([
-                    TextInput::make('contact_person'),
-                    TextInput::make('contact_phone'),
-                    TextInput::make('contact_email'),
-                ]),
-            Textarea::make('observation')
-                ->required(),
-        ];
-    }
-
-    public static function getTeleviziune()
-    {
-        return [
-            Select::make('area')->options(['Nationala', 'Locala']),
-            Section::make(__('Localizare'))
-                ->schema([
-
-                    Select::make('county_id')
-                        ->label(__('general.county'))
-                        ->options(County::pluck('name', 'id'))
-                        ->required()
-                        ->reactive()
-                        ->searchable()
-                        ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
-
-                    Select::make('city_id')
-                       ->label(__('general.city'))
-                        ->required()
-                        ->options(
-                            fn (callable $get) => County::find($get('county_id'))
-                                ?->cities
-                                ->pluck('name', 'id')
-                        )
-                        ->searchable()
-                        ->reactive(),
-                ]),
-            Section::make(__('Contact'))
-                ->schema([
-                    TextInput::make('contact_person'),
-                    TextInput::make('contact_phone'),
-                    TextInput::make('contact_email'),
-                ]),
-            Textarea::make('observation')
-                ->required(),
-        ];
     }
 }

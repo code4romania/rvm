@@ -14,6 +14,8 @@ class Category extends Model
 
     protected $table = 'resource_categories';
 
+    protected $with = ['subcategories'];
+
     public function subcategories(): HasMany
     {
         return $this->hasMany(Subcategory::class);
