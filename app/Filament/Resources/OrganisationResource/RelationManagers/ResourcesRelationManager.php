@@ -16,6 +16,11 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\Layout;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class ResourcesRelationManager extends RelationManager
 {
@@ -154,25 +159,25 @@ class ResourcesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\IconColumn::make('has_transport')
-                    ->options([
-                        'heroicon-o-x-circle',
-                        'heroicon-o-x' => 'false',
-                        'heroicon-o-check' => 'true',
-
-                    ])
-                    ->colors([
-                        'secondary',
-                        'danger' => 'false',
-                        'success' => 'true',
-                    ])
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('quantity'),
-
+                Tables\Columns\TextColumn::make('category.name')->label(__('resource.fields.category')),
+                Tables\Columns\TextColumn::make('subcategory.name')->label(__('resource.fields.subcategory')),
+                Tables\Columns\TextColumn::make('type.name')->label(__('resource.fields.type')),
+                Tables\Columns\TextColumn::make('county.name')->label(__('general.county')),
             ])
             ->filters([
-                //
+                SelectFilter::make('category')
+                    ->relationship('category', 'name')
+                    ->label(__('resource.fields.category')),
+                SelectFilter::make('subcategory')
+                    ->relationship('subcategory', 'name')
+                    ->label(__('resource.fields.subcategory')),
+                SelectFilter::make('type')
+                    ->relationship('type', 'name')
+                    ->label(__('resource.fields.type')),
+                SelectFilter::make('county')->label(__('general.county'))
+                    ->relationship('county', 'name'),
+                TernaryFilter::make('attributes')->label(__('resource.fields.attributes')),
+
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
@@ -189,5 +194,19 @@ class ResourcesRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
+
     }
+    protected function getTableFiltersFormWidth(): string
+    {
+        return '4xl';
+    }
+    protected function getTableFiltersLayout(): ?string
+    {
+        return Layout::AboveContent;
+    }
+    protected function shouldPersistTableFiltersInSession(): bool
+    {
+        return true;
+    }
+
 }

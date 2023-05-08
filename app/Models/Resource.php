@@ -41,7 +41,7 @@ class Resource extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function subcategoy(): BelongsTo
+    public function subcategory(): BelongsTo
     {
         return $this->belongsTo(Subcategory::class);
     }
