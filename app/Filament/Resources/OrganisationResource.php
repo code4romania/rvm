@@ -28,6 +28,8 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Filters\Layout;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
 use Str;
 
@@ -73,13 +75,13 @@ class OrganisationResource extends Resource
                                     ->required()
                                     ->reactive()
                                     ->searchable()
-                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+                                    ->afterStateUpdated(fn(callable $set) => $set('city_id', null)),
 
                                 Select::make('city_id')
                                     ->label(__('general.city'))
                                     ->required()
                                     ->options(
-                                        fn (callable $get) => County::find($get('county_id'))
+                                        fn(callable $get) => County::find($get('county_id'))
                                             ?->cities
                                             ->pluck('name', 'id')
                                     )
@@ -172,13 +174,13 @@ class OrganisationResource extends Resource
                                                     ->required()
                                                     ->reactive()
                                                     ->searchable()
-                                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+                                                    ->afterStateUpdated(fn(callable $set) => $set('city_id', null)),
 
                                                 Select::make('city_id')
                                                     ->label(__('general.city'))
                                                     ->required()
                                                     ->options(
-                                                        fn (callable $get) => County::find($get('county_id'))
+                                                        fn(callable $get) => County::find($get('county_id'))
                                                             ?->cities
                                                             ->pluck('name', 'id')
                                                     )
@@ -227,13 +229,13 @@ class OrganisationResource extends Resource
                                                     ->required()
                                                     ->reactive()
                                                     ->searchable()
-                                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+                                                    ->afterStateUpdated(fn(callable $set) => $set('city_id', null)),
 
                                                 Select::make('city_id')
                                                     ->label(__('general.city'))
                                                     ->required()
                                                     ->options(
-                                                        fn (callable $get) => County::find($get('county_id'))
+                                                        fn(callable $get) => County::find($get('county_id'))
                                                             ?->cities
                                                             ->pluck('name', 'id')
                                                     )
@@ -244,7 +246,7 @@ class OrganisationResource extends Resource
                                             ->createItemButtonLabel(__('organisation.field.branch.add_area'))
                                             ->helperText(__('organisation.field.branch.help_text'))
                                             ->hidden(function (callable $get) {
-                                                return ! $get('has_branches');
+                                                return !$get('has_branches');
                                             }),
                                     ])
                                     ->label(__('organisation.field.resources')),
@@ -307,11 +309,30 @@ class OrganisationResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('county')->label(__('general.county'))
+                    ->relationship('county', 'name'),
+                SelectFilter::make('type')
+                    ->label(__('organisation.field.type'))
+                    ->options(OrganisationType::options()),
+                SelectFilter::make('expertises')
+                    ->multiple()
+                    ->relationship('expertises', 'name')
+                    ->label(__('organisation.field.expertises')),
+                SelectFilter::make('riskCategories')
+                    ->multiple()
+                    ->relationship('riskCategories', 'name')
+                    ->label(__('organisation.field.risk_category')),
+
+
+                SelectFilter::make('resourceTypes')
+                    ->multiple()
+                    ->relationship('resourceTypes', 'name')
+                    ->label(__('organisation.field.resource_types'))
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->filtersLayout(Layout::AboveContent)
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ])->defaultSort('created_at', 'desc');
