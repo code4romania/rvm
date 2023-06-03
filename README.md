@@ -20,6 +20,47 @@ This project is built by amazing volunteers and you can be one of them! Here's a
 -   Nginx
 -   MySQL 8.0
 
+## Development
+This project uses Laravel Sail, Laravel's default Docker development environment.
+
+After running the [initial setup](#initial-setup), run this command to start up the environment:
+```sh
+./vendor/bin/sail up -d
+```
+
+and then this command to rebuild the css / js assets on change:
+
+```sh
+./vendor/bin/sail npm run dev
+```
+
+### Initial setup
+
+```sh
+# 1. Install composer dependencies
+docker run --rm -v ${PWD}:/app -w /app composer:latest composer install --ignore-platform-reqs --no-scripts --no-interaction --prefer-dist --optimize-autoloader
+
+# 2. Copy the environment variables file
+cp .env.example .env
+
+# 3. Start the application
+./vendor/bin/sail up -d
+
+# 4. Install npm dependencies
+./vendor/bin/sail npm ci
+
+# 5. Build the frontend
+./vendor/bin/sail npm run build
+
+# 6. Generate the app secret key
+./vendor/bin/sail artisan key:generate
+
+# 7. Migrate and seed the database
+./vendor/bin/sail artisan migrate:fresh --seed
+```
+
+For more information on Laravel Sail, check out the [official documentation](https://laravel.com/docs/9.x/sail).
+
 ## Deployment
 
 The fastest way to deploy RVM is by using our first-party [Docker image](https://hub.docker.com/r/code4romania/rvm).
