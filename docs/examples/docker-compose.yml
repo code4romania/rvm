@@ -1,0 +1,43 @@
+version: '3'
+services:
+  app:
+    image: code4romania/rvm
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    environment:
+      APP_KEY: "CHANGE_ME"
+      APP_URL: "https://example.com"
+
+      DB_CONNECTION: "mysql"
+      DB_HOST: "db"
+      DB_PORT: "3306"
+      DB_DATABASE: "rvm"
+      DB_USERNAME: "root"
+      DB_PASSWORD: "RANDOM_GENERATED_PASSWORD"
+
+      MAIL_MAILER: "smtp"
+      MAIL_HOST: "smtp.example.com"
+      MAIL_PORT: "587"
+      MAIL_USERNAME: "mail@example.com"
+      MAIL_PASSWORD: "CHANGE_ME"
+      MAIL_ENCRYPTION: "tls"
+      MAIL_FROM_ADDRESS: "mail@example.com"
+      MAIL_FROM_NAME: "CHANGE_ME"
+    volumes:
+      - app-data:/var/www/storage
+
+  db:
+    image: mysql:8
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "RANDOM_GENERATED_PASSWORD"
+      MYSQL_DATABASE: "rvm"
+    volumes:
+      - db-data:/var/lib/mysql/
+
+volumes:
+  app-data:
+  db-data:
