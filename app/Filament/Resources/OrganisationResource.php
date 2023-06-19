@@ -309,9 +309,12 @@ class OrganisationResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('county')->label(__('general.county'))
+                SelectFilter::make('county')
+                    ->multiple()
+                    ->label(__('general.county'))
                     ->relationship('county', 'name'),
                 SelectFilter::make('type')
+                    ->multiple()
                     ->label(__('organisation.field.type'))
                     ->options(OrganisationType::options()),
                 SelectFilter::make('expertises')
@@ -322,7 +325,6 @@ class OrganisationResource extends Resource
                     ->multiple()
                     ->relationship('riskCategories', 'name')
                     ->label(__('organisation.field.risk_category')),
-
 
                 SelectFilter::make('resourceTypes')
                     ->multiple()
