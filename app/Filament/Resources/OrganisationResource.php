@@ -75,13 +75,13 @@ class OrganisationResource extends Resource
                                     ->required()
                                     ->reactive()
                                     ->searchable()
-                                    ->afterStateUpdated(fn(callable $set) => $set('city_id', null)),
+                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                                 Select::make('city_id')
                                     ->label(__('general.city'))
                                     ->required()
                                     ->options(
-                                        fn(callable $get) => County::find($get('county_id'))
+                                        fn (callable $get) => County::find($get('county_id'))
                                             ?->cities
                                             ->pluck('name', 'id')
                                     )
@@ -174,13 +174,13 @@ class OrganisationResource extends Resource
                                                     ->required()
                                                     ->reactive()
                                                     ->searchable()
-                                                    ->afterStateUpdated(fn(callable $set) => $set('city_id', null)),
+                                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                                                 Select::make('city_id')
                                                     ->label(__('general.city'))
                                                     ->required()
                                                     ->options(
-                                                        fn(callable $get) => County::find($get('county_id'))
+                                                        fn (callable $get) => County::find($get('county_id'))
                                                             ?->cities
                                                             ->pluck('name', 'id')
                                                     )
@@ -229,13 +229,13 @@ class OrganisationResource extends Resource
                                                     ->required()
                                                     ->reactive()
                                                     ->searchable()
-                                                    ->afterStateUpdated(fn(callable $set) => $set('city_id', null)),
+                                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
 
                                                 Select::make('city_id')
                                                     ->label(__('general.city'))
                                                     ->required()
                                                     ->options(
-                                                        fn(callable $get) => County::find($get('county_id'))
+                                                        fn (callable $get) => County::find($get('county_id'))
                                                             ?->cities
                                                             ->pluck('name', 'id')
                                                     )
@@ -246,7 +246,7 @@ class OrganisationResource extends Resource
                                             ->createItemButtonLabel(__('organisation.field.branch.add_area'))
                                             ->helperText(__('organisation.field.branch.help_text'))
                                             ->hidden(function (callable $get) {
-                                                return !$get('has_branches');
+                                                return ! $get('has_branches');
                                             }),
                                     ])
                                     ->label(__('organisation.field.resources')),
@@ -329,7 +329,7 @@ class OrganisationResource extends Resource
                 SelectFilter::make('resourceTypes')
                     ->multiple()
                     ->relationship('resourceTypes', 'name')
-                    ->label(__('organisation.field.resource_types'))
+                    ->label(__('organisation.field.resource_types')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

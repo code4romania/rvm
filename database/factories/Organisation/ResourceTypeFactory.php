@@ -21,7 +21,7 @@ class ResourceTypeFactory extends Factory
         $element = collect(['Program de pregatire scolara', 'Interventie rapida', 'Voluntari specializati']);
 
         return [
-            'name'=> fake()->randomElement($element),
+            'name' => fake()->randomElement($element),
         ];
     }
 }

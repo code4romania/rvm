@@ -21,7 +21,7 @@ class RiskCategoryFactory extends Factory
         $risks = collect(['Categorie de risc 1', 'Categorie de risc 2', 'Categorie de risc 3', 'Categorie de risc 4']);
 
         return [
-            'name'=> fake()->randomElement($risks),
+            'name' => fake()->randomElement($risks),
         ];
     }
 }

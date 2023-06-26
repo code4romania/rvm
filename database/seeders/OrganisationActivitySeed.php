@@ -25,29 +25,29 @@ class OrganisationActivitySeed extends Seeder
         ];
         Expertise::insert($expertise);
         $riskCategory = [
-            ['name'=> 'Inundatii'],
-            ['name'=> 'Cutremur'],
-            ['name'=> 'Avalanșă'],
-            ['name'=> 'Incendiu'],
-            ['name'=> 'Accident nuclear'],
-            ['name'=> 'Ger-Viscol'],
-            ['name'=> 'Furtun'],
-            ['name'=> 'Alunecare de teren'],
-            ['name'=> 'Conflict armat'],
-            ['name'=> 'Tornadă'],
-            ['name'=> 'Caniculă'],
-            ['name'=> 'Altele'],
+            ['name' => 'Inundatii'],
+            ['name' => 'Cutremur'],
+            ['name' => 'Avalanșă'],
+            ['name' => 'Incendiu'],
+            ['name' => 'Accident nuclear'],
+            ['name' => 'Ger-Viscol'],
+            ['name' => 'Furtun'],
+            ['name' => 'Alunecare de teren'],
+            ['name' => 'Conflict armat'],
+            ['name' => 'Tornadă'],
+            ['name' => 'Caniculă'],
+            ['name' => 'Altele'],
         ];
         RiskCategory::insert($riskCategory);
         $resourceType = [
-            ['name'=> 'Programe de pregătire în școli'],
-            ['name'=> 'Cursuri de prim-ajutor'],
-            ['name'=> 'Echipe de căutare'],
-            ['name'=> 'Intervenție rapidă'],
-            ['name'=> 'Prim ajutor calificat'],
-            ['name'=> 'Servicii sociale'],
-            ['name'=> 'Ajutor umanitar'],
-            ['name'=> 'Altele'],
+            ['name' => 'Programe de pregătire în școli'],
+            ['name' => 'Cursuri de prim-ajutor'],
+            ['name' => 'Echipe de căutare'],
+            ['name' => 'Intervenție rapidă'],
+            ['name' => 'Prim ajutor calificat'],
+            ['name' => 'Servicii sociale'],
+            ['name' => 'Ajutor umanitar'],
+            ['name' => 'Altele'],
         ];
         ResourceType::insert($resourceType);
     }
