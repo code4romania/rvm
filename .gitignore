@@ -1,5 +1,6 @@
 /.fleet
 /.idea
+/.phpunit.cache
 /.vscode
 /coverage
 /node_modules
@@ -26,3 +27,4 @@ Homestead.yaml
 npm-debug.log
 phpunit.xml
 yarn-error.log
+.DS_Store
