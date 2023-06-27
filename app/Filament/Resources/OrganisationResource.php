@@ -355,7 +355,6 @@ class OrganisationResource extends Resource
     {
         return [
             'index' => Pages\ListOrganisations::route('/'),
-            'create' => Pages\CreateOrganisation::route('/create'),
             'edit' => Pages\EditOrganisation::route('/{record}/edit'),
         ];
     }
