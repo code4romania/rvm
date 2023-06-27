@@ -18,10 +18,12 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Organisation::class)->constrained()->cascadeOnDelete();
-            $table->date('signed_at');
-            $table->date('expire_at');
             $table->timestamps();
+            $table->string('type');
+            $table->string('name');
+            $table->date('signed_at')->nullable();
+            $table->date('expires_at')->nullable();
+            $table->foreignIdFor(Organisation::class)->constrained()->cascadeOnDelete();
         });
     }
 

@@ -39,12 +39,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Organisation::factory(20)
-            ->hasVolunteers(3, function (array $attributes, Organisation $organisation) {
-                return ['organisation_id' => $organisation->id];
-            })
-            ->hasResources(3, function (array $attributes, Organisation $organisation) {
-                return ['organisation_id' => $organisation->id];
-            })
+            ->hasVolunteers(3)
+            ->hasResources(3)
+            ->hasDocuments(3)
             ->create();
     }
 }
