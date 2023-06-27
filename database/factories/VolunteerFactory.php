@@ -26,7 +26,7 @@ class VolunteerFactory extends Factory
             'first_name' => fake()->firstName,
             'last_name' => fake()->lastName,
             'role' => fake()->randomElement(VolunteerRole::values()),
-            'email' => fake()->email,
+            'email' => fake()->safeEmail(),
             'phone' => fake()->phoneNumber,
             'city_id' => $city->id,
             'county_id' => $city->county_id,

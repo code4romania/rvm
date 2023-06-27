@@ -8,7 +8,7 @@ use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
 use App\Models\City;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Str;
+use Illuminate\Support\Str;
 
 class OrganisationFactory extends Factory
 {
@@ -16,7 +16,7 @@ class OrganisationFactory extends Factory
     {
         $contactPerson = [
             'name' => fake()->name,
-            'email' => fake()->email,
+            'email' => fake()->safeEmail(),
             'phone' => fake()->phoneNumber,
             'role' => fake()->jobTitle,
         ];
@@ -32,7 +32,7 @@ class OrganisationFactory extends Factory
             'alias' => Str::slug($name),
             'type' => fake()->randomElement(OrganisationType::values()),
             'status' => fake()->randomElement(OrganisationStatus::values()),
-            'email' => fake()->email,
+            'email' => fake()->safeEmail(),
             'phone' => fake()->phoneNumber,
             'year' => fake()->year,
             'vat' => fake()->text(6),

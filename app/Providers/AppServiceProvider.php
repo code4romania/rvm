@@ -26,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Model::shouldBeStrict(true);
+        tap($this->app->isLocal(), function (bool $shouldBeEnabled) {
+            Model::preventLazyLoading($shouldBeEnabled);
+            Model::preventAccessingMissingAttributes($shouldBeEnabled);
+        });
     }
 }

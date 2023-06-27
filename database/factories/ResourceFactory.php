@@ -24,7 +24,7 @@ class ResourceFactory extends Factory
         $subcategory = Subcategory::query()->inRandomOrder()->first();
         $contactPerson = [
             'person' => fake()->name,
-            'email' => fake()->email,
+            'email' => fake()->safeEmail(),
             'phone' => fake()->phoneNumber,
         ];
 
