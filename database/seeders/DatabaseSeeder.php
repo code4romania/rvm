@@ -34,14 +34,11 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         $this->call([
-            OrganisationActivitySeed::class,
             ResourceCategorySeed::class,
         ]);
 
-        Organisation::factory(20)
-            ->hasVolunteers(3)
-            ->hasResources(3)
-            ->hasDocuments(3)
+        Organisation::factory()
+            ->count(20)
             ->create();
     }
 }

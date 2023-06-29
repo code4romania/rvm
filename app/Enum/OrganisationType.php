@@ -13,6 +13,7 @@ enum OrganisationType: string
     use Arrayable;
     use Comparable;
     use HasLabel;
+
     case association = 'association';
     case foundation = 'foundation';
     case federation = 'federation';

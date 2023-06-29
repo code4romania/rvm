@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\HasLocation;
+use App\Enum\OrganisationAreaType;
+use App\Enum\OrganisationStatus;
+use App\Enum\OrganisationType;
 use App\Models\Organisation\Branch;
 use App\Models\Organisation\Expertise;
 use App\Models\Organisation\ResourceType;
 use App\Models\Organisation\RiskCategory;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -52,12 +56,16 @@ class Organisation extends Model implements HasMedia
         'type_of_area',
         'has_branches',
         'social_services_accreditation',
-
+        'areas',
     ];
 
     protected $casts = [
+        'areas' => AsEnumCollection::class . ':' . OrganisationAreaType::class,
+        'type' => OrganisationType::class,
+        'status' => OrganisationStatus::class,
         'contact_person' => 'array',
         'other_information' => AsCollection::class,
+        'has_branches' => 'boolean',
     ];
 
     public function users(): HasMany
@@ -108,5 +116,14 @@ class Organisation extends Model implements HasMedia
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
+    }
+
+    public function toggleStatus(): bool
+    {
+        return $this->update([
+            'status' => $this->status->is(OrganisationStatus::active)
+                ? OrganisationStatus::inactive
+                : OrganisationStatus::active,
+        ]);
     }
 }
