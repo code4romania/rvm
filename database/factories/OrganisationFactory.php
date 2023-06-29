@@ -15,17 +15,20 @@ class OrganisationFactory extends Factory
     public function definition()
     {
         $contactPerson = [
-            'name' => fake()->name,
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
             'email' => fake()->safeEmail(),
-            'phone' => fake()->phoneNumber,
-            'role' => fake()->jobTitle,
+            'phone' => fake()->phoneNumber(),
+            'role' => fake()->jobTitle(),
         ];
+
         $otherInfo = [
             'facebook' => '#facebook',
             'website' => '#website',
         ];
+
         $city = City::query()->inRandomOrder()->first();
-        $name = fake()->company;
+        $name = fake()->company();
 
         return [
             'name' => $name,
@@ -33,18 +36,18 @@ class OrganisationFactory extends Factory
             'type' => fake()->randomElement(OrganisationType::values()),
             'status' => fake()->randomElement(OrganisationStatus::values()),
             'email' => fake()->safeEmail(),
-            'phone' => fake()->phoneNumber,
-            'year' => fake()->year,
-            'vat' => fake()->text(6),
-            'no_registration' => fake()->text(6),
+            'phone' => fake()->phoneNumber(),
+            'year' => fake()->year(),
+            'cif' => fake()->numerify('#########'),
+            'registration_number' => fake()->text(6),
             'description' => fake()->sentence('10'),
             'address' => fake()->address(),
             'contact_person' => $contactPerson,
             'other_information' => $otherInfo,
-            'has_branches' => fake()->boolean,
+            'has_branches' => fake()->boolean(),
             'city_id' => $city->id,
             'county_id' => $city->county_id,
-            'social_services_accreditation' => fake()->boolean,
+            'social_services_accreditation' => fake()->boolean(),
         ];
     }
 }

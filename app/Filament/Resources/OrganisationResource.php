@@ -6,6 +6,7 @@ namespace App\Filament\Resources;
 
 use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationType;
+use App\Filament\Forms\Components\Location;
 use App\Filament\Resources\OrganisationResource\Pages;
 use App\Filament\Resources\OrganisationResource\RelationManagers\DocumentsRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\InterventionsRelationManager;
@@ -14,8 +15,8 @@ use App\Filament\Resources\OrganisationResource\RelationManagers\UsersRelationMa
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
 use App\Models\County;
 use App\Models\Organisation;
-use Closure;
-use Filament\Forms\Components\Radio;
+use App\Rules\ValidCIF;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -28,140 +29,170 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Model;
-use Str;
 
 class OrganisationResource extends Resource
 {
     protected static ?string $model = Organisation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-office-building';
+
+    public static function getModelLabel(): string
+    {
+        return __('organisation.label.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('organisation.label.plural');
+    }
 
     public static function form(Form $form): Form
     {
 //        debug(Organisation::find(1)->expertises);
         return $form
+            ->columns(3)
             ->schema([
-                Tabs::make('Heading')
-                    ->tabs([
-                        Tabs\Tab::make(__('organisation.section.general_data'))
+                Group::make()
+                    ->columnSpan(2)
+                    ->schema([
+                        Section::make(__('organisation.section.organisation_data'))
+                            ->columns()
                             ->schema([
                                 TextInput::make('name')
                                     ->label(__('organisation.field.name'))
-                                    ->reactive()
-                                    ->afterStateUpdated(function (Closure $set, $state) {
-                                        $set('alias', Str::slug($state));
-                                    })
+                                    ->placeholder(__('organisation.placeholder.name'))
+                                    ->maxLength(200)
                                     ->required(),
+
                                 TextInput::make('alias')
                                     ->label(__('organisation.field.alias'))
-                                    ->nullable()
-                                    ->required(),
-                                Radio::make('type')
-                                    ->label(__('organisation.field.type'))
-                                    ->required()
-                                    ->options(OrganisationType::options())
-                                    ->inline(),
-                                Select::make('year')
-                                    ->label(__('organisation.field.year'))
-                                    ->placeholder(__('organisation.field.choose'))
-                                    ->options(range(today()->year, 1950))
-                                    ->required(),
-                                Select::make('county_id')
-                                    ->label(__('general.county'))
-                                    ->options(County::pluck('name', 'id'))
-                                    ->required()
-                                    ->reactive()
-                                    ->searchable()
-                                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+                                    ->placeholder(__('organisation.placeholder.alias'))
+                                    ->maxLength(200)
+                                    ->nullable(),
 
-                                Select::make('city_id')
-                                    ->label(__('general.city'))
-                                    ->required()
-                                    ->options(
-                                        fn (callable $get) => County::find($get('county_id'))
-                                            ?->cities
-                                            ->pluck('name', 'id')
-                                    )
-                                    ->searchable()
-                                    ->reactive(),
+                                Select::make('type')
+                                    ->label(__('organisation.field.type'))
+                                    ->options(OrganisationType::options())
+                                    ->enum(OrganisationType::class)
+                                    ->required(),
+
+                                TextInput::make('year')
+                                    ->label(__('organisation.field.year'))
+                                    ->placeholder('2006')
+                                    ->numeric()
+                                    ->minValue(1900)
+                                    ->maxValue(today()->year)
+                                    ->required(),
+
+                                TextInput::make('cif')
+                                    ->label(__('organisation.field.cif'))
+                                    ->rule(new ValidCIF)
+                                    ->required(),
+
+                                TextInput::make('registration_number')
+                                    ->label(__('organisation.field.registration_number'))
+                                    ->maxLength(50)
+                                    ->required(),
+
                                 TextInput::make('email')
                                     ->label(__('organisation.field.email_organisation'))
+                                    ->maxLength(200)
                                     ->email()
                                     ->required(),
+
                                 TextInput::make('phone')
                                     ->label(__('organisation.field.phone_organisation'))
+                                    ->maxLength(14)
+                                    ->tel()
                                     ->required(),
-                                TextInput::make('vat')
-                                    ->label(__('organisation.field.vat'))
+
+                                Textarea::make('description')
+                                    ->label(__('organisation.field.short_description'))
+                                    ->maxLength(1000)
+                                    ->rows(2)
+                                    ->helperText(__('organisation.help.description'))
+                                    ->columnSpanFull()
                                     ->required(),
-                                TextInput::make('no_registration')
-                                    ->label(__('organisation.field.no_registration'))
+                            ]),
+
+                        Section::make(__('organisation.field.contact_person'))
+                            ->columns()
+                            ->schema([
+                                TextInput::make('contact_person.first_name')
+                                    ->label(__('organisation.field.contact_person_first_name'))
+                                    ->maxLength(100)
                                     ->required(),
-                                Textarea::make('address')
+
+                                TextInput::make('contact_person.last_name')
+                                    ->label(__('organisation.field.contact_person_last_name'))
+                                    ->maxLength(100)
+                                    ->required(),
+
+                                TextInput::make('contact_person.role')
+                                    ->label(__('organisation.field.role'))
+                                    ->columnSpanFull()
+                                    ->maxLength(200)
+                                    ->required(),
+
+                                TextInput::make('contact_person.email')
+                                    ->label(__('organisation.field.email'))
+                                    ->maxLength(200)
+                                    ->email()
+                                    ->required(),
+
+                                TextInput::make('contact_person.phone')
+                                    ->label(__('organisation.field.phone'))
+                                    ->maxLength(14)
+                                    ->tel()
+                                    ->required(),
+                            ]),
+                    ]),
+
+                Group::make()
+                    ->columnSpan(1)
+                    ->schema([
+                        Section::make(__('organisation.field.logo'))
+                            ->schema([
+                                SpatieMediaLibraryFileUpload::make('logo')
+                                    ->conversion('thumb')
+                                    ->disableLabel()
+                                    ->maxFiles(1)
+                                    ->image(),
+                            ]),
+
+                        Section::make(__('organisation.field.hq'))
+                            ->schema([
+                                Location::make()
+                                    ->columns(1)
+                                    ->required(),
+
+                                TextInput::make('address')
                                     ->label(__('organisation.field.address'))
                                     ->maxLength(200)
                                     ->columnSpanFull()
                                     ->required(),
-                                Textarea::make('description')
-                                    ->label(__('organisation.field.short_description'))
-                                    ->maxLength(700)
-                                    ->helperText(__('organisation.help.description'))
-                                    ->columnSpanFull()
-                                    ->required(),
-                                SpatieMediaLibraryFileUpload::make('logo')->conversion('thumb'),
-                                Section::make(__('organisation.field.contact_person'))
-                                    ->schema([
-                                        TextInput::make('contact_person.name')
-                                            ->label(__('organisation.field.contact_person_name'))
-                                            ->required(),
-                                        TextInput::make('contact_person.role')
-                                            ->label(__('organisation.field.role'))
-                                            ->required(),
-                                        TextInput::make('contact_person.email')
-                                            ->label(__('organisation.field.email'))
-                                            ->email()
-                                            ->required(),
-                                        TextInput::make('contact_person.phone')
-                                            ->label(__('organisation.field.phone'))
-                                            ->required(),
+                            ]),
 
-                                    ])
-                                    ->columns(2),
-                                Section::make(__('organisation.field.other_information'))
-                                    ->schema([
-                                        TextInput::make('other_information.website')
-                                            ->label(__('organisation.field.website'))
-                                            ->required(),
-                                        TextInput::make('other_information.facebook')
-                                            ->label(__('organisation.field.facebook'))
-                                            ->required(),
-                                    ])
-                                    ->columns(2),
-                            ])->columns(2),
-                        Tabs\Tab::make(__('organisation.section.activity'))
+                        Section::make(__('organisation.field.other_information'))
+                            ->columnSpan(1)
                             ->schema([
-                                Select::make('expertises')
-                                    ->multiple()
-                                    ->helperText(__('general.help.multi_select'))
-                                    ->relationship('expertises', 'name')
-                                    ->preload()
-                                    ->label(__('organisation.field.expertises')),
-                                Select::make('risk_category')
-                                    ->multiple()
-                                    ->helperText(__('general.help.multi_select'))
-                                    ->relationship('riskCategories', 'name')
-                                    ->preload()
-                                    ->label(__('organisation.field.risk_category')),
-                                Section::make(__('organisation.section.area_of_activity'))
-                                    ->schema([
-                                        Radio::make('type_of_area')
-                                            ->label(__('organisation.field.type_of_area'))
-                                            ->options(OrganisationAreaType::options())
-                                            ->reactive()
-                                            ->required(),
+                                TextInput::make('other_information.website')
+                                    ->label(__('organisation.field.website'))
+                                    ->maxLength(200)
+                                    ->url()
+                                    ->nullable(),
+
+                                TextInput::make('other_information.facebook')
+                                    ->label(__('organisation.field.facebook'))
+                                    ->maxLength(200)
+                                    ->url()
+                                    ->nullable(),
+                            ]),
+                    ]),
                                         Repeater::make('areas_of_activity')
                                             ->label(__('organisation.field.area_of_activity.areas'))
                                             ->hidden(function (callable $get) {
@@ -259,35 +290,34 @@ class OrganisationResource extends Resource
                                     ]),
                             ]),
                     ]),
-            ])->columns(1);
+            ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label(__('organisation.field.name'))
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('type')
+                TextColumn::make('type')
                     ->label(__('organisation.field.type'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label(__('general.created_at'))
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\IconColumn::make('status')
+                IconColumn::make('status')
                     ->options([
                         'heroicon-o-x-circle',
                         'heroicon-o-x' => 'inactive',
                         'heroicon-o-check' => 'active',
-
                     ])
                     ->colors([
                         'secondary',
@@ -298,12 +328,12 @@ class OrganisationResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('county.name')
+                TextColumn::make('county.name')
                     ->label(__('general.county'))
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
                     ->searchable()
                     ->sortable(),
@@ -313,10 +343,12 @@ class OrganisationResource extends Resource
                     ->multiple()
                     ->label(__('general.county'))
                     ->relationship('county', 'name'),
+
                 SelectFilter::make('type')
                     ->multiple()
                     ->label(__('organisation.field.type'))
                     ->options(OrganisationType::options()),
+
                 SelectFilter::make('expertises')
                     ->multiple()
                     ->relationship('expertises', 'name')
@@ -332,7 +364,7 @@ class OrganisationResource extends Resource
                     ->label(__('organisation.field.resource_types')),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->filtersLayout(Layout::AboveContent)
             ->bulkActions([
@@ -355,14 +387,8 @@ class OrganisationResource extends Resource
     {
         return [
             'index' => Pages\ListOrganisations::route('/'),
+            'view' => Pages\ViewOrganisation::route('/{record}'),
             'edit' => Pages\EditOrganisation::route('/{record}/edit'),
-        ];
-    }
-
-    public static function getGlobalSearchResultActions(Model $record): array
-    {
-        return [
-
         ];
     }
 }

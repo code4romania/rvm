@@ -29,8 +29,8 @@ return new class extends Migration
             $table->text('email');
             $table->text('phone');
             $table->year('year')->nullable();
-            $table->string('vat')->nullable();
-            $table->string('no_registration')->nullable();
+            $table->string('cif')->nullable()->unique();
+            $table->string('registration_number')->nullable();
             $table->foreignIdFor(County::class)->nullable()->constrained();
             $table->foreignIdFor(City::class)->nullable()->constrained();
             $table->text('address')->nullable();

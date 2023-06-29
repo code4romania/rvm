@@ -26,12 +26,14 @@ class ListOrganisations extends ListRecords
                     TextInput::make('name')
                         ->label(__('organisation.field.name'))
                         ->placeholder(__('organisation.placeholder.name'))
+                        ->maxLength(200)
                         ->required()
                         ->inlineLabel(),
 
                     TextInput::make('alias')
                         ->label(__('organisation.field.alias'))
                         ->placeholder(__('organisation.placeholder.alias'))
+                        ->maxLength(200)
                         ->nullable()
                         ->inlineLabel(),
 
@@ -53,6 +55,7 @@ class ListOrganisations extends ListRecords
                         ->label(__('organisation.field.type'))
                         ->required()
                         ->options(OrganisationType::options())
+                        ->enum(OrganisationType::class)
                         ->inlineLabel(),
                 ]),
         ];
