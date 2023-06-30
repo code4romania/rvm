@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 return [
 
+    'label' => [
+        'singular' => 'Resursă',
+        'plural' => 'Resurse',
+    ],
+
     'fields' => [
         'name' => 'Nume',
         'last_name' => 'Nume',
@@ -15,7 +20,7 @@ return [
         'subcategory' => 'Subcategorie',
         'type' => 'Tip',
         'type_other' => 'Alt tip',
-        'organisation'=> 'Organizație',
+        'organisation' => 'Organizație',
     ],
     'attributes' => [
         'dog_name' => 'Numele câinelui',
