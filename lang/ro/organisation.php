@@ -96,6 +96,7 @@ return [
         'area_of_activity' => 'Aria de activitate',
         'localities' => 'Localitati',
         'other_information' => 'Alte informatii',
+        'profile' => 'Profil',
     ],
 
     'help' => [

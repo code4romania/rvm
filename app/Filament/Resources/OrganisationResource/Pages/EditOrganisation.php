@@ -36,4 +36,9 @@ class EditOrganisation extends EditRecord
     {
         return static::getResource()::getUrl('view', $this->getRecord());
     }
+
+    public function getFormTabLabel(): ?string
+    {
+        return __('organisation.section.profile');
+    }
 }
