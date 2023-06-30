@@ -44,4 +44,9 @@ class ViewOrganisation extends ViewRecord
     {
         return true;
     }
+
+    public function getFormTabLabel(): ?string
+    {
+        return __('organisation.section.profile');
+    }
 }
