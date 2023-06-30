@@ -4,24 +4,42 @@ declare(strict_types=1);
 
 return [
 
-    'fields' => [
+    'label' => [
+        'singular' => 'Voluntar',
+        'plural' => 'Voluntari',
+    ],
+
+    'field' => [
         'name' => 'Nume',
         'last_name' => 'Nume',
         'first_name' => 'Prenume',
-        'birthday' => 'Data nașterii',
-        'cnp' => 'Cnp',
+        'cnp' => 'CNP',
+        'language' => 'Ce limbă?',
         'email' => 'Email',
         'phone' => 'Telefon',
         'role' => 'Rol',
-        'specialization' => 'Specializare',
+        'specializations' => 'Specializare',
         'accreditation' => 'Acreditare prim ajutor',
         'updated_at' => 'Ultima actualizare',
-        'types' => [
-            'volunteer' => 'Voluntar',
-            'volunteer_coordinator' => 'Coordonator voluntari',
-        ],
-
+        'organisation' => 'Organizație',
     ],
+
+    'role' => [
+        'volunteer' => 'Voluntar',
+        'coordinator' => 'Coordonator voluntari',
+        'other' => 'Altul',
+    ],
+
+    'specialization' => [
+        'first_aid' => 'Prim ajutor',
+        'search_rescue' => 'Search & rescue',
+        'stretcher_bearer' => 'Brancardier',
+        'cook' => 'Bucătar',
+        'social_worker' => 'Asistent social',
+        'mhpss' => 'MHPSS',
+        'translator' => 'Traducător',
+    ],
+
     'modal' => [
         'heading' => 'Adaugă voluntar',
         'subheading' => 'Vrei să adaugi un număr mai mare de voluntari simultan. Folosești funcția Import voluntari. ',

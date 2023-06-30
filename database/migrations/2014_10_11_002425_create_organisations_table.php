@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('alias')->nullable();
             $table->enum('type', OrganisationType::values());
             $table->enum('status', OrganisationStatus::values())->default('inactive');
-            $table->text('email');
-            $table->text('phone');
+            $table->string('email');
+            $table->string('phone');
             $table->year('year')->nullable();
             $table->string('cif')->nullable()->unique();
             $table->string('registration_number')->nullable();
