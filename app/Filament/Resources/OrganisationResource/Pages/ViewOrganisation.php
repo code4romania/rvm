@@ -15,6 +15,11 @@ class ViewOrganisation extends ViewRecord
 {
     protected static string $resource = OrganisationResource::class;
 
+    public function getTitle(): string
+    {
+        return $this->getRecord()->name;
+    }
+
     protected function getActions(): array
     {
         $status = $this->getRecord()->status?->value;
