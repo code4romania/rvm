@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories\Organisation;
 
+use App\Models\City;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,8 +19,16 @@ class BranchFactory extends Factory
      */
     public function definition()
     {
+        $city = City::query()->inRandomOrder()->first();
+
         return [
-            //
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'email' => fake()->safeEmail(),
+            'phone' => fake()->phoneNumber(),
+            'address' => fake()->address(),
+            'city_id' => $city->id,
+            'county_id' => $city->county_id,
         ];
     }
 }

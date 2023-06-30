@@ -24,8 +24,10 @@ class User extends Authenticatable implements FilamentUser, HasName
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
+        'phone',
         'password',
     ];
 
@@ -55,6 +57,6 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function getFilamentName(): string
     {
-        return $this->name;
+        return "{$this->first_name} {$this->last_name}";
     }
 }

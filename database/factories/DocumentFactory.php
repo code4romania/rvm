@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enum\DocumentType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,9 +20,20 @@ class DocumentFactory extends Factory
      */
     public function definition()
     {
+        $type = fake()->randomElement(DocumentType::values());
+
+        $signed_at = $expires_at = null;
+
+        if (DocumentType::protocol->is($type)) {
+            $signed_at = Carbon::createFromInterface(fake()->dateTimeBetween('-1 year', 'now'));
+            $expires_at = $signed_at->addDays(fake()->randomNumber(2));
+        }
+
         return [
-            'signature_date' => fake()->date(),
-            'expiration_date' => fake()->futureDate(),
+            'name' => fake()->sentence(),
+            'type' => $type,
+            'signed_at' => $signed_at?->toDateString(),
+            'expires_at' => $expires_at?->toDateString(),
         ];
     }
 }

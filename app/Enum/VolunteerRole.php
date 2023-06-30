@@ -15,10 +15,11 @@ enum VolunteerRole: string
     use HasLabel;
 
     case volunteer = 'volunteer';
-    case volunteerCoordinator = 'volunteer_coordinator';
+    case coordinator = 'coordinator';
+    case other = 'other';
 
     protected function labelKeyPrefix(): ?string
     {
-        return 'volunteer.fields.types';
+        return 'volunteer.role';
     }
 }

@@ -26,11 +26,11 @@ return new class extends Migration
             $table->string('alias')->nullable();
             $table->enum('type', OrganisationType::values());
             $table->enum('status', OrganisationStatus::values())->default('inactive');
-            $table->text('email');
-            $table->text('phone');
+            $table->string('email');
+            $table->string('phone');
             $table->year('year')->nullable();
-            $table->string('vat')->nullable();
-            $table->string('no_registration')->nullable();
+            $table->string('cif')->nullable()->unique();
+            $table->string('registration_number')->nullable();
             $table->foreignIdFor(County::class)->nullable()->constrained();
             $table->foreignIdFor(City::class)->nullable()->constrained();
             $table->text('address')->nullable();
@@ -38,7 +38,7 @@ return new class extends Migration
             $table->json('contact_person')->nullable();
             $table->json('other_information')->nullable();
             $table->enum('type_of_area', OrganisationAreaType::values());
-            $table->json('areas_of_activity')->nullable();
+            $table->json('areas')->nullable();
             $table->boolean('has_branches')->default(false);
             $table->boolean('social_services_accreditation')->default(false);
             $table->softDeletes();
