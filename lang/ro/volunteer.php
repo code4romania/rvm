@@ -19,7 +19,7 @@ return [
         'phone' => 'Telefon',
         'role' => 'Rol',
         'specializations' => 'Specializare',
-        'accreditation' => 'Acreditare prim ajutor',
+        'has_first_aid_accreditation' => 'Acreditare prim ajutor',
         'updated_at' => 'Ultima actualizare',
         'organisation' => 'Organizație',
     ],

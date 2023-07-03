@@ -14,10 +14,12 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 
@@ -101,6 +103,10 @@ class VolunteerResource extends Resource
                                 fn (callable $get) => \in_array('translator', $get('specializations'))
                             ),
 
+                        Toggle::make('has_first_aid_accreditation')
+                            ->label(__('volunteer.field.has_first_aid_accreditation'))
+                            ->columnSpanFull(),
+
                         Location::make()
                             ->required(),
                     ]),
@@ -146,6 +152,11 @@ class VolunteerResource extends Resource
                             ->filter()
                             ->join(', ')
                     )
+                    ->toggleable(),
+
+                IconColumn::make('has_first_aid_accreditation')
+                    ->label(__('volunteer.field.has_first_aid_accreditation'))
+                    ->boolean()
                     ->toggleable(),
             ])
             ->defaultSort('id', 'desc')
