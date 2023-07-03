@@ -18,9 +18,10 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class DocumentResource extends Resource
 {
@@ -119,9 +120,8 @@ class DocumentResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
-                IconColumn::make('media.id')
+                TextColumn::make('media.file_name')
                     ->label(__('document.field.document'))
-                    ->boolean()
                     ->sortable()
                     ->toggleable(),
 
@@ -153,6 +153,13 @@ class DocumentResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+            ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exports([
+                        ExcelExport::make()
+                            ->fromTable(),
+                    ]),
             ])
             ->defaultSort('id', 'desc');
     }
