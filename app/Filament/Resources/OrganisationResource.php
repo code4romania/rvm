@@ -32,6 +32,8 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class OrganisationResource extends Resource
 {
@@ -298,7 +300,8 @@ class OrganisationResource extends Resource
                         'class' => 'object-contain',
                     ])
                     ->width(80)
-                    ->height(40),
+                    ->height(40)
+                    ->toggleable(),
 
                 TextColumn::make('name')
                     ->label(__('organisation.field.name'))
@@ -307,7 +310,7 @@ class OrganisationResource extends Resource
 
                 TextColumn::make('type')
                     ->label(__('organisation.field.type'))
-                    ->enum(OrganisationType::options())
+                    ->formatStateUsing(fn ($record) => $record->type->label())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -325,22 +328,28 @@ class OrganisationResource extends Resource
                     ])
                     ->label(__('organisation.field.status'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('county.name')
                     ->label(__('general.county'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
+                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
+                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('county')
@@ -374,7 +383,16 @@ class OrganisationResource extends Resource
             ->filtersLayout(Layout::AboveContent)
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ])->defaultSort('created_at', 'desc');
+            ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exports([
+                        ExcelExport::make()
+                            ->fromTable()
+                            ->except(['logo']),
+                    ]),
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
