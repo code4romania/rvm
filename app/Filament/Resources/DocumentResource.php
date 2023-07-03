@@ -86,6 +86,7 @@ class DocumentResource extends Resource
                 Section::make(__('document.field.document'))
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('document')
+                            ->enableDownload()
                             ->disableLabel()
                             ->preserveFilenames()
                             ->columnSpanFull(),

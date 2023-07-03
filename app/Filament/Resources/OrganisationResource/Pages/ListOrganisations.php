@@ -57,7 +57,9 @@ class ListOrganisations extends ListRecords
                         ->options(OrganisationType::options())
                         ->enum(OrganisationType::class)
                         ->inlineLabel(),
-                ]),
+                ])
+                ->successRedirectUrl(fn ($record) => OrganisationResource::getUrl('view', $record))
+                ->disableCreateAnother(),
         ];
     }
 }

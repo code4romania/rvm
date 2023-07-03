@@ -28,6 +28,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
@@ -156,6 +157,7 @@ class OrganisationResource extends Resource
                         Section::make(__('organisation.field.logo'))
                             ->schema([
                                 SpatieMediaLibraryFileUpload::make('logo')
+                                    ->enableOpen()
                                     ->conversion('thumb')
                                     ->disableLabel()
                                     ->maxFiles(1)
@@ -291,6 +293,13 @@ class OrganisationResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('logo')
+                    ->extraImgAttributes([
+                        'class' => 'object-contain',
+                    ])
+                    ->width(80)
+                    ->height(40),
+
                 TextColumn::make('name')
                     ->label(__('organisation.field.name'))
                     ->searchable()

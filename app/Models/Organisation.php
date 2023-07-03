@@ -35,7 +35,7 @@ class Organisation extends Model implements HasMedia
     {
         $this
             ->addMediaConversion('thumb')
-            ->fit(Manipulations::FIT_CROP, 300, 300)
+            ->fit(Manipulations::FIT_CONTAIN, 80, 40)
             ->nonQueued();
     }
 
@@ -125,5 +125,10 @@ class Organisation extends Model implements HasMedia
                 ? OrganisationStatus::inactive
                 : OrganisationStatus::active,
         ]);
+    }
+
+    public function getLogoAttribute(): string
+    {
+        return $this->getFirstMediaUrl(conversionName: 'thumb');
     }
 }
