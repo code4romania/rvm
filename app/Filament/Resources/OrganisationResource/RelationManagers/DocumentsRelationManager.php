@@ -65,6 +65,7 @@ class DocumentsRelationManager extends RelationManager
                     ]),
 
                 SpatieMediaLibraryFileUpload::make('document')
+                    ->enableDownload()
                     ->label(__('document.field.document'))
                     ->preserveFilenames()
                     ->columnSpanFull(),
@@ -109,6 +110,7 @@ class DocumentsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
