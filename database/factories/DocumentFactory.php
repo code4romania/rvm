@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enum\DocumentType;
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,7 +25,7 @@ class DocumentFactory extends Factory
         $signed_at = $expires_at = null;
 
         if (DocumentType::protocol->is($type)) {
-            $signed_at = Carbon::createFromInterface(fake()->dateTimeBetween('-1 year', 'now'));
+            $signed_at = CarbonImmutable::createFromInterface(fake()->dateTimeBetween('-1 year', 'now'));
             $expires_at = $signed_at->addDays(fake()->randomNumber(2));
         }
 
