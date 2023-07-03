@@ -33,6 +33,7 @@ class VolunteerFactory extends Factory
             'city_id' => $city->id,
             'county_id' => $city->county_id,
             'specializations' => fake()->randomElements(VolunteerSpecialization::values(), fake()->numberBetween(1, 3)),
+            'has_first_aid_accreditation' => fake()->boolean(),
         ];
     }
 }

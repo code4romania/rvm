@@ -25,12 +25,14 @@ class Volunteer extends Model
         'county_id',
         'city_id',
         'specializations',
+        'has_first_aid_accreditation',
         'cnp',
     ];
 
     protected $casts = [
         'role' => VolunteerRole::class,
         'specializations' => AsEnumCollection::class . ':' . VolunteerSpecialization::class,
+        'has_first_aid_accreditation' => 'boolean',
     ];
 
     public function organisation()

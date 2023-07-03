@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('cnp', 13)->nullable();
             $table->json('specializations');
+            $table->boolean('has_first_aid_accreditation')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });
