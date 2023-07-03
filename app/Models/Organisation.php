@@ -35,7 +35,7 @@ class Organisation extends Model implements HasMedia
     {
         $this
             ->addMediaConversion('thumb')
-            ->fit(Manipulations::FIT_CROP, 300, 300)
+            ->fit(Manipulations::FIT_CONTAIN, 300, 300)
             ->nonQueued();
     }
 

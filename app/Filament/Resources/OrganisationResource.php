@@ -156,6 +156,7 @@ class OrganisationResource extends Resource
                         Section::make(__('organisation.field.logo'))
                             ->schema([
                                 SpatieMediaLibraryFileUpload::make('logo')
+                                    ->enableOpen()
                                     ->conversion('thumb')
                                     ->disableLabel()
                                     ->maxFiles(1)
