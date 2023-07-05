@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ResourceResource\Pages;
+use App\Filament\Tables\Actions\ExportAction;
 use App\Models\County;
 use App\Models\Resource as ResourceModel;
 use App\Models\Resource\Category;
@@ -185,14 +186,18 @@ class ResourceResource extends Resource
                 SelectFilter::make('county')->label(__('general.county'))
                     ->relationship('county', 'name'),
                 TernaryFilter::make('attributes')->label(__('resource.fields.attributes')),
-
             ])
+            ->filtersLayout(Layout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ])->filtersLayout(Layout::AboveContent);
+            ])
+            ->headerActions([
+                ExportAction::make(),
+            ])
+            ->defaultSort('id', 'desc');
     }
 
     public static function getRelations(): array

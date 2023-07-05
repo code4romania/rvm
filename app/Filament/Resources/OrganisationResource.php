@@ -13,6 +13,7 @@ use App\Filament\Resources\OrganisationResource\RelationManagers\InterventionsRe
 use App\Filament\Resources\OrganisationResource\RelationManagers\ResourcesRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\UsersRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
+use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Organisation;
 use App\Rules\ValidCIF;
 use Filament\Forms\Components\Group;
@@ -298,7 +299,8 @@ class OrganisationResource extends Resource
                         'class' => 'object-contain',
                     ])
                     ->width(80)
-                    ->height(40),
+                    ->height(40)
+                    ->toggleable(),
 
                 TextColumn::make('name')
                     ->label(__('organisation.field.name'))
@@ -307,7 +309,7 @@ class OrganisationResource extends Resource
 
                 TextColumn::make('type')
                     ->label(__('organisation.field.type'))
-                    ->enum(OrganisationType::options())
+                    ->formatStateUsing(fn ($record) => $record->type->label())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -325,22 +327,28 @@ class OrganisationResource extends Resource
                     ])
                     ->label(__('organisation.field.status'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('county.name')
                     ->label(__('general.county'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
+                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
+                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('county')
@@ -368,13 +376,17 @@ class OrganisationResource extends Resource
                     ->relationship('resourceTypes', 'name')
                     ->label(__('organisation.field.resource_types')),
             ])
+            ->filtersLayout(Layout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])
-            ->filtersLayout(Layout::AboveContent)
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ])->defaultSort('created_at', 'desc');
+            ])
+            ->headerActions([
+                ExportAction::make(),
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

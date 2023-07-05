@@ -8,6 +8,7 @@ use App\Enum\VolunteerRole;
 use App\Enum\VolunteerSpecialization;
 use App\Filament\Forms\Components\Location;
 use App\Filament\Resources\VolunteerResource\Pages;
+use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Volunteer;
 use App\Rules\ValidCNP;
 use Filament\Forms\Components\Card;
@@ -176,7 +177,11 @@ class VolunteerResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])
+            ->headerActions([
+                ExportAction::make(),
+            ])
+            ->defaultSort('id', 'desc');
     }
 
     public static function getRelations(): array

@@ -6,6 +6,7 @@ namespace App\Filament\Resources;
 
 use App\Enum\DocumentType;
 use App\Filament\Resources\DocumentResource\Pages;
+use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Document;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
@@ -18,7 +19,6 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 
@@ -119,9 +119,8 @@ class DocumentResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
-                IconColumn::make('media.id')
+                TextColumn::make('media.file_name')
                     ->label(__('document.field.document'))
-                    ->boolean()
                     ->sortable()
                     ->toggleable(),
 
@@ -153,6 +152,9 @@ class DocumentResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+            ])
+            ->headerActions([
+                ExportAction::make(),
             ])
             ->defaultSort('id', 'desc');
     }

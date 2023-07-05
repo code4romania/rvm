@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Tables\Actions\ExportAction;
 use App\Models\User;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\TextInput;
@@ -94,6 +95,9 @@ class UserResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+            ])
+            ->headerActions([
+                ExportAction::make(),
             ])
             ->defaultSort('id', 'desc');
     }
