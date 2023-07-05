@@ -6,6 +6,7 @@ namespace App\Filament\Resources;
 
 use App\Enum\DocumentType;
 use App\Filament\Resources\DocumentResource\Pages;
+use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Document;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
@@ -20,8 +21,6 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class DocumentResource extends Resource
 {
@@ -155,11 +154,7 @@ class DocumentResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ])
             ->headerActions([
-                ExportAction::make()
-                    ->exports([
-                        ExcelExport::make()
-                            ->fromTable(),
-                    ]),
+                ExportAction::make(),
             ])
             ->defaultSort('id', 'desc');
     }

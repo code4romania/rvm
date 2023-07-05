@@ -13,6 +13,7 @@ use App\Filament\Resources\OrganisationResource\RelationManagers\InterventionsRe
 use App\Filament\Resources\OrganisationResource\RelationManagers\ResourcesRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\UsersRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
+use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Organisation;
 use App\Rules\ValidCIF;
 use Filament\Forms\Components\Group;
@@ -32,8 +33,6 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class OrganisationResource extends Resource
 {
@@ -377,20 +376,15 @@ class OrganisationResource extends Resource
                     ->relationship('resourceTypes', 'name')
                     ->label(__('organisation.field.resource_types')),
             ])
+            ->filtersLayout(Layout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])
-            ->filtersLayout(Layout::AboveContent)
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ])
             ->headerActions([
-                ExportAction::make()
-                    ->exports([
-                        ExcelExport::make()
-                            ->fromTable()
-                            ->except(['logo']),
-                    ]),
+                ExportAction::make(),
             ])
             ->defaultSort('created_at', 'desc');
     }
