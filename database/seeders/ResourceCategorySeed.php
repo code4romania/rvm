@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Resource\Category;
 use Illuminate\Database\Seeder;
 
 class ResourceCategorySeed extends Seeder
@@ -15,10 +16,10 @@ class ResourceCategorySeed extends Seeder
      */
     public function run()
     {
-        $resourceCategory = [
+        $categories = [
             [
                 'name' => 'Adăpostire',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Corturi',
                         'types' => [
@@ -80,7 +81,7 @@ class ResourceCategorySeed extends Seeder
             ],
             [
                 'name' => 'Transport',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Rutier',
                         'types' => [
@@ -151,7 +152,7 @@ class ResourceCategorySeed extends Seeder
             ],
             [
                 'name' => 'Salvare',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Câini utilitari',
                         'types' => [
@@ -193,7 +194,7 @@ class ResourceCategorySeed extends Seeder
             ],
             [
                 'name' => 'Telecomunicații',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Radiocomunicații',
                         'custom_attributes' => [
@@ -226,7 +227,7 @@ class ResourceCategorySeed extends Seeder
             ],
             [
                 'name' => 'IT&C',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Hardware',
                     ],
@@ -240,30 +241,31 @@ class ResourceCategorySeed extends Seeder
             ],
             [
                 'name' => 'Altele',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Altele',
                     ],
                 ],
             ],
         ];
-        foreach ($resourceCategory as $item) {
-            $category = \App\Models\Resource\Category::create([
+
+        foreach ($categories as $item) {
+            $category = Category::create([
                 'name' => $item['name'],
-                'slug' => \Illuminate\Support\Str::slug($item['name']),
             ]);
-            foreach ($item['subcategory'] as $subcategory) {
-                $subcategoryMode = $category->subcategories()->create([
-                    'name' => $subcategory['name'],
-                    'slug' => \Illuminate\Support\Str::slug($subcategory['name']),
-                    'custom_attributes' => $subcategory['custom_attributes'] ?? [],
+
+            foreach ($item['children'] as $child) {
+                $subcategory = $category->subcategories()->create([
+                    'name' => $child['name'],
+                    'custom_attributes' => data_get($child, 'custom_attributes'),
                 ]);
-                foreach ($subcategory['types'] ?? [] as $type) {
-                    $subcategoryMode->types()->create([
-                        'name' => $type,
-                        'slug' => \Illuminate\Support\Str::slug($type),
-                    ]);
-                }
+
+                $subcategory->types()->createMany(
+                    collect($child['types'] ?? [])
+                        ->map(fn ($type) => [
+                            'name' => $type,
+                        ])
+                );
             }
         }
     }

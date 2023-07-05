@@ -8,8 +8,8 @@ use App\Filament\Resources\ResourceResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\County;
 use App\Models\Resource as ResourceModel;
-use App\Models\Resource\Category;
 use App\Models\Resource\Subcategory;
+use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -19,6 +19,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -29,39 +30,59 @@ class ResourceResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
+    public static function getModelLabel(): string
+    {
+        return __('resource.label.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resource.label.plural');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->label(__('resource.fields.name'))
-                    ->maxLength(255),
-                Select::make('organisation_id')->relationship('organisation', 'name')
-                    ->reactive()
-                    ->label(__('resource.fields.organisation'))
-                    ->required(),
-                Select::make('category_id')
-                    ->relationship('category', 'name')
-                    ->reactive()
-                    ->label(__('resource.fields.category'))
-                    ->required(),
+                Card::make()
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('name')
+                            ->label(__('resource.fields.name'))
+                            ->maxLength(255)
+                            ->required(),
 
-                Select::make('subcategory_id')
-                    ->label('Subcategory')
-                    ->required()
-                    ->label(__('resource.fields.subcategory'))
-                    ->options(
-                        function (callable $get, callable $set) {
-                            $set('type_id', null);
+                        Select::make('organisation_id')
+                            ->relationship('organisation', 'name')
+                            ->label(__('resource.fields.organisation'))
+                            ->searchable()
+                            ->required(),
 
-                            return Category::find($get('category_id'))
-                                ?->subcategories
-                                ->pluck('name', 'id');
-                        }
-                    )
-                    ->searchable()
-                    ->reactive(),
+                        Select::make('category_id')
+                            ->relationship('category', 'name')
+                            ->label(__('resource.fields.category'))
+                            ->reactive()
+                            ->required()
+                            ->afterStateUpdated(function (callable $set) {
+                                $set('subcategory_id', null);
+                                $set('type', null);
+                            }),
+
+                        Select::make('subcategory_id')
+                            ->label(__('resource.fields.subcategory'))
+                            ->options(
+                                function (callable $get, callable $set) {
+                                    $set('type_id', null);
+
+                                    return Subcategory::query()
+                                        ->inCategory($get('category_id'))
+                                        ->pluck('name', 'id');
+                                }
+                            )
+                            ->disabled(fn (callable $get) => $get('category_id') === null)
+                            ->reactive()
+                            ->required(),
+                    ]),
 
                 Select::make('type_id')
                     ->label(__('resource.fields.type'))
@@ -163,32 +184,65 @@ class ResourceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('organisation.name')->label(__('resource.fields.organisation')),
-                Tables\Columns\TextColumn::make('category.name')->label(__('resource.fields.category')),
-                Tables\Columns\TextColumn::make('subcategory.name')->label(__('resource.fields.subcategory')),
-                Tables\Columns\TextColumn::make('type.name')->label(__('resource.fields.type')),
-                Tables\Columns\TextColumn::make('county.name')->label(__('general.county')),
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('name')
+                    ->label(__('resource.fields.name'))
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('organisation.name')
+                    ->label(__('resource.fields.organisation'))
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('category.name')
+                    ->label(__('resource.fields.category'))
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('type.name')
+                    ->label(__('resource.fields.type'))
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('county.name')
+                    ->label(__('general.county'))
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('organisation')
-                    ->relationship('organisation', 'name')
-                    ->label(__('resource.fields.organisation')),
+                    ->label(__('resource.fields.organisation'))
+                    ->relationship('organisation', 'name'),
+
                 SelectFilter::make('category')
-                    ->relationship('category', 'name')
-                    ->label(__('resource.fields.category')),
+                    ->label(__('resource.fields.category'))
+                    ->relationship('category', 'name'),
+
                 SelectFilter::make('subcategory')
                     ->relationship('subcategory', 'name')
                     ->label(__('resource.fields.subcategory')),
+
                 SelectFilter::make('type')
-                    ->relationship('type', 'name')
-                    ->label(__('resource.fields.type')),
-                SelectFilter::make('county')->label(__('general.county'))
+                    ->label(__('resource.fields.type'))
+                    ->relationship('type', 'name'),
+
+                SelectFilter::make('county')
+                    ->label(__('general.county'))
                     ->relationship('county', 'name'),
-                TernaryFilter::make('attributes')->label(__('resource.fields.attributes')),
+
+                TernaryFilter::make('attributes')
+                    ->label(__('resource.fields.attributes')),
             ])
             ->filtersLayout(Layout::AboveContent)
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -198,13 +252,6 @@ class ResourceResource extends Resource
                 ExportAction::make(),
             ])
             ->defaultSort('id', 'desc');
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
