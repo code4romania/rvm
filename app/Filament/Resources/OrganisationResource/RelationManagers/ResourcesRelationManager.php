@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
-use App\Models\County;
-use App\Models\Resource\Category;
+use App\Filament\Forms\FieldGroups;
+use App\Filament\Resources\ResourceResource;
 use App\Models\Resource\Subcategory;
-use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -16,9 +15,10 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class ResourcesRelationManager extends RelationManager
 {
@@ -26,128 +26,83 @@ class ResourcesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static function getModelLabel(): string
+    {
+        return ResourceResource::getModelLabel();
+    }
+
+    protected static function getPluralModelLabel(): string
+    {
+        return ResourceResource::getPluralModelLabel();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->required()
                     ->label(__('resource.fields.name'))
-                    ->maxLength(255),
-                Select::make('category_id')
-                    ->relationship('category', 'name')
-                    ->reactive()
-                    ->label(__('resource.fields.category'))
+                    ->maxLength(255)
+                    ->columnSpanFull()
                     ->required(),
 
-                Select::make('subcategory_id')
-                    ->label('Subcategory')
+                Select::make('category_id')
+                    ->relationship('category', 'name', fn (Builder $query) => $query->orderBy('id'))
+                    ->label(__('resource.fields.category'))
+                    ->reactive()
                     ->required()
+                    ->afterStateUpdated(function (callable $set) {
+                        $set('subcategory_id', null);
+                        $set('types', null);
+                        $set('properties', []);
+                    }),
+
+                Select::make('subcategory_id')
                     ->label(__('resource.fields.subcategory'))
                     ->options(
                         function (callable $get, callable $set) {
-                            $set('type_id', null);
+                            $set('types', null);
 
-                            return Category::find($get('category_id'))
-                                ?->subcategories
+                            if (! $get('category_id')) {
+                                return;
+                            }
+
+                            return Subcategory::query()
+                                ->inCategory($get('category_id'))
                                 ->pluck('name', 'id');
                         }
                     )
-                    ->searchable()
-                    ->reactive(),
+                    ->disabled(fn (callable $get) => $get('category_id') === null)
+                    ->reactive()
+                    ->required(),
 
-                Select::make('type_id')
-                    ->label(__('resource.fields.type'))
-                    ->options(
-                        function (callable $get) {
-                            return Subcategory::find($get('subcategory_id'))
-                                ?->types
-                                ->pluck('name', 'id');
-                        }
-                    )
-                    ->hidden(function (callable $get) {
-                        return Subcategory::find($get('subcategory_id'))
-                            ?->types->count() == 0;
-                    })
-                    ->searchable()
-                    ->reactive(),
-                TextInput::make('type_other')
-                    ->label(__('resource.fields.type_other'))
-                    ->hidden(function (callable $get) {
-                        return Subcategory::find($get('subcategory_id'))
-                            ?->types->count() > 0;
-                    })
-                    ->maxLength(255),
+                // The logic that toggles the visibility of the field groups
+                // is included in the abstract FieldGroup class.
+                FieldGroups\AircraftFieldGroup::make(),
+                FieldGroups\BoatFieldGroup::make(),
+                FieldGroups\BroadcastFieldGroup::make(),
+                FieldGroups\RadioFieldGroup::make(),
+                FieldGroups\RescueDogFieldGroup::make(),
+                FieldGroups\TentFieldGroup::make(),
+                FieldGroups\TrailerFieldGroup::make(),
+                FieldGroups\TvFieldGroup::make(),
+                FieldGroups\VehicleFieldGroup::make(),
 
-                Section::make('attributes')->heading(__('resource.fields.attributes'))
-                    ->schema(function (callable $get) {
-                        $attributes = collect(Subcategory::find($get('subcategory_id'))
-                            ?->custom_attributes);
-                        if ($attributes) {
-                            return $attributes->map(
-                                function ($attribute) {
-                                    switch ($attribute['type']) {
-                                        case 'text':
-                                            return TextInput::make('attributes.' . $attribute['name'])
-                                                ->label(__('resource.attributes.' . $attribute['name']))
-                                                ->required()
-                                                ->maxLength(255);
-                                        case 'checkbox':
-                                            return Checkbox::make('attributes.' . $attribute['name'])
-                                                ->label(__('resource.attributes.' . $attribute['name']));
-                                        case 'select':
-                                            return Select::make('attributes.' . $attribute['name'])
-                                                ->label(__('resource.attributes.' . $attribute['name']))
-                                                ->required()
-                                                ->options(
-                                                    collect($attribute['options'])
-                                                        ->mapWithKeys(fn ($option) => [$option => $option])
-                                                );
-                                    }
-                                }
-                            )->toArray();
-                        }
-
-                        return [];
-                    })->hidden(function (callable $get) {
-                        return Subcategory::find($get('subcategory_id'))
-                                ?->custom_attributes == null;
-                    }),
-
-                Section::make(__('resource.fields.localisation'))
-                    ->schema([
-
-                        Select::make('county_id')
-                            ->label(__('general.county'))
-                            ->options(County::pluck('name', 'id'))
-                            ->required()
-                            ->reactive()
-                            ->searchable()
-                            ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
-
-                        Select::make('city_id')
-                            ->label(__('general.city'))
-                            ->required()
-                            ->options(
-                                fn (callable $get) => County::find($get('county_id'))
-                                    ?->cities
-                                    ->pluck('name', 'id')
-                            )
-                            ->searchable()
-                            ->reactive(),
-                    ]),
                 Section::make(__('resource.fields.contact'))
+                    ->columns()
                     ->schema([
-                        TextInput::make('contact.person')
-                            ->label(__('resource.fields.contact_name'))
+                        TextInput::make('contact_name')
+                            ->label(__('resource.fields.contact'))
                             ->required(),
-                        TextInput::make('contact.phone')->label(__('resource.fields.contact_phone')),
-                        TextInput::make('contact.email')->label(__('resource.fields.contact_email')),
 
+                        TextInput::make('contact_phone')
+                            ->label(__('resource.fields.contact_phone'))
+                            ->required(),
                     ]),
-                Textarea::make('observation')
-                    ->label(__('resource.fields.observation'))
-                    ->columnSpanFull()->required(),
+
+                Textarea::make('comments')
+                    ->label(__('resource.fields.comments'))
+                    ->columnSpanFull(),
 
             ]);
     }
@@ -156,25 +111,49 @@ class ResourcesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('category.name')->label(__('resource.fields.category')),
-                Tables\Columns\TextColumn::make('subcategory.name')->label(__('resource.fields.subcategory')),
-                Tables\Columns\TextColumn::make('type.name')->label(__('resource.fields.type')),
-                Tables\Columns\TextColumn::make('county.name')->label(__('general.county')),
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('name')
+                    ->label(__('resource.fields.name'))
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('category.name')
+                    ->label(__('resource.fields.category'))
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('subcategory.name')
+                    ->label(__('resource.fields.subcategory'))
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('county.name')
+                    ->label(__('general.county'))
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('category')
-                    ->relationship('category', 'name')
-                    ->label(__('resource.fields.category')),
+                    ->label(__('resource.fields.category'))
+                    ->relationship('category', 'name'),
+
                 SelectFilter::make('subcategory')
                     ->relationship('subcategory', 'name')
                     ->label(__('resource.fields.subcategory')),
+
                 SelectFilter::make('type')
-                    ->relationship('type', 'name')
-                    ->label(__('resource.fields.type')),
-                SelectFilter::make('county')->label(__('general.county'))
+                    ->label(__('resource.fields.type'))
+                    ->relationship('types', 'name'),
+
+                SelectFilter::make('county')
+                    ->label(__('general.county'))
                     ->relationship('county', 'name'),
-                TernaryFilter::make('attributes')->label(__('resource.fields.attributes')),
 
             ])
             ->headerActions([
@@ -191,7 +170,8 @@ class ResourcesRelationManager extends RelationManager
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])
+            ->defaultSort('id', 'desc');
     }
 
     protected function getTableFiltersFormWidth(): string

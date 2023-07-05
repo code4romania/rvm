@@ -11,6 +11,7 @@ use App\Models\Resource\Type;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Resource extends Model
 {
@@ -21,19 +22,18 @@ class Resource extends Model
         'name',
         'category_id',
         'subcategory_id',
-        'type_id',
-        'attributes',
+        'properties',
         'city_id',
         'county_id',
         'organisation_id',
-        'contact',
+        'contact_name',
+        'contact_phone',
         'other_type',
-        'observation',
+        'comments',
     ];
 
     protected $casts = [
-        'attributes' => 'array',
-        'contact' => 'array',
+        'properties' => 'json',
     ];
 
     public function category(): BelongsTo
@@ -46,9 +46,9 @@ class Resource extends Model
         return $this->belongsTo(Subcategory::class);
     }
 
-    public function type(): ?BelongsTo
+    public function types(): BelongsToMany
     {
-        return $this->belongsTo(Type::class);
+        return $this->belongsToMany(Type::class, 'resource_has_types');
     }
 
     public function organisation(): BelongsTo

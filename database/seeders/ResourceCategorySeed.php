@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Filament\Forms\FieldGroups;
+use App\Models\Resource\Category;
 use Illuminate\Database\Seeder;
 
 class ResourceCategorySeed extends Seeder
@@ -15,60 +17,26 @@ class ResourceCategorySeed extends Seeder
      */
     public function run()
     {
-        $resourceCategory = [
+        $categories = [
             [
                 'name' => 'Adăpostire',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Corturi',
                         'types' => [
-                            'Iarna',
-                            'Vara',
+                            'Iarnă',
+                            'Vară',
                             'Gonflabil',
-                            'Pe structura metalică',
+                            'Pe structură metalică',
                             'Utilat',
                             'Neutilat',
                             'Altul',
                         ],
-                        'custom_attributes' => [
-                            [
-                                'name' => 'dimension',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'relocation_resource',
-                                'type' => 'checkbox',
-                            ],
-                            [
-                                'name' => 'has_transport',
-                                'type' => 'checkbox',
-                            ],
-                        ],
+                        'field_group' => FieldGroups\TentFieldGroup::class,
                     ],
                     [
                         'name' => 'Rulote',
-                        'custom_attributes' => [
-                            [
-                                'name' => 'dimension',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                        ],
+                        'field_group' => FieldGroups\TrailerFieldGroup::class,
                     ],
                     [
                         'name' => 'Cazare',
@@ -80,122 +48,54 @@ class ResourceCategorySeed extends Seeder
             ],
             [
                 'name' => 'Transport',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Rutier',
                         'types' => [
-                            'Masina',
-                            'Duba',
+                            'Mașină',
+                            'Dubă',
                             'Camion',
-                            'Altele',
+                            'Altul',
                         ],
-                        'custom_attributes' => [
-                            [
-                                'name' => 'dimension',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                        ],
+                        'field_group' => FieldGroups\VehicleFieldGroup::class,
                     ],
                     [
                         'name' => 'Maritim',
-                        'custom_attributes' => [
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                        ],
+                        'field_group' => FieldGroups\BoatFieldGroup::class,
                     ],
                     [
                         'name' => 'Feroviar',
-                        'custom_attributes' => [
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                        ],
                     ],
                     [
                         'name' => 'Aerian',
-                        'custom_attributes' => [
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                        ],
+                        'field_group' => FieldGroups\AircraftFieldGroup::class,
                     ],
                     [
-                        'name' => 'Altele',
+                        'name' => 'Altul',
                     ],
                 ],
 
             ],
             [
                 'name' => 'Salvare',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Câini utilitari',
                         'types' => [
                             'Căutare în mediul urban',
                             'Căutare în mediu natural',
+                            'Altul',
                         ],
-                        'custom_attributes' => [
-                            [
-                                'name' => 'dog_name',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'volunteer_name',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'volunteer_specialization',
-                                'type' => 'text',
-                            ],
-
-                            [
-                                'name' => 'has_trailer',
-                                'type' => 'checkbox',
-                            ],
-                            [
-                                'name' => 'has_carriage',
-                                'type' => 'checkbox',
-                            ],
-                            [
-                                'name' => 'has_transport',
-                                'type' => 'checkbox',
-                            ],
-                        ],
-                    ],
-                    [
-                        'name' => 'Altele',
+                        'field_group' => FieldGroups\RescueDogFieldGroup::class,
                     ],
                 ],
             ],
             [
                 'name' => 'Telecomunicații',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Radiocomunicații',
+                        'field_group' => FieldGroups\RadioFieldGroup::class,
                         'custom_attributes' => [
                             [
                                 'name' => 'tech_type',
@@ -205,6 +105,7 @@ class ResourceCategorySeed extends Seeder
                     ],
                     [
                         'name' => 'Televiziune',
+                        'field_group' => FieldGroups\TvFieldGroup::class,
                         'custom_attributes' => [
                             [
                                 'name' => 'area',
@@ -218,6 +119,7 @@ class ResourceCategorySeed extends Seeder
                     ],
                     [
                         'name' => 'Radiodifuziune',
+                        'field_group' => FieldGroups\BroadcastFieldGroup::class,
                     ],
                     [
                         'name' => 'Altele',
@@ -226,7 +128,7 @@ class ResourceCategorySeed extends Seeder
             ],
             [
                 'name' => 'IT&C',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Hardware',
                     ],
@@ -240,30 +142,31 @@ class ResourceCategorySeed extends Seeder
             ],
             [
                 'name' => 'Altele',
-                'subcategory' => [
+                'children' => [
                     [
                         'name' => 'Altele',
                     ],
                 ],
             ],
         ];
-        foreach ($resourceCategory as $item) {
-            $category = \App\Models\Resource\Category::create([
+
+        foreach ($categories as $item) {
+            $category = Category::create([
                 'name' => $item['name'],
-                'slug' => \Illuminate\Support\Str::slug($item['name']),
             ]);
-            foreach ($item['subcategory'] as $subcategory) {
-                $subcategoryMode = $category->subcategories()->create([
-                    'name' => $subcategory['name'],
-                    'slug' => \Illuminate\Support\Str::slug($subcategory['name']),
-                    'custom_attributes' => $subcategory['custom_attributes'] ?? [],
+
+            foreach ($item['children'] as $child) {
+                $subcategory = $category->subcategories()->create([
+                    'name' => $child['name'],
+                    'field_group' => data_get($child, 'field_group'),
                 ]);
-                foreach ($subcategory['types'] ?? [] as $type) {
-                    $subcategoryMode->types()->create([
-                        'name' => $type,
-                        'slug' => \Illuminate\Support\Str::slug($type),
-                    ]);
-                }
+
+                $subcategory->types()->createMany(
+                    collect($child['types'] ?? [])
+                        ->map(fn ($type) => [
+                            'name' => $type,
+                        ])
+                );
             }
         }
     }
