@@ -23,18 +23,19 @@ return new class extends Migration
     {
         Schema::create('resources', function (Blueprint $table) {
             $table->id();
+            $table->timestamps();
             $table->foreignIdFor(Organisation::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Category::class)->constrained('resource_categories')->cascadeOnDelete();
             $table->foreignIdFor(Subcategory::class)->constrained('resource_subcategories')->cascadeOnDelete();
             $table->foreignIdFor(Type::class)->nullable()->constrained('resource_subcategory_types')->cascadeOnDelete();
             $table->string('other_type')->nullable();
-            $table->json('attributes')->nullable();
+            $table->json('properties')->nullable();
             $table->string('name');
             $table->foreignIdFor(County::class)->nullable()->constrained();
             $table->foreignIdFor(City::class)->nullable()->constrained();
-            $table->json('contact');
-            $table->text('observation')->nullable();
-            $table->timestamps();
+            $table->string('contact_name')->nullable();
+            $table->string('contact_phone')->nullable();
+            $table->text('comments')->nullable();
         });
     }
 };

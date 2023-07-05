@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Filament\Forms\FieldGroups;
 use App\Models\Resource\Category;
 use Illuminate\Database\Seeder;
 
@@ -23,53 +24,19 @@ class ResourceCategorySeed extends Seeder
                     [
                         'name' => 'Corturi',
                         'types' => [
-                            'Iarna',
-                            'Vara',
+                            'Iarnă',
+                            'Vară',
                             'Gonflabil',
-                            'Pe structura metalică',
+                            'Pe structură metalică',
                             'Utilat',
                             'Neutilat',
                             'Altul',
                         ],
-                        'custom_attributes' => [
-                            [
-                                'name' => 'dimension',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'relocation_resource',
-                                'type' => 'checkbox',
-                            ],
-                            [
-                                'name' => 'has_transport',
-                                'type' => 'checkbox',
-                            ],
-                        ],
+                        'field_group' => FieldGroups\TentFieldGroup::class,
                     ],
                     [
                         'name' => 'Rulote',
-                        'custom_attributes' => [
-                            [
-                                'name' => 'dimension',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                        ],
+                        'field_group' => FieldGroups\TrailerFieldGroup::class,
                     ],
                     [
                         'name' => 'Cazare',
@@ -85,67 +52,26 @@ class ResourceCategorySeed extends Seeder
                     [
                         'name' => 'Rutier',
                         'types' => [
-                            'Masina',
-                            'Duba',
+                            'Mașină',
+                            'Dubă',
                             'Camion',
-                            'Altele',
+                            'Altul',
                         ],
-                        'custom_attributes' => [
-                            [
-                                'name' => 'dimension',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                        ],
+                        'field_group' => FieldGroups\VehicleFieldGroup::class,
                     ],
                     [
                         'name' => 'Maritim',
-                        'custom_attributes' => [
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                        ],
+                        'field_group' => FieldGroups\BoatFieldGroup::class,
                     ],
                     [
                         'name' => 'Feroviar',
-                        'custom_attributes' => [
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                        ],
                     ],
                     [
                         'name' => 'Aerian',
-                        'custom_attributes' => [
-                            [
-                                'name' => 'capacity',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'quantity',
-                                'type' => 'text',
-                            ],
-                        ],
+                        'field_group' => FieldGroups\AircraftFieldGroup::class,
                     ],
                     [
-                        'name' => 'Altele',
+                        'name' => 'Altul',
                     ],
                 ],
 
@@ -158,37 +84,9 @@ class ResourceCategorySeed extends Seeder
                         'types' => [
                             'Căutare în mediul urban',
                             'Căutare în mediu natural',
+                            'Altul',
                         ],
-                        'custom_attributes' => [
-                            [
-                                'name' => 'dog_name',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'volunteer_name',
-                                'type' => 'text',
-                            ],
-                            [
-                                'name' => 'volunteer_specialization',
-                                'type' => 'text',
-                            ],
-
-                            [
-                                'name' => 'has_trailer',
-                                'type' => 'checkbox',
-                            ],
-                            [
-                                'name' => 'has_carriage',
-                                'type' => 'checkbox',
-                            ],
-                            [
-                                'name' => 'has_transport',
-                                'type' => 'checkbox',
-                            ],
-                        ],
-                    ],
-                    [
-                        'name' => 'Altele',
+                        'field_group' => FieldGroups\RescueDogFieldGroup::class,
                     ],
                 ],
             ],
@@ -197,6 +95,7 @@ class ResourceCategorySeed extends Seeder
                 'children' => [
                     [
                         'name' => 'Radiocomunicații',
+                        'field_group' => FieldGroups\RadioFieldGroup::class,
                         'custom_attributes' => [
                             [
                                 'name' => 'tech_type',
@@ -206,6 +105,7 @@ class ResourceCategorySeed extends Seeder
                     ],
                     [
                         'name' => 'Televiziune',
+                        'field_group' => FieldGroups\TvFieldGroup::class,
                         'custom_attributes' => [
                             [
                                 'name' => 'area',
@@ -219,6 +119,7 @@ class ResourceCategorySeed extends Seeder
                     ],
                     [
                         'name' => 'Radiodifuziune',
+                        'field_group' => FieldGroups\BroadcastFieldGroup::class,
                     ],
                     [
                         'name' => 'Altele',
@@ -257,7 +158,7 @@ class ResourceCategorySeed extends Seeder
             foreach ($item['children'] as $child) {
                 $subcategory = $category->subcategories()->create([
                     'name' => $child['name'],
-                    'custom_attributes' => data_get($child, 'custom_attributes'),
+                    'field_group' => data_get($child, 'field_group'),
                 ]);
 
                 $subcategory->types()->createMany(

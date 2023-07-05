@@ -15,33 +15,49 @@ class Location extends Grid
 {
     use CanBeValidated;
 
+    protected bool $withCity = true;
+
+    public function withoutCity(): self
+    {
+        $this->withCity = false;
+
+        return $this;
+    }
+
     public function getChildComponents(): array
     {
-        return [
-            Select::make('county_id')
-                ->label(__('general.county'))
-                ->options(function () {
-                    return Cache::driver('array')
-                        ->rememberForever(
-                            'counties',
-                            fn () => County::pluck('name', 'id')
-                        );
-                })
-                ->searchable()
-                ->reactive()
-                ->required($this->isRequired())
-                ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+        $county = Select::make('county_id')
+            ->label(__('general.county'))
+            ->options(function () {
+                return Cache::driver('array')
+                    ->rememberForever(
+                        'counties',
+                        fn () => County::pluck('name', 'id')
+                    );
+            })
+            ->searchable()
+            ->reactive()
+            ->required($this->isRequired())
+            ->afterStateUpdated(fn (callable $set) => $set('city_id', null));
 
-            Select::make('city_id')
+        $components = [
+            ! $this->withCity
+                ? $county->columnSpanFull()
+                : $county,
+        ];
+
+        if ($this->withCity) {
+            $components[] = Select::make('city_id')
                 ->label(__('general.city'))
-                ->allowHtml()
                 ->searchable()
                 ->required($this->isRequired())
                 ->getSearchResultsUsing(function (string $search, callable $get) {
                     $countyId = (int) $get('county_id');
 
+                    debug(\func_get_args());
+
                     if (! $countyId) {
-                        return null;
+                        return [];
                     }
 
                     return City::query()
@@ -53,8 +69,9 @@ class Location extends Grid
                 })
                 ->getOptionLabelUsing(
                     fn ($value) => City::find($value)?->name
-                ),
+                );
+        }
 
-        ];
+        return $components;
     }
 }

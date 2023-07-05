@@ -16,12 +16,9 @@ class Subcategory extends Model
 
     protected $table = 'resource_subcategories';
 
-    protected $with = [
-        'types',
-    ];
-
-    protected $casts = [
-        'custom_attributes' => 'array',
+    protected $fillable = [
+        'name',
+        'field_group',
     ];
 
     public function category(): BelongsTo

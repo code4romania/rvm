@@ -19,7 +19,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained('resource_categories')->cascadeOnDelete();
             $table->string('name');
-            $table->json('custom_attributes')->nullable();
+            $table->string('field_group')->nullable();
             $table->timestamps();
         });
     }

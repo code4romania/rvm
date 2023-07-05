@@ -22,21 +22,17 @@ class ResourceFactory extends Factory
     {
         $city = City::query()->inRandomOrder()->first();
         $subcategory = Subcategory::query()->inRandomOrder()->first();
-        $contactPerson = [
-            'person' => fake()->name,
-            'email' => fake()->safeEmail(),
-            'phone' => fake()->phoneNumber,
-        ];
 
         return [
             'name' => fake()->name,
-            'contact' => $contactPerson,
             'city_id' => $city->id,
             'county_id' => $city->county_id,
             'subcategory_id' => $subcategory?->id,
             'category_id' => $subcategory?->category_id,
             'type_id' => fake()->randomElement($subcategory?->types?->pluck('id')->toArray() ?? []),
-            'observation' => fake()->sentence(10),
+            'contact_name' => fake()->name(),
+            'contact_phone' => fake()->phoneNumber(),
+            'comments' => fake()->sentence(10),
         ];
     }
 }

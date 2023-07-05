@@ -10,33 +10,54 @@ return [
     ],
 
     'fields' => [
-        'name' => 'Nume',
-        'last_name' => 'Nume',
+        'name' => 'Denumire resursă',
         'localisation' => 'Localizare',
         'contact' => 'Persoana de contact',
+        'contact_phone' => 'Telefon de contact',
         'attributes' => 'Atribute resursă',
-        'observation' => 'Observații',
+        'comments' => 'Comentarii',
         'category' => 'Categorie',
         'subcategory' => 'Subcategorie',
         'type' => 'Tip',
         'type_other' => 'Alt tip',
         'organisation' => 'Organizație',
     ],
+
     'attributes' => [
-        'dog_name' => 'Numele câinelui',
-        'dimension' => 'Dimensiune',
+
+        'location' => [
+            'relocatable' => 'Relocare resursă',
+            'transportable' => 'Transport disponibil',
+        ],
+
+        'coverage' => [
+            'label' => 'Acoperire',
+            'national' => 'Acoperire națională',
+            'local' => 'Acoperire locală',
+        ],
+
+        'dimensions' => 'Dimensiuni',
         'capacity' => 'Capacitate',
-        'quantity' => 'Cantitate',
-        'volunteer_name' => 'Numele voluntarului',
-        'volunteer_specialization' => 'Specializarea voluntarului',
-        'has_trailer' => 'Are remorcă',
-        'has_carriage' => 'Are cusca',
-        'has_transport' => 'Are transport',
-        'tech_type' => 'Tipul tehnicii',
-        'area' => 'Areia de acoperire',
-        'relocation_resource' => 'Resursă poate fi relocata',
+        'quantity' => 'Nr. de bucăți disponibile',
+
+        'dog_name' => 'Nume câine',
+        'volunteer_name' => 'Nume voluntar',
+        'volunteer_specialization' => 'Specializare voluntar',
+        'dog_aircraft_cage' => 'Cușcă transport aerian',
+        'dog_trailer' => 'Remorcă transport câini',
+
+        'type' => [
+            'tent' => 'Tip de cort',
+            'trailer' => 'Tip de rulotă',
+            'vehicle' => 'Tip de autovehicul',
+            'boat' => 'Tip de ambarcațiune',
+            'aircraft' => 'Tip de aeronavă',
+            'dog' => 'Tip de câine',
+            'radio' => 'Tip tehnică',
+        ],
 
     ],
+
     'modal' => [
         'heading' => 'Adaugă o resursa nouă',
         'subheading' => 'Adauga o resursa noua folosind formularul de mai jos',
