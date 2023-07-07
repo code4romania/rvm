@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Resources\ResourceResource\Pages;
 
 use App\Filament\Resources\ResourceResource;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditResource extends EditRecord
@@ -15,13 +14,12 @@ class EditResource extends EditRecord
     protected function getActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            //
         ];
     }
 
-    protected function getRelationManagers(): array
+    protected function getRedirectUrl(): ?string
     {
-        return [
-        ];
+        return static::getResource()::getUrl('view', $this->getRecord());
     }
 }

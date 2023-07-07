@@ -6,6 +6,7 @@ namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
 use App\Enum\DocumentType;
 use App\Filament\Resources\DocumentResource;
+use App\Filament\Tables\Actions\ExportAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
@@ -24,14 +25,19 @@ class DocumentsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getResource(): string
+    {
+        return DocumentResource::class;
+    }
+
     protected static function getModelLabel(): string
     {
-        return DocumentResource::getModelLabel();
+        return static::getResource()::getModelLabel();
     }
 
     protected static function getPluralModelLabel(): string
     {
-        return DocumentResource::getPluralModelLabel();
+        return static::getResource()::getPluralModelLabel();
     }
 
     public static function form(Form $form): Form
@@ -107,6 +113,8 @@ class DocumentsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
+                ExportAction::make(),
+
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([

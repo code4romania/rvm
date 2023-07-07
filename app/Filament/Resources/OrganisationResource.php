@@ -294,6 +294,12 @@ class OrganisationResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
                 ImageColumn::make('logo')
                     ->extraImgAttributes([
                         'class' => 'object-contain',
@@ -386,7 +392,7 @@ class OrganisationResource extends Resource
             ->headerActions([
                 ExportAction::make(),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('id', 'desc');
     }
 
     public static function getRelations(): array

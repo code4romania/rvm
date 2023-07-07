@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enum\DocumentType;
+use App\Filament\Filters\DateRangeFilter;
 use App\Filament\Resources\DocumentResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Document;
@@ -146,6 +147,12 @@ class DocumentResource extends Resource
                     ->label(__('document.field.type'))
                     ->options(DocumentType::options())
                     ->multiple(),
+
+                DateRangeFilter::make('signed_at')
+                    ->label(__('document.field.signed_at')),
+
+                DateRangeFilter::make('expires_at')
+                    ->label(__('document.field.expires_at')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

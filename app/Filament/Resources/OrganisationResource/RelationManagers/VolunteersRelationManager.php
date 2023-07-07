@@ -8,6 +8,7 @@ use App\Enum\VolunteerRole;
 use App\Enum\VolunteerSpecialization;
 use App\Filament\Forms\Components\Location;
 use App\Filament\Resources\VolunteerResource;
+use App\Filament\Tables\Actions\ExportAction;
 use App\Rules\ValidCNP;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -23,14 +24,19 @@ class VolunteersRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'full_name';
 
+    public static function getResource(): string
+    {
+        return VolunteerResource::class;
+    }
+
     protected static function getModelLabel(): string
     {
-        return VolunteerResource::getModelLabel();
+        return static::getResource()::getModelLabel();
     }
 
     protected static function getPluralModelLabel(): string
     {
-        return VolunteerResource::getPluralModelLabel();
+        return static::getResource()::getPluralModelLabel();
     }
 
     public static function form(Form $form): Form
@@ -123,6 +129,8 @@ class VolunteersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
+                ExportAction::make(),
+
                 Tables\Actions\CreateAction::make()
                     ->requiresConfirmation()
                     ->modalHeading(__('volunteer.modal.heading'))

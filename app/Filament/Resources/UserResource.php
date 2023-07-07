@@ -67,6 +67,12 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
                 TextColumn::make('first_name')
                     ->label(__('user.field.first_name'))
                     ->sortable()

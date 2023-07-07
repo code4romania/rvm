@@ -13,7 +13,9 @@ class ExportAction extends BaseAction
     {
         parent::setUp();
 
-        $this->exports = collect([
+        $this->color('secondary');
+
+        $this->exports([
             ExcelExport::make(),
         ]);
     }

@@ -6,6 +6,7 @@ namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
 use App\Filament\Forms\FieldGroups;
 use App\Filament\Resources\ResourceResource;
+use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Resource\Subcategory;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -26,14 +27,19 @@ class ResourcesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getResource(): string
+    {
+        return ResourceResource::class;
+    }
+
     protected static function getModelLabel(): string
     {
-        return ResourceResource::getModelLabel();
+        return static::getResource()::getModelLabel();
     }
 
     protected static function getPluralModelLabel(): string
     {
-        return ResourceResource::getPluralModelLabel();
+        return static::getResource()::getPluralModelLabel();
     }
 
     public static function form(Form $form): Form
@@ -157,6 +163,8 @@ class ResourcesRelationManager extends RelationManager
 
             ])
             ->headerActions([
+                ExportAction::make(),
+
                 Tables\Actions\CreateAction::make()
                     ->requiresConfirmation()
                     ->modalHeading(__('resource.modal.heading'))

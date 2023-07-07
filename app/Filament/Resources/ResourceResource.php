@@ -73,8 +73,6 @@ class ResourceResource extends Resource
                             ->label(__('resource.fields.subcategory'))
                             ->options(
                                 function (callable $get, callable $set) {
-                                    $set('types', null);
-
                                     if (! $get('category_id')) {
                                         return;
                                     }
@@ -110,6 +108,7 @@ class ResourceResource extends Resource
 
                         TextInput::make('contact_phone')
                             ->label(__('resource.fields.contact_phone'))
+                            ->tel()
                             ->required(),
                     ]),
 
@@ -183,7 +182,6 @@ class ResourceResource extends Resource
             ->filtersLayout(Layout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

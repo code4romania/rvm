@@ -16,6 +16,13 @@ class EditOrganisation extends EditRecord
 {
     protected static string $resource = OrganisationResource::class;
 
+    protected function getActions(): array
+    {
+        return [
+            //
+        ];
+    }
+
     public function getTitle(): string
     {
         return $this->getRecord()->name;

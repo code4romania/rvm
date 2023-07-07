@@ -9,6 +9,10 @@ return [
     'updated_at' => 'Actualizat la data de',
     'help' => [
         'multi_select' => 'Selectează toate opțiunile care se aplică, pe rând',
+    ],
 
+    'filter' => [
+        'date_from' => 'Dată început',
+        'date_until' => 'Dată sfârșit',
     ],
 ];

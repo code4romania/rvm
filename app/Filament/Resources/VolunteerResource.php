@@ -23,6 +23,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class VolunteerResource extends Resource
 {
@@ -171,9 +173,21 @@ class VolunteerResource extends Resource
                     ->multiple()
                     ->label(__('general.county'))
                     ->relationship('county', 'name'),
+
+                SelectFilter::make('specializations')
+                    ->multiple()
+                    ->label(__('volunteer.field.specializations'))
+                    ->options(VolunteerSpecialization::options())
+                    ->query(
+                        fn (Builder $query, array $state) => collect($state['values'])
+                            ->map(fn ($value) => $query->whereJsonContains('specializations', $value))
+                    ),
+
+                TernaryFilter::make('has_first_aid_accreditation')
+                    ->label(__('volunteer.field.has_first_aid_accreditation')),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -196,6 +210,7 @@ class VolunteerResource extends Resource
         return [
             'index' => Pages\ListVolunteers::route('/'),
             'create' => Pages\CreateVolunteer::route('/create'),
+            'view' => Pages\ViewVolunteer::route('/{record}'),
             'edit' => Pages\EditVolunteer::route('/{record}/edit'),
         ];
     }
