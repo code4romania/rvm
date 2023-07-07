@@ -16,4 +16,10 @@ return [
         'phone' => 'Telefon',
     ],
 
+    'role' => [
+        'superadmin' => 'Admin DSU',
+        'coordinator' => 'Coordonator local DSU',
+        'org_admin' => 'Admin organizație',
+        'org_member' => 'Membru organizație',
+    ],
 ];

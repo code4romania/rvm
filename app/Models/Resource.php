@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\BelongsToOrganisation;
 use App\Concerns\HasLocation;
+use App\Concerns\LimitsVisibility;
 use App\Models\Resource\Category;
 use App\Models\Resource\Subcategory;
 use App\Models\Resource\Type;
@@ -15,8 +17,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Resource extends Model
 {
+    use BelongsToOrganisation;
     use HasFactory;
     use HasLocation;
+    use LimitsVisibility;
 
     protected $fillable = [
         'name',
@@ -25,7 +29,6 @@ class Resource extends Model
         'properties',
         'city_id',
         'county_id',
-        'organisation_id',
         'contact_name',
         'contact_phone',
         'other_type',
@@ -49,10 +52,5 @@ class Resource extends Model
     public function types(): BelongsToMany
     {
         return $this->belongsToMany(Type::class, 'resource_has_types');
-    }
-
-    public function organisation(): BelongsTo
-    {
-        return $this->belongsTo(Organisation::class);
     }
 }

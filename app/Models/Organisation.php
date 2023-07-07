@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\HasLocation;
+use App\Concerns\LimitsVisibility;
 use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
@@ -27,6 +28,7 @@ class Organisation extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
+    use LimitsVisibility;
     use HasLocation;
 
     protected $with = ['city', 'county'];

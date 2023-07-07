@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enum\UserRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -39,6 +40,34 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function platformAdmin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::PLATFORM_ADMIN,
+        ]);
+    }
+
+    public function platformCoordinator(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::PLATFORM_COORDINATOR,
+        ]);
+    }
+
+    public function orgAdmin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::ORG_ADMIN,
+        ]);
+    }
+
+    public function orgMember(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::ORG_MEMBER,
         ]);
     }
 }

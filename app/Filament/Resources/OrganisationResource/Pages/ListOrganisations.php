@@ -10,10 +10,17 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListOrganisations extends ListRecords
 {
     protected static string $resource = OrganisationResource::class;
+
+    protected function getTableQuery(): Builder
+    {
+        return parent::getTableQuery()
+            ->with('media');
+    }
 
     protected function getActions(): array
     {

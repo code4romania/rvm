@@ -14,6 +14,7 @@ use App\Models\Organisation\Branch;
 use App\Models\Organisation\Expertise;
 use App\Models\Organisation\RiskCategory;
 use App\Models\Resource;
+use App\Models\User;
 use App\Models\Volunteer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
@@ -68,6 +69,11 @@ class OrganisationFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (Organisation $organisation) {
+            User::factory(['email' => $organisation->email])
+                ->orgadmin()
+                ->for($organisation)
+                ->create();
+
             Volunteer::factory()
                 ->for($organisation)
                 ->count(fake()->numberBetween(0, 100))
