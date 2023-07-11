@@ -49,6 +49,7 @@ class ListOrganisations extends ListRecords
                         ->placeholder(__('organisation.placeholder.email'))
                         ->email()
                         ->required()
+                        ->unique('users', 'email')
                         ->inlineLabel(),
 
                     TextInput::make('phone')

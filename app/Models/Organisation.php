@@ -9,6 +9,7 @@ use App\Concerns\LimitsVisibility;
 use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
+use App\Events\OrganisationCreated;
 use App\Models\Organisation\Branch;
 use App\Models\Organisation\Expertise;
 use App\Models\Organisation\ResourceType;
@@ -68,6 +69,10 @@ class Organisation extends Model implements HasMedia
         'contact_person' => 'array',
         'other_information' => AsCollection::class,
         'has_branches' => 'boolean',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => OrganisationCreated::class,
     ];
 
     public function users(): HasMany
