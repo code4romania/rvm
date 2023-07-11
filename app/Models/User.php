@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Concerns\BelongsToOrganisation;
 use App\Concerns\HasRole;
+use App\Concerns\MustSetInitialPassword;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +21,7 @@ class User extends Authenticatable implements FilamentUser, HasName
     use HasFactory;
     use HasRole;
     use Notifiable;
+    use MustSetInitialPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +34,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         'email',
         'phone',
         'password',
+        'password_set_at',
     ];
 
     /**
@@ -50,7 +53,7 @@ class User extends Authenticatable implements FilamentUser, HasName
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'password_set_at' => 'datetime',
     ];
 
     public function canAccessFilament(): bool
