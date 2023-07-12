@@ -13,6 +13,11 @@ class ViewResource extends ViewRecord
 {
     protected static string $resource = ResourceResource::class;
 
+    public function getTitle(): string
+    {
+        return $this->getRecord()->name;
+    }
+
     protected function getActions(): array
     {
         return [
