@@ -30,12 +30,8 @@ class WelcomeNotification extends Notification
     {
         return (new MailMessage)
             ->subject(__('auth.welcome.subject'))
-            ->greeting(__('auth.welcome.greeting', [
-                'name' => $notifiable->full_name,
-            ]))
-            ->line(__('auth.welcome.intro', [
-                'app' => config('app.name'),
-            ]))
+            ->line(__('auth.welcome.intro_line_1'))
+            ->line(__('auth.welcome.intro_line_2'))
             ->action(__('auth.welcome.submit'), URL::signedRoute(
                 'filament.auth.welcome',
                 ['user' => $notifiable->id]
