@@ -6,7 +6,6 @@ namespace App\Filament\Resources\OrganisationResource\Pages;
 
 use App\Filament\Resources\OrganisationResource;
 use App\Filament\Resources\OrganisationResource\RelationManagers\DocumentsRelationManager;
-use App\Filament\Resources\OrganisationResource\RelationManagers\InterventionsRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\ResourcesRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\UsersRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
@@ -33,7 +32,6 @@ class EditOrganisation extends EditRecord
         return [
             VolunteersRelationManager::class,
             ResourcesRelationManager::class,
-            InterventionsRelationManager::class,
             DocumentsRelationManager::class,
             UsersRelationManager::class,
         ];

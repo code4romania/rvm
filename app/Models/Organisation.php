@@ -108,11 +108,6 @@ class Organisation extends Model implements HasMedia
         return $this->hasMany(Resource::class);
     }
 
-    public function interventions(): HasMany
-    {
-        return $this->hasMany(Intervention::class);
-    }
-
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
