@@ -9,7 +9,6 @@ use App\Enum\OrganisationType;
 use App\Filament\Forms\Components\Location;
 use App\Filament\Resources\OrganisationResource\Pages;
 use App\Filament\Resources\OrganisationResource\RelationManagers\DocumentsRelationManager;
-use App\Filament\Resources\OrganisationResource\RelationManagers\InterventionsRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\ResourcesRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\UsersRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
@@ -400,7 +399,6 @@ class OrganisationResource extends Resource
         return [
             VolunteersRelationManager::class,
             ResourcesRelationManager::class,
-            InterventionsRelationManager::class,
             UsersRelationManager::class,
             DocumentsRelationManager::class,
         ];
