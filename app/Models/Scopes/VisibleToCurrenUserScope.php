@@ -30,7 +30,9 @@ class VisibleToCurrenUserScope implements Scope
         }
 
         if (auth()->user()->belongsToOrganisation()) {
-            $builder->whereRelation('organisation', 'id', auth()->user()->organisation_id);
+            if (! $model instanceof Organisation) {
+                $builder->where('organisation_id', auth()->user()->organisation_id);
+            }
         }
     }
 }

@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Organisation::factory()
-            ->count($counties->count() * 25)
+            ->count($counties->count() * 5)
             ->sequence(
                 ...$counties->map(fn (County $county) => [
                     'county_id' => $county->id,

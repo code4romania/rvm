@@ -46,7 +46,7 @@ class OrganisationFactory extends Factory
             'alias' => Str::slug($name),
             'type' => fake()->randomElement(OrganisationType::values()),
             'status' => fake()->randomElement(OrganisationStatus::values()),
-            'email' => fake()->safeEmail(),
+            'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),
             'year' => fake()->year(),
             'cif' => fake()->numerify('#########'),
@@ -70,7 +70,7 @@ class OrganisationFactory extends Factory
     {
         return $this->afterCreating(function (Organisation $organisation) {
             User::factory(['email' => $organisation->email])
-                ->orgadmin()
+                ->orgAdmin()
                 ->for($organisation)
                 ->create();
 
