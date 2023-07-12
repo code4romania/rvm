@@ -36,6 +36,7 @@ class Location extends Grid
                     );
             })
             ->searchable()
+            ->preload()
             ->reactive()
             ->required($this->isRequired())
             ->afterStateUpdated(fn (callable $set) => $set('city_id', null));
@@ -53,8 +54,6 @@ class Location extends Grid
                 ->required($this->isRequired())
                 ->getSearchResultsUsing(function (string $search, callable $get) {
                     $countyId = (int) $get('county_id');
-
-                    debug(\func_get_args());
 
                     if (! $countyId) {
                         return [];

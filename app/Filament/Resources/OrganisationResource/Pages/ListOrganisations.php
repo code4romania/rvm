@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\OrganisationResource\Pages;
 
 use App\Enum\OrganisationType;
+use App\Filament\Forms\Components\Location;
 use App\Filament\Resources\OrganisationResource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -65,6 +66,12 @@ class ListOrganisations extends ListRecords
                         ->options(OrganisationType::options())
                         ->enum(OrganisationType::class)
                         ->inlineLabel(),
+
+                    Location::make()
+                        ->withoutCity()
+                        ->required()
+                        ->inlineLabel(),
+
                 ])
                 ->successRedirectUrl(fn ($record) => OrganisationResource::getUrl('view', $record))
                 ->disableCreateAnother(),
