@@ -19,7 +19,7 @@ trait BelongsToOrganisation
         static::creating(function (self $model): void {
             if (
                 $model->organisation_id === null &&
-                auth()->user()->belongsToOrganisation()
+                auth()->user()?->belongsToOrganisation()
             ) {
                 $model->organisation_id = auth()->user()->organisation_id;
             }
