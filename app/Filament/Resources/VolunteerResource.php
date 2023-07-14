@@ -22,6 +22,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -50,6 +51,7 @@ class VolunteerResource extends Resource
                     ->columns()
                     ->schema([
                         Group::make()
+                            ->hidden(fn () => auth()->user()->belongsToOrganisation())
                             ->columns()
                             ->columnSpanFull()
                             ->schema([
@@ -126,6 +128,7 @@ class VolunteerResource extends Resource
 
                 TextColumn::make('organisation.name')
                     ->label(__('volunteer.field.organisation'))
+                    ->hidden(fn () => auth()->user()->belongsToOrganisation())
                     ->sortable()
                     ->toggleable(),
 
@@ -167,6 +170,7 @@ class VolunteerResource extends Resource
                 SelectFilter::make('organisation')
                     ->multiple()
                     ->label(__('volunteer.field.organisation'))
+                    ->hidden(fn () => auth()->user()->belongsToOrganisation())
                     ->relationship('organisation', 'name'),
 
                 SelectFilter::make('county')
@@ -186,6 +190,7 @@ class VolunteerResource extends Resource
                 TernaryFilter::make('has_first_aid_accreditation')
                     ->label(__('volunteer.field.has_first_aid_accreditation')),
             ])
+            ->filtersLayout(Layout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

@@ -30,7 +30,7 @@ class DocumentPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->isPlatformAdmin();
     }
 
     /**
@@ -38,7 +38,7 @@ class DocumentPolicy
      */
     public function update(User $user, Document $document): bool
     {
-        return true;
+        return $user->isPlatformAdmin();
     }
 
     /**
@@ -46,7 +46,7 @@ class DocumentPolicy
      */
     public function delete(User $user, Document $document): bool
     {
-        return true;
+        return $user->isPlatformAdmin();
     }
 
     /**
@@ -54,7 +54,7 @@ class DocumentPolicy
      */
     public function restore(User $user, Document $document): bool
     {
-        return true;
+        return $user->isPlatformAdmin();
     }
 
     /**
@@ -62,6 +62,6 @@ class DocumentPolicy
      */
     public function forceDelete(User $user, Document $document): bool
     {
-        return true;
+        return $user->isPlatformAdmin();
     }
 }

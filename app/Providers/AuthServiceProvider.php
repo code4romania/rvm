@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Auth\EloquentUserProvider;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        //
     ];
 
     /**
@@ -25,6 +27,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // This prevents an infinite loop when using the
+        // `LimitsVisibility` trait on the `User` model
+        Auth::provider('eloquent', function ($app, array $config) {
+            return (new EloquentUserProvider($app['hash'], $config['model']))
+                ->withQuery(fn (Builder $query) => $query->withoutGlobalScopes());
+        });
     }
 }

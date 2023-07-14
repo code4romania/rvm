@@ -6,7 +6,9 @@ namespace App\Models;
 
 use App\Concerns\BelongsToOrganisation;
 use App\Concerns\HasRole;
+use App\Concerns\LimitsVisibility;
 use App\Concerns\MustSetInitialPassword;
+use App\Enum\UserRole;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,6 +24,7 @@ class User extends Authenticatable implements FilamentUser, HasName
     use HasRole;
     use Notifiable;
     use MustSetInitialPassword;
+    use LimitsVisibility;
 
     /**
      * The attributes that are mass assignable.
@@ -55,6 +58,24 @@ class User extends Authenticatable implements FilamentUser, HasName
     protected $casts = [
         'password_set_at' => 'datetime',
     ];
+
+    public static function booted(): void
+    {
+        static::creating(function (self $user) {
+            if ($user->role !== null) {
+                return;
+            }
+
+            if ($user->county_id !== null) {
+                $user->role = UserRole::PLATFORM_COORDINATOR;
+                $user->organisation_id = null;
+            }
+
+            if ($user->belongsToOrganisation()) {
+                $user->role = UserRole::ORG_MEMBER;
+            }
+        });
+    }
 
     public function canAccessFilament(): bool
     {

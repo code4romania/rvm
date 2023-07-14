@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enum\UserRole;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\User;
@@ -14,6 +15,8 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Layout;
+use Filament\Tables\Filters\SelectFilter;
 
 class UserResource extends Resource
 {
@@ -86,16 +89,38 @@ class UserResource extends Resource
                     ->toggleable(),
 
                 TextColumn::make('email')
+                    ->label(__('user.field.email'))
                     ->sortable()
                     ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('role')
+                    ->label(__('user.field.role'))
+                    ->formatStateUsing(fn (User $record) => $record->role?->label())
+                    ->description(function (User $record) {
+                        if (
+                            ! $record->belongsToOrganisation() ||
+                            auth()->user()->belongsToOrganisation()
+                        ) {
+                            return null;
+                        }
+
+                        return $record->organisation->name;
+                    })
+                    ->sortable()
                     ->toggleable(),
 
                 // Tables\Columns\TextColumn::make('role')
                 //     ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('role')
+                    ->multiple()
+                    ->label(__('user.field.role'))
+                    ->options(UserRole::options())
+                    ->hidden(fn () => auth()->user()->belongsToOrganisation()),
             ])
+            ->filtersLayout(Layout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

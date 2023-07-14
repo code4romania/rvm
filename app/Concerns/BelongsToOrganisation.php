@@ -14,6 +14,18 @@ trait BelongsToOrganisation
         $this->fillable[] = 'organisation_id';
     }
 
+    public static function bootBelongsToOrganisation(): void
+    {
+        static::creating(function (self $model): void {
+            if (
+                $model->organisation_id === null &&
+                auth()->user()->belongsToOrganisation()
+            ) {
+                $model->organisation_id = auth()->user()->organisation_id;
+            }
+        });
+    }
+
     public function organisation(): BelongsTo
     {
         return $this->belongsTo(Organisation::class);

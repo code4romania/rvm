@@ -22,7 +22,7 @@ class ResourcePolicy
      */
     public function view(User $user, Resource $resource): bool
     {
-        return $user->isPlatformAdmin();
+        return true;
     }
 
     /**
@@ -30,7 +30,8 @@ class ResourcePolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->isPlatformAdmin()
+            || $user->isOrgAdmin();
     }
 
     /**
@@ -38,7 +39,8 @@ class ResourcePolicy
      */
     public function update(User $user, Resource $resource): bool
     {
-        return true;
+        return $user->isPlatformAdmin()
+            || $user->isOrgAdmin($resource->organisation);
     }
 
     /**
@@ -46,7 +48,8 @@ class ResourcePolicy
      */
     public function delete(User $user, Resource $resource): bool
     {
-        return true;
+        return $user->isPlatformAdmin()
+            || $user->isOrgAdmin($resource->organisation);
     }
 
     /**
@@ -54,7 +57,8 @@ class ResourcePolicy
      */
     public function restore(User $user, Resource $resource): bool
     {
-        return $user->isPlatformAdmin();
+        return $user->isPlatformAdmin()
+            || $user->isOrgAdmin($resource->organisation);
     }
 
     /**
@@ -62,6 +66,7 @@ class ResourcePolicy
      */
     public function forceDelete(User $user, Resource $resource): bool
     {
-        return $user->isPlatformAdmin();
+        return $user->isPlatformAdmin()
+            || $user->isOrgAdmin($resource->organisation);
     }
 }
