@@ -23,15 +23,15 @@ class Welcome extends Component implements HasForms
     use InteractsWithForms;
     use WithRateLimiting;
 
-    public ?User $user = null;
+    public User $user;
 
-    public ?string $email = null;
+    public string $email;
 
     public ?string $password = null;
 
     public ?string $passwordConfirmation = null;
 
-    public function mount($user, Request $request): void
+    public function mount(Request $request): void
     {
         if (Filament::auth()->check()) {
             redirect()->intended(Filament::getUrl());
@@ -40,8 +40,6 @@ class Welcome extends Component implements HasForms
         if (! $request->hasValidSignature()) {
             abort(Response::HTTP_FORBIDDEN, __('auth.welcome.invalid_signature'));
         }
-
-        $this->user = User::find($user)->first();
 
         if (\is_null($this->user)) {
             abort(Response::HTTP_FORBIDDEN, __('auth.welcome.no_user'));
@@ -52,7 +50,7 @@ class Welcome extends Component implements HasForms
         }
 
         $this->form->fill([
-            'email' => $this->user?->email,
+            'email' => $this->user->email,
         ]);
     }
 
