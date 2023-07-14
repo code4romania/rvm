@@ -5,15 +5,23 @@ declare(strict_types=1);
 namespace App\Filament\Resources\OrganisationResource\Pages;
 
 use App\Enum\OrganisationType;
+use App\Filament\Forms\Components\Location;
 use App\Filament\Resources\OrganisationResource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListOrganisations extends ListRecords
 {
     protected static string $resource = OrganisationResource::class;
+
+    protected function getTableQuery(): Builder
+    {
+        return parent::getTableQuery()
+            ->with('media');
+    }
 
     protected function getActions(): array
     {
@@ -42,6 +50,7 @@ class ListOrganisations extends ListRecords
                         ->placeholder(__('organisation.placeholder.email'))
                         ->email()
                         ->required()
+                        ->unique('users', 'email')
                         ->inlineLabel(),
 
                     TextInput::make('phone')
@@ -57,6 +66,12 @@ class ListOrganisations extends ListRecords
                         ->options(OrganisationType::options())
                         ->enum(OrganisationType::class)
                         ->inlineLabel(),
+
+                    Location::make()
+                        ->withoutCity()
+                        ->required()
+                        ->inlineLabel(),
+
                 ])
                 ->successRedirectUrl(fn ($record) => OrganisationResource::getUrl('view', $record))
                 ->disableCreateAnother(),

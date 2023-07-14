@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Concerns\BelongsToOrganisation;
+use App\Concerns\HasRole;
+use App\Concerns\LimitsVisibility;
+use App\Concerns\MustSetInitialPassword;
+use App\Enum\UserRole;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,9 +18,13 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements FilamentUser, HasName
 {
+    use BelongsToOrganisation;
     use HasApiTokens;
     use HasFactory;
+    use HasRole;
     use Notifiable;
+    use MustSetInitialPassword;
+    use LimitsVisibility;
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +37,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         'email',
         'phone',
         'password',
+        'password_set_at',
     ];
 
     /**
@@ -47,8 +56,26 @@ class User extends Authenticatable implements FilamentUser, HasName
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'password_set_at' => 'datetime',
     ];
+
+    public static function booted(): void
+    {
+        static::creating(function (self $user) {
+            if ($user->role !== null) {
+                return;
+            }
+
+            if ($user->county_id !== null) {
+                $user->role = UserRole::PLATFORM_COORDINATOR;
+                $user->organisation_id = null;
+            }
+
+            if ($user->belongsToOrganisation()) {
+                $user->role = UserRole::ORG_MEMBER;
+            }
+        });
+    }
 
     public function canAccessFilament(): bool
     {

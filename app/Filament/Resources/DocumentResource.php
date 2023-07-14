@@ -21,6 +21,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
 
 class DocumentResource extends Resource
@@ -117,6 +118,7 @@ class DocumentResource extends Resource
 
                 TextColumn::make('organisation.name')
                     ->label(__('document.field.organisation'))
+                    ->hidden(fn () => auth()->user()->belongsToOrganisation())
                     ->sortable()
                     ->toggleable(),
 
@@ -141,6 +143,7 @@ class DocumentResource extends Resource
                 SelectFilter::make('organisation')
                     ->label(__('document.field.organisation'))
                     ->relationship('organisation', 'name')
+                    ->hidden(fn () => auth()->user()->belongsToOrganisation())
                     ->multiple(),
 
                 SelectFilter::make('type')
@@ -149,11 +152,14 @@ class DocumentResource extends Resource
                     ->multiple(),
 
                 DateRangeFilter::make('signed_at')
-                    ->label(__('document.field.signed_at')),
+                    ->label(__('document.field.signed_at'))
+                    ->columns(),
 
                 DateRangeFilter::make('expires_at')
-                    ->label(__('document.field.expires_at')),
+                    ->label(__('document.field.expires_at'))
+                    ->columns(),
             ])
+            ->filtersLayout(Layout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

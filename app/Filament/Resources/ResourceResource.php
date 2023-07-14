@@ -54,6 +54,7 @@ class ResourceResource extends Resource
                         Select::make('organisation_id')
                             ->relationship('organisation', 'name')
                             ->label(__('resource.fields.organisation'))
+                            ->hidden(fn () => auth()->user()->belongsToOrganisation())
                             ->searchable()
                             ->preload()
                             ->required(),
@@ -139,6 +140,7 @@ class ResourceResource extends Resource
 
                 TextColumn::make('organisation.name')
                     ->label(__('resource.fields.organisation'))
+                    ->hidden(fn () => auth()->user()->belongsToOrganisation())
                     ->sortable()
                     ->toggleable(),
 
@@ -160,6 +162,7 @@ class ResourceResource extends Resource
             ->filters([
                 SelectFilter::make('organisation')
                     ->label(__('resource.fields.organisation'))
+                    ->hidden(fn () => auth()->user()->belongsToOrganisation())
                     ->relationship('organisation', 'name'),
 
                 SelectFilter::make('category')
@@ -177,7 +180,6 @@ class ResourceResource extends Resource
                 SelectFilter::make('county')
                     ->label(__('general.county'))
                     ->relationship('county', 'name'),
-
             ])
             ->filtersLayout(Layout::AboveContent)
             ->actions([

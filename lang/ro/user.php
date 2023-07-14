@@ -14,6 +14,13 @@ return [
         'last_name' => 'Nume',
         'email' => 'Email',
         'phone' => 'Telefon',
+        'role' => 'Rol',
     ],
 
+    'role' => [
+        'platform_admin' => 'Admin DSU',
+        'platform_coordinator' => 'Coordonator local DSU',
+        'org_admin' => 'Admin organizație',
+        'org_member' => 'Membru organizație',
+    ],
 ];
