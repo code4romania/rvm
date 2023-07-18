@@ -8,6 +8,8 @@ return [
     'password' => 'Parola introdusă este incorrectă.',
     'throttle' => 'Prea multe încercări de intrare în cont. Poți încerca din nou peste :seconds secunde.',
 
+    'organisation_inactive' => 'Organizația este inactivă.',
+
     'welcome' => [
         'subject' => 'Invitație la platforma RVM',
         'intro_line_1' => 'Ești invitat să te alături platformei RVM - Sistemul de management de resurse umane și materiale în cazul unui dezastru, administrat de Departamentul Situații de Urgență al României.',
@@ -17,5 +19,4 @@ return [
         'no_user' => 'Acest utilizator nu este valid.',
         'already_used' => 'Acest link a fost folosit deja.',
     ],
-
 ];

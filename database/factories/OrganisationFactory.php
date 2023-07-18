@@ -76,7 +76,7 @@ class OrganisationFactory extends Factory
 
             Volunteer::factory()
                 ->for($organisation)
-                ->count(fake()->numberBetween(0, 100))
+                ->count(20)
                 ->create();
 
             Resource::factory()
@@ -86,7 +86,16 @@ class OrganisationFactory extends Factory
 
             Document::factory()
                 ->for($organisation)
-                ->count(fake()->randomDigitNotZero())
+                ->create();
+
+            Document::factory()
+                ->contract()
+                ->for($organisation)
+                ->create();
+
+            Document::factory()
+                ->protocol()
+                ->for($organisation)
                 ->create();
 
             $organisation->expertises()

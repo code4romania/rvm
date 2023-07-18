@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Concerns\HasLocation;
 use App\Concerns\LimitsVisibility;
+use App\Enum\DocumentType;
 use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
@@ -14,12 +15,15 @@ use App\Models\Organisation\Branch;
 use App\Models\Organisation\Expertise;
 use App\Models\Organisation\ResourceType;
 use App\Models\Organisation\RiskCategory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -30,6 +34,7 @@ class Organisation extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
     use LimitsVisibility;
+    use Notifiable;
     use HasLocation;
 
     protected $with = ['city', 'county'];
@@ -120,17 +125,64 @@ class Organisation extends Model implements HasMedia
         return $this->hasMany(Document::class);
     }
 
-    public function toggleStatus(): bool
+    public function scopeWithLastProtocolExpiresAt(Builder $query): Builder
+    {
+        return $query
+            ->addSelect([
+                'last_protocol_expires_at' => Document::select('expires_at')
+                    ->whereColumn('organisation_id', 'organisations.id')
+                    ->where('type', DocumentType::protocol)
+                    ->orderByDesc('expires_at')
+                    ->limit(1),
+            ])
+            ->withCasts([
+                'last_protocol_expires_at' => 'date',
+            ]);
+    }
+
+    public function scopeWhereActive(Builder $query): Builder
+    {
+        return $query->where('status', OrganisationStatus::active);
+    }
+
+    public function setActive(): bool
     {
         return $this->update([
-            'status' => $this->status->is(OrganisationStatus::active)
-                ? OrganisationStatus::inactive
-                : OrganisationStatus::active,
+            'status' => OrganisationStatus::active,
         ]);
+    }
+
+    public function setInactive(): bool
+    {
+        return $this->update([
+            'status' => OrganisationStatus::inactive,
+        ]);
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status->is(OrganisationStatus::active);
+    }
+
+    public function isInactive(): bool
+    {
+        return $this->status->is(OrganisationStatus::inactive);
+    }
+
+    public function toggleStatus(): bool
+    {
+        return $this->isInactive()
+            ? $this->setActive()
+            : $this->setInActive();
     }
 
     public function getLogoAttribute(): string
     {
         return $this->getFirstMediaUrl(conversionName: 'thumb');
+    }
+
+    public function routeNotificationForMail(?Notification $notification = null): string
+    {
+        return data_get($this->contact_person, ['email'], $this->email);
     }
 }
