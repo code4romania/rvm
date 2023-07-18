@@ -20,20 +20,32 @@ class DocumentFactory extends Factory
      */
     public function definition()
     {
-        $type = fake()->randomElement(DocumentType::values());
-
-        $signed_at = $expires_at = null;
-
-        if (DocumentType::protocol->is($type)) {
-            $signed_at = CarbonImmutable::createFromInterface(fake()->dateTimeBetween('-1 year', 'now'));
-            $expires_at = $signed_at->addDays(fake()->randomNumber(2));
-        }
-
         return [
             'name' => fake()->sentence(),
-            'type' => $type,
-            'signed_at' => $signed_at?->toDateString(),
-            'expires_at' => $expires_at?->toDateString(),
+            'type' => DocumentType::other,
         ];
+    }
+
+    public function protocol(): static
+    {
+        return $this->state(function (array $attributes) {
+            $signed_at = CarbonImmutable::createFromInterface(fake()->dateTimeBetween('-1 year', '-1 week'));
+            $expires_at = fake()->boolean()
+                ? today()->addDays(30)
+                : today();
+
+            return [
+                'type' => DocumentType::protocol,
+                'signed_at' => $signed_at->toDateString(),
+                'expires_at' => $expires_at->toDateString(),
+            ];
+        });
+    }
+
+    public function contract()
+    {
+        return $this->state([
+            'type' => DocumentType::contract,
+        ]);
     }
 }

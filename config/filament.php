@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\CheckOrganisationIsActive;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Http\Middleware\MirrorConfigToSubpackages;
@@ -89,7 +90,7 @@ return [
     'auth' => [
         'guard' => env('FILAMENT_AUTH_GUARD', 'web'),
         'pages' => [
-            'login' => \Filament\Http\Livewire\Auth\Login::class,
+            'login' => App\Filament\Pages\Auth\Login::class,
         ],
     ],
 
@@ -183,7 +184,7 @@ return [
     */
 
     'database_notifications' => [
-        'enabled' => false,
+        'enabled' => true,
         'polling_interval' => '30s',
     ],
 
@@ -317,6 +318,7 @@ return [
     'middleware' => [
         'auth' => [
             Authenticate::class,
+            CheckOrganisationIsActive::class,
         ],
         'base' => [
             EncryptCookies::class,
