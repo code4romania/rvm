@@ -14,7 +14,8 @@ class OrganisationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isPlatformAdmin() || $user->isPlatformCoordinator();
+        return $user->isPlatformAdmin()
+            || $user->isPlatformCoordinator();
     }
 
     /**
@@ -23,7 +24,7 @@ class OrganisationPolicy
     public function view(User $user, Organisation $organisation): bool
     {
         return $user->isPlatformAdmin()
-            || $user->isPlatformCoordinator($organisation->county)
+            || $user->isPlatformCoordinator()
             || $user->belongsToOrganisation($organisation);
     }
 

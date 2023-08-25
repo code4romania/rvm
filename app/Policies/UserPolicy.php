@@ -22,7 +22,7 @@ class UserPolicy
     public function view(User $user, User $model): bool
     {
         return $user->isPlatformAdmin()
-            || $user->isPlatformCoordinator($model->organisation->county)
+            || $user->isPlatformCoordinator()
             || $user->belongsToOrganisation($model->organisation);
     }
 
