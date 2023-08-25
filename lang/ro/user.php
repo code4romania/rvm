@@ -15,11 +15,12 @@ return [
         'email' => 'Email',
         'phone' => 'Telefon',
         'role' => 'Rol',
+        'organisation' => 'Organizație',
     ],
 
     'role' => [
         'platform_admin' => 'Admin DSU',
-        'platform_coordinator' => 'Coordonator local DSU',
+        'platform_coordinator' => 'Coordonator local IGSU/ISUJ',
         'org_admin' => 'Admin organizație',
     ],
 ];
