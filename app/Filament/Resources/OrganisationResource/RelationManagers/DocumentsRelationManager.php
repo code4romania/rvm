@@ -124,7 +124,7 @@ class DocumentsRelationManager extends RelationManager
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                //
             ])
             ->defaultSort('id', 'desc');
     }

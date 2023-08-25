@@ -108,11 +108,12 @@ class UsersRelationManager extends RelationManager
                     ->disabled(fn (self $livewire) => $livewire->getOwnerRecord()->isInactive()),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                //
             ]);
     }
 }

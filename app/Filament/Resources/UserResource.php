@@ -82,7 +82,10 @@ class UserResource extends Resource
                             ->visible(fn (callable $get) => UserRole::ORG_ADMIN->is($get('role')))
                             ->searchable()
                             ->required(),
-                    ]),
+                    ])
+                    ->visible(
+                        fn () => auth()->user()->isPlatformAdmin(),
+                    ),
             ]);
     }
 
@@ -140,9 +143,11 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                //
             ])
             ->headerActions([
                 ExportAction::make(),
