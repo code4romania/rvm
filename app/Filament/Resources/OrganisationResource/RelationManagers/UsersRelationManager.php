@@ -104,7 +104,8 @@ class UsersRelationManager extends RelationManager
                         $data['role'] = UserRole::ORG_ADMIN;
 
                         return $data;
-                    }),
+                    })
+                    ->disabled(fn (self $livewire) => $livewire->getOwnerRecord()->isInactive()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

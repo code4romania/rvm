@@ -115,7 +115,8 @@ class DocumentsRelationManager extends RelationManager
             ->headerActions([
                 ExportAction::make(),
 
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->disabled(fn (self $livewire) => $livewire->getOwnerRecord()->isInactive()),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
