@@ -17,7 +17,6 @@ enum UserRole: string
     case PLATFORM_ADMIN = 'platform_admin';
     case PLATFORM_COORDINATOR = 'platform_coordinator';
     case ORG_ADMIN = 'org_admin';
-    case ORG_MEMBER = 'org_member';
 
     protected function labelKeyPrefix(): ?string
     {

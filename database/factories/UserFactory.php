@@ -64,11 +64,4 @@ class UserFactory extends Factory
             'role' => UserRole::ORG_ADMIN,
         ]);
     }
-
-    public function orgMember(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'role' => UserRole::ORG_MEMBER,
-        ]);
-    }
 }

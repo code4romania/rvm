@@ -21,6 +21,5 @@ return [
         'platform_admin' => 'Admin DSU',
         'platform_coordinator' => 'Coordonator local DSU',
         'org_admin' => 'Admin organizație',
-        'org_member' => 'Membru organizație',
     ],
 ];
