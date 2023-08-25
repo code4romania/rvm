@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
+use App\Enum\UserRole;
 use App\Filament\Resources\UserResource;
 use App\Filament\Tables\Actions\ExportAction;
 use Filament\Forms\Components\TextInput;
@@ -11,6 +12,7 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 
 class UsersRelationManager extends RelationManager
 {
@@ -37,9 +39,28 @@ class UsersRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                TextInput::make('name')->required()->autofocus()->label(__('Name')),
-                TextInput::make('email')->email()->required()->label(__('Email')),
-                TextInput::make('password')->password()->autocomplete('new-password')->required()->label(__('Password')),
+                TextInput::make('first_name')
+                    ->label(__('user.field.first_name'))
+                    ->maxLength(100)
+                    ->required(),
+
+                TextInput::make('last_name')
+                    ->label(__('user.field.last_name'))
+                    ->maxLength(100)
+                    ->required(),
+
+                TextInput::make('email')
+                    ->label(__('user.field.email'))
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(200)
+                    ->email()
+                    ->required(),
+
+                TextInput::make('phone')
+                    ->label(__('user.field.phone'))
+                    ->maxLength(14)
+                    ->tel()
+                    ->required(),
 
             ]);
     }
@@ -48,12 +69,29 @@ class UsersRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
                     ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\TextColumn::make('role')
-                    ->sortable(),
+                    ->toggleable(),
+
+                TextColumn::make('first_name')
+                    ->label(__('user.field.first_name'))
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('last_name')
+                    ->label(__('user.field.last_name'))
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('email')
+                    ->label(__('user.field.email'))
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
             ])
             ->filters([
                 //
@@ -61,7 +99,12 @@ class UsersRelationManager extends RelationManager
             ->headerActions([
                 ExportAction::make(),
 
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->mutateFormDataUsing(function (array $data) {
+                        $data['role'] = UserRole::ORG_ADMIN;
+
+                        return $data;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

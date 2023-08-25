@@ -9,14 +9,15 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\User;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserResource extends Resource
 {
@@ -53,6 +54,7 @@ class UserResource extends Resource
 
                         TextInput::make('email')
                             ->label(__('user.field.email'))
+                            ->unique(ignoreRecord: true)
                             ->maxLength(200)
                             ->email()
                             ->required(),
@@ -61,6 +63,24 @@ class UserResource extends Resource
                             ->label(__('user.field.phone'))
                             ->maxLength(14)
                             ->tel()
+                            ->required(),
+                    ]),
+
+                Card::make()
+                    ->columns()
+                    ->schema([
+                        Select::make('role')
+                            ->label(__('user.field.role'))
+                            ->options(UserRole::options())
+                            ->enum(UserRole::class)
+                            ->reactive()
+                            ->required(),
+
+                        Select::make('organisation_id')
+                            ->relationship('organisation', 'name', fn (Builder $query) => $query->whereActive())
+                            ->label(__('user.field.organisation'))
+                            ->visible(fn (callable $get) => UserRole::ORG_ADMIN->is($get('role')))
+                            ->searchable()
                             ->required(),
                     ]),
             ]);
@@ -110,8 +130,6 @@ class UserResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
-                // Tables\Columns\TextColumn::make('role')
-                //     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('role')
@@ -120,7 +138,6 @@ class UserResource extends Resource
                     ->options(UserRole::options())
                     ->hidden(fn () => auth()->user()->belongsToOrganisation()),
             ])
-            ->filtersLayout(Layout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])
