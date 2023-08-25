@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
@@ -31,6 +32,8 @@ class DatabaseSeeder extends Seeder
 
             return;
         }
+
+        Mail::fake();
 
         User::factory(['email' => 'admin@example.com'])
             ->platformAdmin()

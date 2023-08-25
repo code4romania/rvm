@@ -386,7 +386,7 @@ class OrganisationResource extends Resource
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                //
             ])
             ->headerActions([
                 ExportAction::make(),

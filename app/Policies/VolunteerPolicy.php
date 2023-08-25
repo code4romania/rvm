@@ -23,7 +23,7 @@ class VolunteerPolicy
     public function view(User $user, Volunteer $volunteer): bool
     {
         return $user->isPlatformAdmin()
-            || $user->isPlatformCoordinator($volunteer->organisation->county)
+            || $user->isPlatformCoordinator()
             || $user->belongsToOrganisation($volunteer->organisation);
     }
 

@@ -22,7 +22,9 @@ class ResourcePolicy
      */
     public function view(User $user, Resource $resource): bool
     {
-        return true;
+        return $user->isPlatformAdmin()
+            || $user->isPlatformCoordinator()
+            || $user->belongsToOrganisation($resource->organisation);
     }
 
     /**

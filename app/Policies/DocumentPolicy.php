@@ -22,7 +22,9 @@ class DocumentPolicy
      */
     public function view(User $user, Document $document): bool
     {
-        return true;
+        return $user->isPlatformAdmin()
+            || $user->isPlatformCoordinator()
+            || $user->belongsToOrganisation($document->organisation);
     }
 
     /**

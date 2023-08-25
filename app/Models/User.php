@@ -66,13 +66,8 @@ class User extends Authenticatable implements FilamentUser, HasName
                 return;
             }
 
-            if ($user->county_id !== null) {
-                $user->role = UserRole::PLATFORM_COORDINATOR;
-                $user->organisation_id = null;
-            }
-
             if ($user->belongsToOrganisation()) {
-                $user->role = UserRole::ORG_MEMBER;
+                $user->role = UserRole::ORG_ADMIN;
             }
         });
     }

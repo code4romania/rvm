@@ -115,7 +115,8 @@ class DocumentsRelationManager extends RelationManager
             ->headerActions([
                 ExportAction::make(),
 
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->disabled(fn (self $livewire) => $livewire->getOwnerRecord()->isInactive()),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -123,7 +124,7 @@ class DocumentsRelationManager extends RelationManager
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                //
             ])
             ->defaultSort('id', 'desc');
     }
