@@ -17,16 +17,11 @@ class VisibleToCurrenUserScope implements Scope
             return;
         }
 
-        if (auth()->user()->isPlatformAdmin()) {
+        if (
+            auth()->user()->isPlatformAdmin() ||
+            auth()->user()->isPlatformCoordinator()
+        ) {
             return;
-        }
-
-        if (auth()->user()->isPlatformCoordinator()) {
-            if ($model instanceof Organisation) {
-                $builder->where('county_id', auth()->user()->county_id);
-            } else {
-                $builder->whereHas('organisation');
-            }
         }
 
         if (auth()->user()->belongsToOrganisation()) {
