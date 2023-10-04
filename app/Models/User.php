@@ -14,6 +14,7 @@ use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use JeffGreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements FilamentUser, HasName
@@ -25,6 +26,7 @@ class User extends Authenticatable implements FilamentUser, HasName
     use Notifiable;
     use MustSetInitialPassword;
     use LimitsVisibility;
+    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.

@@ -7,6 +7,7 @@ return [
     'organisation_inactive' => 'Organizația este inactivă.',
     'password' => 'Parola este greșită.',
     'throttle' => 'Prea multe încercări de intrare în cont. Puteți încerca din nou peste :seconds secunde.',
+    'settings' => 'Setări',
     'welcome' => [
         'already_used' => 'Acest link a fost folosit deja.',
         'intro_line_1' => 'Ești invitat să te alături platformei RVM - Sistemul de management de resurse umane și materiale în cazul unui dezastru, administrat de Departamentul Situații de Urgență al României.',

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Auth;
 
-use Filament\Http\Livewire\Auth\Login as BaseLogin;
 use Illuminate\Validation\ValidationException;
+use JeffGreco13\FilamentBreezy\Http\Livewire\Auth\Login as BaseLogin;
 
 class Login extends BaseLogin
 {

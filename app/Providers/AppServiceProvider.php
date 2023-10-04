@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Filament\Pages\Auth\Settings;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
+use Filament\Navigation\UserMenuItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -35,6 +37,13 @@ class AppServiceProvider extends ServiceProvider
 
         Filament::serving(function () {
             Filament::registerViteTheme('resources/css/app.css');
+
+            Filament::registerUserMenuItems([
+                'account' => UserMenuItem::make()
+                    ->url(Settings::getUrl())
+                    ->label(__('auth.settings'))
+                    ->icon('heroicon-o-cog'),
+            ]);
         });
     }
 
