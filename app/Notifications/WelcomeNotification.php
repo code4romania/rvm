@@ -32,7 +32,7 @@ class WelcomeNotification extends Notification
             ->subject(__('auth.welcome.subject'))
             ->line(__('auth.welcome.intro_line_1'))
             ->line(__('auth.welcome.intro_line_2'))
-            ->action(__('auth.welcome.submit'), URL::signedRoute(
+            ->action(__('auth.welcome.accept_invitation'), URL::signedRoute(
                 'filament.auth.welcome',
                 ['user' => $notifiable->id]
             ));
