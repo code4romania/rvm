@@ -91,7 +91,7 @@ class Welcome extends Component implements HasForms
                 ->confirmed(),
 
             TextInput::make('password_confirmation')
-                ->label(__('filament::login.fields.password.label'))
+                ->label(__('validation.attributes.password_confirmation'))
                 ->password()
                 ->required(),
         ];
