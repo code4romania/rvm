@@ -6,6 +6,7 @@ return [
     'label' => [
         'singular' => 'Organizație',
         'plural' => 'Organizații',
+        'profile' => 'Profil organizație',
     ],
 
     'modal' => [
