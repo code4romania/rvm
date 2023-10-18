@@ -21,7 +21,7 @@ class ProfileResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('organisation.label.singular');
+        return __('organisation.label.profile');
     }
 
     public static function getPluralModelLabel(): string
