@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\OrganisationResource\Pages;
+namespace App\Filament\Resources\ProfileResource\Pages;
 
-use App\Filament\Resources\OrganisationResource;
+use App\Filament\Resources\ProfileResource;
+use App\Filament\Resources\ProfileResource\Concerns\ResolvesRecord;
 use Filament\Resources\Pages\EditRecord;
 
-class EditOrganisation extends EditRecord
+class EditProfile extends EditRecord
 {
-    protected static string $resource = OrganisationResource::class;
+    use ResolvesRecord;
+
+    protected static string $resource = ProfileResource::class;
 
     protected function getActions(): array
     {
@@ -37,7 +40,7 @@ class EditOrganisation extends EditRecord
 
     protected function getRedirectUrl(): ?string
     {
-        return static::getResource()::getUrl('view', $this->getRecord());
+        return static::getResource()::getUrl('index');
     }
 
     public function getFormTabLabel(): ?string
