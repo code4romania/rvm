@@ -39,6 +39,8 @@ class OrganisationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-office-building';
 
+    protected static ?int $navigationSort = 1;
+
     public static function getModelLabel(): string
     {
         return __('organisation.label.singular');
@@ -51,7 +53,6 @@ class OrganisationResource extends Resource
 
     public static function form(Form $form): Form
     {
-//        debug(Organisation::find(1)->expertises);
         return $form
             ->columns(3)
             ->schema([

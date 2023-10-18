@@ -33,6 +33,8 @@ class VolunteerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
+    protected static ?int $navigationSort = 4;
+
     public static function getModelLabel(): string
     {
         return __('volunteer.label.singular');
