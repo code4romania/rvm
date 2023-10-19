@@ -24,8 +24,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('alias')->nullable();
-            $table->enum('type', OrganisationType::values());
-            $table->enum('status', OrganisationStatus::values())->default('inactive');
+            $table->string('type');
+            $table->string('ngo_type')->nullable();
             $table->string('email');
             $table->string('phone');
             $table->year('year')->nullable();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enum\NGOType;
 use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
@@ -40,11 +41,15 @@ class OrganisationFactory extends Factory
 
         $city = City::query()->inRandomOrder()->first();
         $name = fake()->company();
+        $type = fake()->randomElement(OrganisationType::values());
 
         return [
             'name' => $name,
             'alias' => Str::slug($name),
-            'type' => fake()->randomElement(OrganisationType::values()),
+            'type' => $type,
+            'ngo_type' => OrganisationType::ngo->is($type)
+                ? fake()->randomElement(NGOType::values())
+                : null,
             'status' => fake()->randomElement(OrganisationStatus::values()),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),

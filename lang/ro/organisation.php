@@ -17,6 +17,7 @@ return [
         'name' => 'Denumire organizație',
         'alias' => 'Alias organizație',
         'type' => 'Tip organizație',
+        'ngo_type' => 'Tipul ONG-ului',
         'email_organisation' => 'Email de contact organizație',
         'phone_organisation' => 'Telefon de contact organizație',
         'year' => 'Anul înființării',
@@ -52,10 +53,15 @@ return [
             'inactive' => 'Activeaza',
         ],
         'types' => [
-            'association' => 'Asociatie',
-            'foundation' => 'Fundatie',
-            'federation' => 'Federatie',
-            'informal_group' => 'Grup informal',
+            'ngo' => 'ONG',
+            'private' => 'Entitate privată',
+            'public' => 'Instituție publică',
+            'academic' => 'Mediu academic',
+        ],
+        'ngo_types' => [
+            'association' => 'Asociație',
+            'foundation' => 'Fundație',
+            'federation' => 'Federație',
         ],
         'area' => 'Organizația își desfășoară activitatea pe plan:',
         'area_of_activity' => [

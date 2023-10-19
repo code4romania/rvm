@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enum\NGOType;
 use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationType;
 use App\Filament\Forms\Components\Location;
@@ -78,6 +79,14 @@ class OrganisationResource extends Resource
                                     ->label(__('organisation.field.type'))
                                     ->options(OrganisationType::options())
                                     ->enum(OrganisationType::class)
+                                    ->required()
+                                    ->reactive(),
+
+                                Select::make('ngo_type')
+                                    ->label(__('organisation.field.ngo_type'))
+                                    ->visible(fn (callable $get) => OrganisationType::ngo->is($get('type')))
+                                    ->options(NGOType::options())
+                                    ->enum(NGOType::class)
                                     ->required(),
 
                                 TextInput::make('year')

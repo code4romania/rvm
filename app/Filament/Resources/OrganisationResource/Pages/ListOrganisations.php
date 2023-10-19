@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\OrganisationResource\Pages;
 
+use App\Enum\NGOType;
 use App\Enum\OrganisationType;
 use App\Filament\Forms\Components\Location;
 use App\Filament\Resources\OrganisationResource;
@@ -65,6 +66,15 @@ class ListOrganisations extends ListRecords
                         ->required()
                         ->options(OrganisationType::options())
                         ->enum(OrganisationType::class)
+                        ->reactive()
+                        ->inlineLabel(),
+
+                    Select::make('ngo_type')
+                        ->label(__('organisation.field.ngo_type'))
+                        ->required()
+                        ->visible(fn (callable $get) => OrganisationType::ngo->is($get('type')))
+                        ->options(NGOType::options())
+                        ->enum(NGOType::class)
                         ->inlineLabel(),
 
                     Location::make()
