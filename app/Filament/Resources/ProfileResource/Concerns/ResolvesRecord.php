@@ -10,6 +10,8 @@ trait ResolvesRecord
     {
         $this->record = auth()->user()->organisation;
 
+        abort_unless($this->record, 404);
+
         $this->fillForm();
     }
 }

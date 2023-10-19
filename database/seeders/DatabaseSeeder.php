@@ -49,7 +49,6 @@ class DatabaseSeeder extends Seeder
                     'first_name' => 'Coordonator',
                     'last_name' => $county->name,
                     'email' => Str::slug($county->name) . '@example.com',
-                    'county_id' => $county->id,
                 ])->toArray()
             )
             ->create();

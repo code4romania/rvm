@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enum\OrganisationAreaType;
-use App\Enum\OrganisationStatus;
-use App\Enum\OrganisationType;
 use App\Models\City;
 use App\Models\County;
 use Illuminate\Database\Migrations\Migration;
@@ -26,6 +23,7 @@ return new class extends Migration
             $table->string('alias')->nullable();
             $table->string('type');
             $table->string('ngo_type')->nullable();
+            $table->string('status')->default('inactive');
             $table->string('email');
             $table->string('phone');
             $table->year('year')->nullable();
@@ -37,22 +35,12 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->json('contact_person')->nullable();
             $table->json('other_information')->nullable();
-            $table->enum('type_of_area', OrganisationAreaType::values());
+            $table->string('type_of_area')->nullable();
             $table->json('areas')->nullable();
             $table->boolean('has_branches')->default(false);
             $table->boolean('social_services_accreditation')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('organisations');
     }
 };

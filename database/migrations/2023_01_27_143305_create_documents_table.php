@@ -26,14 +26,4 @@ return new class extends Migration
             $table->foreignIdFor(Organisation::class)->constrained()->cascadeOnDelete();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('documents');
-    }
 };
