@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Models\Organisation;
+use App\Models\Organisation\ResourceType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,19 +19,9 @@ return new class extends Migration
     {
         Schema::create('organisation_resource_type', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Organisation::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Organisation\ResourceType::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Organisation::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(ResourceType::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('resource_types');
     }
 };

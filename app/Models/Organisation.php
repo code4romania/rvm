@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Concerns\HasLocation;
 use App\Concerns\LimitsVisibility;
 use App\Enum\DocumentType;
+use App\Enum\NGOType;
 use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
@@ -51,6 +52,7 @@ class Organisation extends Model implements HasMedia
         'name',
         'alias',
         'type',
+        'ngo_type',
         'status',
         'email',
         'phone',
@@ -70,6 +72,7 @@ class Organisation extends Model implements HasMedia
     protected $casts = [
         'areas' => AsEnumCollection::class . ':' . OrganisationAreaType::class,
         'type' => OrganisationType::class,
+        'ngo_type' => NGOType::class,
         'status' => OrganisationStatus::class,
         'contact_person' => 'array',
         'other_information' => AsCollection::class,

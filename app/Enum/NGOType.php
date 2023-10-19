@@ -8,19 +8,18 @@ use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\Comparable;
 use App\Concerns\Enums\HasLabel;
 
-enum OrganisationType: string
+enum NGOType: string
 {
     use Arrayable;
     use Comparable;
     use HasLabel;
 
-    case ngo = 'ngo';
-    case private = 'private';
-    case public = 'public';
-    case academic = 'academic';
+    case association = 'association';
+    case foundation = 'foundation';
+    case federation = 'federation';
 
     protected function labelKeyPrefix(): ?string
     {
-        return 'organisation.field.types';
+        return 'organisation.field.ngo_types';
     }
 }

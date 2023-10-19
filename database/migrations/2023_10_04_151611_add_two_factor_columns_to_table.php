@@ -24,15 +24,4 @@ return new class extends Migration
                 ->nullable();
         });
     }
-
-    public function down()
-    {
-        Schema::table(config('filament-breezy.users_table'), function (Blueprint $table) {
-            $table->dropColumn([
-                'two_factor_secret',
-                'two_factor_recovery_codes',
-                'two_factor_confirmed_at',
-            ]);
-        });
-    }
 };
