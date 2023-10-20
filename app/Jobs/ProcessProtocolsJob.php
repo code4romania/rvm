@@ -100,6 +100,10 @@ class ProcessProtocolsJob implements ShouldQueue
 
     private function sendSummaryNotification(string $notification, Collection $organisations): void
     {
+        if ($organisations->isEmpty()) {
+            return;
+        }
+
         $this->admins->each(
             fn (User $user) => $user->notify(new $notification($organisations))
         );
