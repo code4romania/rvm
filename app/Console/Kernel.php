@@ -22,7 +22,8 @@ class Kernel extends ConsoleKernel
             ->daily()
             ->at('06:00')
             ->timezone('Europe/Bucharest')
-            ->withoutOverlapping();
+            ->withoutOverlapping()
+            ->sentryMonitor();
     }
 
     /**
