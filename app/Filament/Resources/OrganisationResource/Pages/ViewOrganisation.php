@@ -26,6 +26,7 @@ class ViewOrganisation extends ViewRecord
 
         return [
             Action::make('change_status')
+                ->visible(fn () => auth()->user()->isPlatformAdmin())
                 ->record($this->getRecord())
                 ->action(function (Organisation $record, Action $action) {
                     $record->toggleStatus();
