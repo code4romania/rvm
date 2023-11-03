@@ -87,8 +87,7 @@ class VolunteerResource extends Resource
                         TextInput::make('cnp')
                             ->label(__('volunteer.field.cnp'))
                             ->rule(new ValidCNP)
-                            ->unique()
-                            ->required(),
+                            ->unique(),
 
                         Select::make('role')
                             ->label(__('volunteer.field.role'))
