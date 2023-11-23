@@ -94,18 +94,15 @@ class OrganisationResource extends Resource
                                     ->placeholder('2006')
                                     ->numeric()
                                     ->minValue(1900)
-                                    ->maxValue(today()->year)
-                                    ->required(),
+                                    ->maxValue(today()->year),
 
                                 TextInput::make('cif')
                                     ->label(__('organisation.field.cif'))
-                                    ->rule(new ValidCIF)
-                                    ->required(),
+                                    ->rule(new ValidCIF),
 
                                 TextInput::make('registration_number')
                                     ->label(__('organisation.field.registration_number'))
-                                    ->maxLength(50)
-                                    ->required(),
+                                    ->maxLength(50),
 
                                 TextInput::make('email')
                                     ->label(__('organisation.field.email_organisation'))
@@ -124,8 +121,7 @@ class OrganisationResource extends Resource
                                     ->maxLength(1000)
                                     ->rows(2)
                                     ->helperText(__('organisation.help.description'))
-                                    ->columnSpanFull()
-                                    ->required(),
+                                    ->columnSpanFull(),
                             ]),
 
                         Section::make(__('organisation.field.contact_person'))
@@ -133,31 +129,26 @@ class OrganisationResource extends Resource
                             ->schema([
                                 TextInput::make('contact_person.first_name')
                                     ->label(__('organisation.field.contact_person_first_name'))
-                                    ->maxLength(100)
-                                    ->required(),
+                                    ->maxLength(100),
 
                                 TextInput::make('contact_person.last_name')
                                     ->label(__('organisation.field.contact_person_last_name'))
-                                    ->maxLength(100)
-                                    ->required(),
+                                    ->maxLength(100),
 
                                 TextInput::make('contact_person.role')
                                     ->label(__('organisation.field.role'))
                                     ->columnSpanFull()
-                                    ->maxLength(200)
-                                    ->required(),
+                                    ->maxLength(200),
 
                                 TextInput::make('contact_person.email')
                                     ->label(__('organisation.field.email'))
                                     ->maxLength(200)
-                                    ->email()
-                                    ->required(),
+                                    ->email(),
 
                                 TextInput::make('contact_person.phone')
                                     ->label(__('organisation.field.phone'))
                                     ->maxLength(14)
-                                    ->tel()
-                                    ->required(),
+                                    ->tel(),
                             ]),
                     ]),
 
@@ -183,8 +174,7 @@ class OrganisationResource extends Resource
                                 TextInput::make('address')
                                     ->label(__('organisation.field.address'))
                                     ->maxLength(200)
-                                    ->columnSpanFull()
-                                    ->required(),
+                                    ->columnSpanFull(),
                             ]),
 
                         Section::make(__('organisation.field.other_information'))
@@ -244,7 +234,6 @@ class OrganisationResource extends Resource
                 Section::make(__('organisation.section.branches'))
                     ->schema([
                         Toggle::make('has_branches')
-                            ->required()
                             ->label(__('organisation.field.has_branches'))
                             ->reactive(),
 
@@ -293,8 +282,7 @@ class OrganisationResource extends Resource
                 Section::make(__('organisation.section.other_information'))
                     ->schema([
                         Toggle::make('social_services_accreditation')
-                            ->label(__('organisation.field.social_services_accreditation'))
-                            ->required(),
+                            ->label(__('organisation.field.social_services_accreditation')),
                     ]),
             ]);
     }
