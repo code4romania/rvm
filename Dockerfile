@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine as vendor
+FROM php:8.1-fpm-alpine AS vendor
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
@@ -34,7 +34,7 @@ RUN composer install \
     --no-dev \
     --prefer-dist
 
-FROM node:20-alpine as assets
+FROM node:20-alpine AS assets
 
 WORKDIR /build
 
