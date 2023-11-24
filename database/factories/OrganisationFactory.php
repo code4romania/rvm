@@ -9,6 +9,7 @@ use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
 use App\Models\City;
+use App\Models\County;
 use App\Models\Document;
 use App\Models\Organisation;
 use App\Models\Organisation\Branch;
@@ -35,8 +36,8 @@ class OrganisationFactory extends Factory
         ];
 
         $otherInfo = [
-            'facebook' => '#facebook',
-            'website' => '#website',
+            'facebook' => fake()->boolean() ? 'https://www.facebook.com/#link' : null,
+            'website' => fake()->boolean() ? fake()->url() : null,
         ];
 
         $city = City::query()->inRandomOrder()->first();
@@ -54,7 +55,7 @@ class OrganisationFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),
             'year' => fake()->year(),
-            'cif' => fake()->numerify('#########'),
+            'cif' => null,
             'registration_number' => fake()->text(6),
             'description' => fake()->sentence('10'),
             'address' => fake()->address(),
@@ -64,10 +65,7 @@ class OrganisationFactory extends Factory
             'city_id' => $city->id,
             'county_id' => $city->county_id,
             'social_services_accreditation' => fake()->boolean(),
-            'areas' => fake()->randomElements(
-                OrganisationAreaType::values(),
-                fake()->numberBetween(0, 4)
-            ),
+            'area' => fake()->randomElement(OrganisationAreaType::values()),
         ];
     }
 
@@ -115,7 +113,41 @@ class OrganisationFactory extends Factory
                     ->count(fake()->numberBetween(1, 3))
                     ->create();
             }
+
+            $this->attachLocationByActivityArea($organisation);
         });
+    }
+
+    protected function attachLocationByActivityArea(Organisation $organisation): void
+    {
+        $counties = null;
+        $cities = null;
+
+        if ($organisation->area->is(OrganisationAreaType::local)) {
+            $cities = City::query()
+                ->inRandomOrder()
+                ->limit(fake()->numberBetween(1, 4))
+                ->get();
+
+            $counties = $cities->pluck('county_id')
+                ->unique()
+                ->values();
+        }
+
+        if ($organisation->area->is(OrganisationAreaType::regional)) {
+            $counties = County::query()
+                ->inRandomOrder()
+                ->limit(fake()->numberBetween(1, 4))
+                ->get();
+        }
+
+        if ($cities !== null) {
+            $organisation->activityCities()->attach($cities);
+        }
+
+        if ($counties !== null) {
+            $organisation->activityCounties()->attach($counties);
+        }
     }
 
     private function randomExpertises(int $count = 1): Collection

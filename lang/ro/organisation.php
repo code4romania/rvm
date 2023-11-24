@@ -68,8 +68,8 @@ return [
             'types' => [
                 'local' => 'Local',
                 'regional' => 'Regional',
-                'national' => 'National',
-                'international' => 'International',
+                'national' => 'Național',
+                'international' => 'Internațional',
             ],
             'areas' => 'Localitați',
             'help_text' => 'Poți adăuga mai multe arii de activitate',

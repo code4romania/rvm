@@ -14,6 +14,8 @@ use App\Filament\Resources\OrganisationResource\RelationManagers\ResourcesRelati
 use App\Filament\Resources\OrganisationResource\RelationManagers\UsersRelationManager;
 use App\Filament\Resources\OrganisationResource\RelationManagers\VolunteersRelationManager;
 use App\Filament\Tables\Actions\ExportAction;
+use App\Models\City;
+use App\Models\County;
 use App\Models\Organisation;
 use App\Rules\ValidCIF;
 use Filament\Forms\Components\Group;
@@ -33,6 +35,9 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 
 class OrganisationResource extends Resource
 {
@@ -221,13 +226,67 @@ class OrganisationResource extends Resource
                     ]),
 
                 Section::make(__('organisation.section.area_of_activity'))
-                    ->columns()
+                    ->columns(3)
                     ->schema([
-                        Select::make('areas')
+                        Select::make('area')
                             ->label(__('organisation.field.area'))
                             ->options(OrganisationAreaType::options())
-                            ->multiple()
                             ->reactive()
+                            ->afterStateUpdated(function (array $state, callable $set) {
+                                if (
+                                    ! \in_array(OrganisationAreaType::regional->value, $state) &&
+                                    ! \in_array(OrganisationAreaType::local->value, $state)
+                                ) {
+                                    $set('activity_counties', []);
+                                }
+
+                                if (! \in_array(OrganisationAreaType::local->value, $state)) {
+                                    $set('activity_cities', []);
+                                }
+                            }),
+
+                        Select::make('activity_counties')
+                            ->label(__('general.county'))
+                            ->relationship('activityCounties', 'name')
+                            ->options(function () {
+                                return Cache::driver('array')
+                                    ->rememberForever(
+                                        'counties',
+                                        fn () => County::pluck('name', 'id')
+                                    );
+                            })
+                            ->multiple()
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->visible(fn (callable $get) => \in_array($get('area'), [
+                                OrganisationAreaType::regional->value,
+                                OrganisationAreaType::local->value,
+                            ]))
+                            ->reactive(),
+
+                        Select::make('activity_cities')
+                            ->label(__('general.city'))
+                            ->relationship('activityCities', 'name')
+                            ->searchable()
+                            ->multiple()
+                            ->getSearchResultsUsing(function (string $search, callable $get) {
+                                $counties = Arr::wrap($get('activity_counties'));
+
+                                if (empty($counties)) {
+                                    return [];
+                                }
+
+                                return City::query()
+                                    ->whereIn('county_id', $counties)
+                                    ->search($search)
+                                    ->limit(100)
+                                    ->get()
+                                    ->pluck('name', 'id');
+                            })
+                            ->visible(fn (callable $get) => \in_array($get('area'), [
+                                OrganisationAreaType::local->value,
+                            ]))
                             ->required(),
                     ]),
 
@@ -334,10 +393,14 @@ class OrganisationResource extends Resource
                     ->toggleable(),
 
                 TextColumn::make('county.name')
-                    ->label(__('general.county'))
+                    ->label(__('organisation.field.hq'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('area')
+                    ->label(__('organisation.section.area_of_activity'))
+                    ->enum(OrganisationAreaType::options()),
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
@@ -356,7 +419,7 @@ class OrganisationResource extends Resource
             ->filters([
                 SelectFilter::make('county')
                     ->multiple()
-                    ->label(__('general.county'))
+                    ->label(__('organisation.field.hq'))
                     ->relationship('county', 'name'),
 
                 SelectFilter::make('type')
@@ -378,6 +441,30 @@ class OrganisationResource extends Resource
                     ->multiple()
                     ->relationship('resourceTypes', 'name')
                     ->label(__('organisation.field.resource_types')),
+
+                SelectFilter::make('area')
+                    ->label(__('organisation.section.area_of_activity'))
+                    ->options(OrganisationAreaType::options())
+                    ->multiple(),
+
+                SelectFilter::make('activityCounties')
+                    ->relationship('activityCounties', 'name')
+                    ->label(__('general.county'))
+                    ->multiple()
+                    ->query(function (Builder $query, array $data) {
+                        if (empty($data['values'])) {
+                            return;
+                        }
+
+                        $hasAreaBindings = collect($query->getQuery()->wheres)
+                            ->filter(fn (array $where) => $where['column'] === 'area')
+                            ->isNotEmpty();
+
+                        if (! $hasAreaBindings) {
+                            $query->where('area', OrganisationAreaType::national);
+                        }
+                    }),
+
             ])
             ->filtersLayout(Layout::AboveContent)
             ->actions([
