@@ -189,11 +189,6 @@ class Organisation extends Model implements HasMedia
             : $this->setInActive();
     }
 
-    public function getLogoAttribute(): string
-    {
-        return $this->getFirstMediaUrl(conversionName: 'thumb');
-    }
-
     public function routeNotificationForMail(?Notification $notification = null): string
     {
         return data_get($this->contact_person, ['email'], $this->email);
