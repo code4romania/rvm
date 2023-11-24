@@ -18,7 +18,6 @@ use App\Models\Organisation\ResourceType;
 use App\Models\Organisation\RiskCategory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
-use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -67,12 +66,10 @@ class Organisation extends Model implements HasMedia
         'type_of_area',
         'has_branches',
         'social_services_accreditation',
-        'areas',
         'area',
     ];
 
     protected $casts = [
-        'areas' => AsEnumCollection::class . ':' . OrganisationAreaType::class,
         'area' => OrganisationAreaType::class,
         'type' => OrganisationType::class,
         'ngo_type' => NGOType::class,
