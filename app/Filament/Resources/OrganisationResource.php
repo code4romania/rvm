@@ -165,6 +165,7 @@ class OrganisationResource extends Resource
                                 SpatieMediaLibraryFileUpload::make('logo')
                                     ->enableOpen()
                                     ->conversion('thumb')
+                                    ->visibility('private')
                                     ->disableLabel()
                                     ->maxFiles(1)
                                     ->image(),
