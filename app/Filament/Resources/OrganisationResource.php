@@ -363,6 +363,7 @@ class OrganisationResource extends Resource
                     ])
                     ->width(80)
                     ->height(40)
+                    ->visibility('private')
                     ->toggleable(),
 
                 TextColumn::make('name')
