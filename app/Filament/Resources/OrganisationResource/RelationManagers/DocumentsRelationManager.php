@@ -74,6 +74,7 @@ class DocumentsRelationManager extends RelationManager
                     ->enableDownload()
                     ->label(__('document.field.document'))
                     ->preserveFilenames()
+                    ->visibility('private')
                     ->columnSpanFull(),
             ]);
     }

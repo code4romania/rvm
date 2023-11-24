@@ -93,6 +93,7 @@ class DocumentResource extends Resource
                             ->enableDownload()
                             ->disableLabel()
                             ->preserveFilenames()
+                            ->visibility('private')
                             ->columnSpanFull(),
                     ]),
             ]);
