@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Spatie\Image\Manipulations;
@@ -67,10 +68,12 @@ class Organisation extends Model implements HasMedia
         'has_branches',
         'social_services_accreditation',
         'areas',
+        'area',
     ];
 
     protected $casts = [
         'areas' => AsEnumCollection::class . ':' . OrganisationAreaType::class,
+        'area' => OrganisationAreaType::class,
         'type' => OrganisationType::class,
         'ngo_type' => NGOType::class,
         'status' => OrganisationStatus::class,
@@ -126,6 +129,16 @@ class Organisation extends Model implements HasMedia
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
+    }
+
+    public function activityCounties(): MorphToMany
+    {
+        return $this->morphedByMany(County::class, 'model', 'model_has_organisations');
+    }
+
+    public function activityCities(): MorphToMany
+    {
+        return $this->morphedByMany(City::class, 'model', 'model_has_organisations');
     }
 
     public function scopeWithLastProtocolExpiresAt(Builder $query): Builder
