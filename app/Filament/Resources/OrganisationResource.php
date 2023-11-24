@@ -31,7 +31,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
@@ -357,7 +357,8 @@ class OrganisationResource extends Resource
                     ->searchable()
                     ->toggleable(),
 
-                ImageColumn::make('logo')
+                SpatieMediaLibraryImageColumn::make('logo')
+                    ->conversion('thumb')
                     ->extraImgAttributes([
                         'class' => 'object-contain',
                     ])
