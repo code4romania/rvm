@@ -21,7 +21,7 @@ class ListOrganisations extends ListRecords
     protected function getTableQuery(): Builder
     {
         return parent::getTableQuery()
-            ->with('media');
+            ->with('media', 'activityCounties');
     }
 
     protected function getActions(): array

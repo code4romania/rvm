@@ -10,6 +10,139 @@ use Illuminate\Database\Seeder;
 
 class ResourceCategorySeed extends Seeder
 {
+    private array $categories = [
+        [
+            'name' => 'Adăpostire',
+            'children' => [
+                [
+                    'name' => 'Corturi',
+                    'types' => [
+                        'Iarnă',
+                        'Vară',
+                        'Gonflabil',
+                        'Pe structură metalică',
+                        'Utilat',
+                        'Neutilat',
+                        'Altul',
+                    ],
+                    'field_group' => FieldGroups\TentFieldGroup::class,
+                ],
+                [
+                    'name' => 'Rulote',
+                    'field_group' => FieldGroups\TrailerFieldGroup::class,
+                ],
+                [
+                    'name' => 'Cazare',
+                ],
+                [
+                    'name' => 'Altele',
+                ],
+            ],
+        ],
+        [
+            'name' => 'Transport',
+            'children' => [
+                [
+                    'name' => 'Rutier',
+                    'types' => [
+                        'Mașină',
+                        'Dubă',
+                        'Camion',
+                        'Altul',
+                    ],
+                    'field_group' => FieldGroups\VehicleFieldGroup::class,
+                ],
+                [
+                    'name' => 'Maritim',
+                    'field_group' => FieldGroups\BoatFieldGroup::class,
+                ],
+                [
+                    'name' => 'Feroviar',
+                ],
+                [
+                    'name' => 'Aerian',
+                    'field_group' => FieldGroups\AircraftFieldGroup::class,
+                ],
+                [
+                    'name' => 'Altul',
+                ],
+            ],
+
+        ],
+        [
+            'name' => 'Salvare',
+            'children' => [
+                [
+                    'name' => 'Câini utilitari',
+                    'types' => [
+                        'Căutare în mediul urban',
+                        'Căutare în mediu natural',
+                        'Altul',
+                    ],
+                    'field_group' => FieldGroups\RescueDogFieldGroup::class,
+                ],
+            ],
+        ],
+        [
+            'name' => 'Telecomunicații',
+            'children' => [
+                [
+                    'name' => 'Radiocomunicații',
+                    'field_group' => FieldGroups\RadioFieldGroup::class,
+                    'custom_attributes' => [
+                        [
+                            'name' => 'tech_type',
+                            'type' => 'text',
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'Televiziune',
+                    'field_group' => FieldGroups\TvFieldGroup::class,
+                    'custom_attributes' => [
+                        [
+                            'name' => 'area',
+                            'type' => 'select',
+                            'options' => [
+                                'Nationala',
+                                'Locala',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'Radiodifuziune',
+                    'field_group' => FieldGroups\BroadcastFieldGroup::class,
+                ],
+                [
+                    'name' => 'Altele',
+                ],
+            ],
+        ],
+        [
+            'name' => 'IT&C',
+            'children' => [
+                [
+                    'name' => 'Hardware',
+                ],
+                [
+                    'name' => 'Software',
+                ],
+                [
+                    'name' => 'Altele',
+                ],
+            ],
+        ],
+        [
+            'name' => 'Altele',
+            'children' => [
+                [
+                    'name' => 'Altele',
+                ],
+            ],
+        ],
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -17,140 +150,7 @@ class ResourceCategorySeed extends Seeder
      */
     public function run()
     {
-        $categories = [
-            [
-                'name' => 'Adăpostire',
-                'children' => [
-                    [
-                        'name' => 'Corturi',
-                        'types' => [
-                            'Iarnă',
-                            'Vară',
-                            'Gonflabil',
-                            'Pe structură metalică',
-                            'Utilat',
-                            'Neutilat',
-                            'Altul',
-                        ],
-                        'field_group' => FieldGroups\TentFieldGroup::class,
-                    ],
-                    [
-                        'name' => 'Rulote',
-                        'field_group' => FieldGroups\TrailerFieldGroup::class,
-                    ],
-                    [
-                        'name' => 'Cazare',
-                    ],
-                    [
-                        'name' => 'Altele',
-                    ],
-                ],
-            ],
-            [
-                'name' => 'Transport',
-                'children' => [
-                    [
-                        'name' => 'Rutier',
-                        'types' => [
-                            'Mașină',
-                            'Dubă',
-                            'Camion',
-                            'Altul',
-                        ],
-                        'field_group' => FieldGroups\VehicleFieldGroup::class,
-                    ],
-                    [
-                        'name' => 'Maritim',
-                        'field_group' => FieldGroups\BoatFieldGroup::class,
-                    ],
-                    [
-                        'name' => 'Feroviar',
-                    ],
-                    [
-                        'name' => 'Aerian',
-                        'field_group' => FieldGroups\AircraftFieldGroup::class,
-                    ],
-                    [
-                        'name' => 'Altul',
-                    ],
-                ],
-
-            ],
-            [
-                'name' => 'Salvare',
-                'children' => [
-                    [
-                        'name' => 'Câini utilitari',
-                        'types' => [
-                            'Căutare în mediul urban',
-                            'Căutare în mediu natural',
-                            'Altul',
-                        ],
-                        'field_group' => FieldGroups\RescueDogFieldGroup::class,
-                    ],
-                ],
-            ],
-            [
-                'name' => 'Telecomunicații',
-                'children' => [
-                    [
-                        'name' => 'Radiocomunicații',
-                        'field_group' => FieldGroups\RadioFieldGroup::class,
-                        'custom_attributes' => [
-                            [
-                                'name' => 'tech_type',
-                                'type' => 'text',
-                            ],
-                        ],
-                    ],
-                    [
-                        'name' => 'Televiziune',
-                        'field_group' => FieldGroups\TvFieldGroup::class,
-                        'custom_attributes' => [
-                            [
-                                'name' => 'area',
-                                'type' => 'select',
-                                'options' => [
-                                    'Nationala',
-                                    'Locala',
-                                ],
-                            ],
-                        ],
-                    ],
-                    [
-                        'name' => 'Radiodifuziune',
-                        'field_group' => FieldGroups\BroadcastFieldGroup::class,
-                    ],
-                    [
-                        'name' => 'Altele',
-                    ],
-                ],
-            ],
-            [
-                'name' => 'IT&C',
-                'children' => [
-                    [
-                        'name' => 'Hardware',
-                    ],
-                    [
-                        'name' => 'Software',
-                    ],
-                    [
-                        'name' => 'Altele',
-                    ],
-                ],
-            ],
-            [
-                'name' => 'Altele',
-                'children' => [
-                    [
-                        'name' => 'Altele',
-                    ],
-                ],
-            ],
-        ];
-
-        foreach ($categories as $item) {
+        foreach ($this->categories as $item) {
             $category = Category::create([
                 'name' => $item['name'],
             ]);
