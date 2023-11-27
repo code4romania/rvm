@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Filters\ResourceTreeFilter;
 use App\Filament\Forms\FieldGroups;
 use App\Filament\Resources\ResourceResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
@@ -167,21 +168,13 @@ class ResourceResource extends Resource
                     ->hidden(fn () => auth()->user()->belongsToOrganisation())
                     ->relationship('organisation', 'name'),
 
-                SelectFilter::make('category')
-                    ->label(__('resource.fields.category'))
-                    ->relationship('category', 'name'),
-
-                SelectFilter::make('subcategory')
-                    ->relationship('subcategory', 'name')
-                    ->label(__('resource.fields.subcategory')),
-
-                SelectFilter::make('type')
-                    ->label(__('resource.fields.type'))
-                    ->relationship('types', 'name'),
-
                 SelectFilter::make('county')
                     ->label(__('general.county'))
                     ->relationship('county', 'name'),
+
+                ResourceTreeFilter::make('cat')
+                    ->columns(3)
+                    ->columnSpan(3),
             ])
             ->filtersLayout(Layout::AboveContent)
             ->actions([

@@ -403,7 +403,14 @@ class OrganisationResource extends Resource
 
                 TextColumn::make('area')
                     ->label(__('organisation.section.area_of_activity'))
-                    ->enum(OrganisationAreaType::options()),
+                    ->enum(OrganisationAreaType::options())
+                    ->description(
+                        fn (Organisation $record) => $record
+                            ->activityCounties
+                            ->pluck('name')
+                            ->join(', ')
+                    )
+                    ->wrap(),
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
@@ -464,7 +471,9 @@ class OrganisationResource extends Resource
                             ->isNotEmpty();
 
                         if (! $hasAreaBindings) {
-                            $query->where('area', OrganisationAreaType::national);
+                            $query
+                                ->whereRaw('1 = 1')
+                                ->orWhere('area', OrganisationAreaType::national);
                         }
                     }),
 
