@@ -233,15 +233,15 @@ class OrganisationResource extends Resource
                             ->label(__('organisation.field.area'))
                             ->options(OrganisationAreaType::options())
                             ->reactive()
-                            ->afterStateUpdated(function (array $state, callable $set) {
+                            ->afterStateUpdated(function (string $state, callable $set) {
                                 if (
-                                    ! \in_array(OrganisationAreaType::regional->value, $state) &&
-                                    ! \in_array(OrganisationAreaType::local->value, $state)
+                                    OrganisationAreaType::regional->isNot($state) &&
+                                    OrganisationAreaType::local->isNot($state)
                                 ) {
                                     $set('activity_counties', []);
                                 }
 
-                                if (! \in_array(OrganisationAreaType::local->value, $state)) {
+                                if (OrganisationAreaType::local->isNot($state)) {
                                     $set('activity_cities', []);
                                 }
                             }),
