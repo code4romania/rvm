@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Navigation\UserMenuItem;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerCarbonMacros();
+        $this->registerReleaseVersion();
 
         if ($this->app->isLocal()) {
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
@@ -50,6 +52,15 @@ class AppServiceProvider extends ServiceProvider
                     ->icon('heroicon-o-cog'),
             ]);
         });
+    }
+
+    public function registerReleaseVersion(): void
+    {
+        $version = rescue(fn () => File::get(base_path('.version')), 'develop', report: false);
+
+        config([
+            'sentry.release' => $version,
+        ]);
     }
 
     protected function registerCarbonMacros(): void
