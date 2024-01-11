@@ -51,39 +51,62 @@ class ProcessProtocolsJob implements ShouldQueue
             ->withLastProtocolExpiresAt()
             ->get();
 
+        logger()->info(sprintf('ProcessProtocolsJob: starting check on %d organisations...', $organisations->count()));
+
         $this->handleExpiringProtocols($organisations);
         $this->handleExpiredProtocols($organisations);
+
+        logger()->info('ProcessProtocolsJob: done!');
     }
 
     private function handleExpiringProtocols(Collection $organisations): void
     {
+        $checkDate = today()->addDays(30);
+
+        logger()->info(sprintf(
+            'ProcessProtocolsJob: checking for protocols expiring in 30 days (%s)...',
+            $checkDate->format('Y-m-d')
+        ));
+
         $organisations
-            ->filter(function (Organisation $organisation) {
-                return today()
-                    ->addDays(30)
-                    ->equalTo($organisation->last_protocol_expires_at);
-            })
+            ->filter(fn (Organisation $organisation) => $checkDate->isSameDay($organisation->last_protocol_expires_at))
             ->each(function (Organisation $organisation) {
                 $this->sendNotification(ExpiringProtocol::class, $organisation);
             })
             ->tap(function (Collection $organisations) {
+                logger()->info(sprintf(
+                    'ProcessProtocolsJob: found %d organisations with expiring protocols: %s',
+                    $organisations->count(),
+                    $organisations->pluck('id')->join(', ')
+                ));
+
                 $this->sendSummaryNotification(SummaryExpiringProtocols::class, $organisations);
             });
     }
 
     private function handleExpiredProtocols(Collection $organisations): void
     {
+        $checkDate = today();
+
+        logger()->info(sprintf(
+            'ProcessProtocolsJob: checking for protocols expiring today (%s)...',
+            $checkDate->format('Y-m-d')
+        ));
+
         $organisations
-            ->filter(function (Organisation $organisation) {
-                return today()
-                    ->equalTo($organisation->last_protocol_expires_at);
-            })
+            ->filter(fn (Organisation $organisation) => $checkDate->isSameDay($organisation->last_protocol_expires_at))
             ->each(function (Organisation $organisation) {
                 $organisation->setInactive();
 
                 $this->sendNotification(ExpiredProtocol::class, $organisation);
             })
             ->tap(function (Collection $organisations) {
+                logger()->info(sprintf(
+                    'ProcessProtocolsJob: found %d organisations with expired protocols: %s',
+                    $organisations->count(),
+                    $organisations->pluck('id')->join(', ')
+                ));
+
                 $this->sendSummaryNotification(SummaryExpiredProtocols::class, $organisations);
             });
     }
