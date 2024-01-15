@@ -41,6 +41,7 @@ class ProcessProtocolsJob implements ShouldQueue
     public function handle(): void
     {
         $organisations = Organisation::query()
+            ->whereActive()
             ->select(['id', 'name', 'email', 'contact_person'])
             ->withOnly([
                 'users' => function ($query) {
