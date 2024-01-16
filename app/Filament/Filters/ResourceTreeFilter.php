@@ -6,7 +6,6 @@ namespace App\Filament\Filters;
 
 use App\Models\Resource\Category;
 use Closure;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\BaseFilter;
 
