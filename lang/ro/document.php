@@ -16,6 +16,7 @@ return [
         'signed_at' => 'Dată semnare',
         'expires_at' => 'Dată expirare',
         'document' => 'Document',
+        'never_expires' => 'Nedeterminat'
     ],
 
     'type' => [

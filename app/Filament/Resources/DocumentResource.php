@@ -9,7 +9,9 @@ use App\Filament\Filters\DateRangeFilter;
 use App\Filament\Resources\DocumentResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Document;
+use Closure;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
@@ -83,7 +85,24 @@ class DocumentResource extends Resource
                                 DatePicker::make('expires_at')
                                     ->label(__('document.field.expires_at'))
                                     ->after('signed_at')
-                                    ->required(),
+                                    ->required(fn (Closure $get) => ! $get('never_expires'))
+                                    ->disabled(fn (Closure $get) => (bool) $get('never_expires'))
+                                    ->afterStateHydrated(
+                                        fn (Closure $set, $state) =>
+                                            blank($state) ?
+                                                $set('never_expires', true) :
+                                                $set('never_expires', false)
+                                    ),
+
+                                Checkbox::make('never_expires')
+                                    ->label(__('document.field.never_expires'))
+                                    ->afterStateUpdated(
+                                        fn (Closure $set, $state) =>
+                                            $state === true ?
+                                                $set('expires_at', null) :
+                                                $set('expires_at', now())
+                                    )
+                                    ->reactive(),
                             ]),
                     ]),
 
