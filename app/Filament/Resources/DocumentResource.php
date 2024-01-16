@@ -87,21 +87,19 @@ class DocumentResource extends Resource
                                     ->after('signed_at')
                                     ->required(fn (Closure $get) => ! $get('never_expires'))
                                     ->disabled(fn (Closure $get) => (bool) $get('never_expires'))
-                                    ->afterStateHydrated(
-                                        fn (Closure $set, $state) =>
-                                            blank($state) ?
-                                                $set('never_expires', true) :
-                                                $set('never_expires', false)
-                                    ),
+                                    ->afterStateHydrated(function (Closure $set, $state) {
+                                        if (blank($state)) {
+                                            $set('never_expires', true);
+                                        }
+                                    }),
 
                                 Checkbox::make('never_expires')
                                     ->label(__('document.field.never_expires'))
-                                    ->afterStateUpdated(
-                                        fn (Closure $set, $state) =>
-                                            $state === true ?
-                                                $set('expires_at', null) :
-                                                $set('expires_at', now())
-                                    )
+                                    ->afterStateUpdated(function (Closure $set, $state) {
+                                        if ($state === true) {
+                                            $set('expires_at', null);
+                                        }
+                                    })
                                     ->reactive(),
                             ]),
                     ]),
