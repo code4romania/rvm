@@ -33,7 +33,7 @@ class PlatformStatsWidget extends BaseWidget
     /**
      * Available counties to select.
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     public Collection $counties;
 
