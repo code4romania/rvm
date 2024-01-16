@@ -14,6 +14,7 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -82,25 +83,28 @@ class DocumentResource extends Resource
                                     ->label(__('document.field.signed_at'))
                                     ->required(),
 
-                                DatePicker::make('expires_at')
-                                    ->label(__('document.field.expires_at'))
-                                    ->after('signed_at')
-                                    ->required(fn (Closure $get) => ! $get('never_expires'))
-                                    ->disabled(fn (Closure $get) => (bool) $get('never_expires'))
-                                    ->afterStateHydrated(function (Closure $set, $state) {
-                                        if (blank($state)) {
-                                            $set('never_expires', true);
-                                        }
-                                    }),
+                                Group::make()
+                                    ->schema([
+                                        DatePicker::make('expires_at')
+                                            ->label(__('document.field.expires_at'))
+                                            ->after('signed_at')
+                                            ->required(fn (Closure $get) => ! $get('never_expires'))
+                                            ->disabled(fn (Closure $get) => (bool) $get('never_expires'))
+                                            ->afterStateHydrated(function (Closure $set, $state) {
+                                                if (blank($state)) {
+                                                    $set('never_expires', true);
+                                                }
+                                            }),
 
-                                Checkbox::make('never_expires')
-                                    ->label(__('document.field.never_expires'))
-                                    ->afterStateUpdated(function (Closure $set, $state) {
-                                        if ($state === true) {
-                                            $set('expires_at', null);
-                                        }
-                                    })
-                                    ->reactive(),
+                                        Checkbox::make('never_expires')
+                                            ->label(__('document.field.never_expires'))
+                                            ->afterStateUpdated(function (Closure $set, $state) {
+                                                if ($state === true) {
+                                                    $set('expires_at', null);
+                                                }
+                                            })
+                                            ->reactive(),
+                                    ]),
                             ]),
                     ]),
 
