@@ -64,6 +64,8 @@ class DatabaseSeeder extends Seeder
                     'county_id' => $county->id,
                 ])->toArray()
             )
+            ->randomStatus()
+            ->withRelated()
             ->createQuietly();
     }
 }
