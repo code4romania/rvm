@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs;
+namespace App\Console\Commands;
 
 use App\Enum\UserRole;
 use App\Models\Organisation;
@@ -11,23 +11,52 @@ use App\Notifications\ExpiredProtocol;
 use App\Notifications\ExpiringProtocol;
 use App\Notifications\SummaryExpiredProtocols;
 use App\Notifications\SummaryExpiringProtocols;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\Isolatable;
 use Illuminate\Support\Collection;
 
-class ProcessProtocolsJob implements ShouldQueue
+class ProcessProtocolsCommand extends Command implements Isolatable
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'app:protocols';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Process protocols that are about to expire';
 
     public Collection $admins;
 
-    public function __construct()
+    public Collection $organisations;
+
+    /**
+     * Execute the console command.
+     */
+    public function handle(): int
+    {
+        $this->loadPlatformAdmins();
+        $this->loadActiveOrganisations();
+
+        logger()->info(sprintf(
+            'ProcessProtocols: starting check on %d active organisations...',
+            $this->organisations->count()
+        ));
+
+        $this->handleExpiringProtocols();
+        $this->handleExpiredProtocols();
+
+        logger()->info('ProcessProtocols: done!');
+
+        return static::SUCCESS;
+    }
+
+    private function loadPlatformAdmins(): void
     {
         $this->admins = User::query()
             ->withoutGlobalScopes()
@@ -35,12 +64,9 @@ class ProcessProtocolsJob implements ShouldQueue
             ->get();
     }
 
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
+    private function loadActiveOrganisations(): void
     {
-        $organisations = Organisation::query()
+        $this->organisations = Organisation::query()
             ->whereActive()
             ->select(['id', 'name', 'email', 'contact_person'])
             ->withOnly([
@@ -51,32 +77,29 @@ class ProcessProtocolsJob implements ShouldQueue
             ])
             ->withLastProtocolExpiresAt()
             ->get();
-
-        logger()->info(sprintf('ProcessProtocolsJob: starting check on %d organisations...', $organisations->count()));
-
-        $this->handleExpiringProtocols($organisations);
-        $this->handleExpiredProtocols($organisations);
-
-        logger()->info('ProcessProtocolsJob: done!');
     }
 
-    private function handleExpiringProtocols(Collection $organisations): void
+    private function handleExpiringProtocols(): void
     {
         $checkDate = today()->addDays(30);
 
         logger()->info(sprintf(
-            'ProcessProtocolsJob: checking for protocols expiring in 30 days (%s)...',
+            'ProcessProtocols: checking for protocols expiring in 30 days (%s)...',
             $checkDate->format('Y-m-d')
         ));
 
-        $organisations
-            ->filter(fn (Organisation $organisation) => $checkDate->isSameDay($organisation->last_protocol_expires_at))
+        $this->organisations
+            ->filter(
+                fn (Organisation $organisation) => $organisation
+                    ->last_protocol_expires_at
+                    ?->isSameDay($checkDate) ?? true
+            )
             ->each(function (Organisation $organisation) {
                 $this->sendNotification(ExpiringProtocol::class, $organisation);
             })
             ->tap(function (Collection $organisations) {
                 logger()->info(sprintf(
-                    'ProcessProtocolsJob: found %d organisations with expiring protocols: %s',
+                    'ProcessProtocols: found %d organisations with expiring protocols: %s',
                     $organisations->count(),
                     $organisations->pluck('id')->join(', ')
                 ));
@@ -85,17 +108,21 @@ class ProcessProtocolsJob implements ShouldQueue
             });
     }
 
-    private function handleExpiredProtocols(Collection $organisations): void
+    private function handleExpiredProtocols(): void
     {
         $checkDate = today();
 
         logger()->info(sprintf(
-            'ProcessProtocolsJob: checking for protocols expiring today (%s)...',
+            'ProcessProtocols: checking for protocols expiring today (%s)...',
             $checkDate->format('Y-m-d')
         ));
 
-        $organisations
-            ->filter(fn (Organisation $organisation) => $checkDate->isSameDay($organisation->last_protocol_expires_at))
+        $this->organisations
+            ->filter(
+                fn (Organisation $organisation) => $organisation
+                    ->last_protocol_expires_at
+                    ?->lte($checkDate) ?? true
+            )
             ->each(function (Organisation $organisation) {
                 $organisation->setInactive();
 
@@ -103,7 +130,7 @@ class ProcessProtocolsJob implements ShouldQueue
             })
             ->tap(function (Collection $organisations) {
                 logger()->info(sprintf(
-                    'ProcessProtocolsJob: found %d organisations with expired protocols: %s',
+                    'ProcessProtocols: found %d organisations with expired protocols: %s',
                     $organisations->count(),
                     $organisations->pluck('id')->join(', ')
                 ));
