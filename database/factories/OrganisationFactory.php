@@ -30,7 +30,7 @@ class OrganisationFactory extends Factory
         $contactPerson = [
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
-            'email' => fake()->safeEmail(),
+            'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),
             'role' => fake()->jobTitle(),
         ];
@@ -51,7 +51,7 @@ class OrganisationFactory extends Factory
             'ngo_type' => OrganisationType::ngo->is($type)
                 ? fake()->randomElement(NGOType::values())
                 : null,
-            'status' => fake()->randomElement(OrganisationStatus::values()),
+            'status' => OrganisationStatus::active,
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),
             'year' => fake()->year(),
@@ -69,7 +69,21 @@ class OrganisationFactory extends Factory
         ];
     }
 
-    public function configure(): static
+    public function inactive(): static
+    {
+        return $this->state([
+            'status' => OrganisationStatus::inactive,
+        ]);
+    }
+
+    public function randomStatus(): static
+    {
+        return $this->state(fn () => [
+            'status' => fake()->randomElement(OrganisationStatus::values()),
+        ]);
+    }
+
+    public function withRelated(): static
     {
         return $this->afterCreating(function (Organisation $organisation) {
             User::factory(['email' => $organisation->email])
