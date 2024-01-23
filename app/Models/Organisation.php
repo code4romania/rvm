@@ -182,13 +182,6 @@ class Organisation extends Model implements HasMedia
         return $this->status->is(OrganisationStatus::inactive);
     }
 
-    public function toggleStatus(): bool
-    {
-        return $this->isInactive()
-            ? $this->setActive()
-            : $this->setInActive();
-    }
-
     public function routeNotificationForMail(?Notification $notification = null): string
     {
         return data_get($this->contact_person, ['email'], $this->email);
