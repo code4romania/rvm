@@ -136,8 +136,7 @@ class VolunteersRelationManager extends RelationManager
                     ->modalHeading(__('volunteer.modal.heading'))
                     ->modalSubheading(__('volunteer.modal.subheading'))
                     ->modalWidth('4xl')
-                    ->slideOver()
-                    ->disabled(fn (self $livewire) => $livewire->getOwnerRecord()->isInactive()),
+                    ->slideOver(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
