@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Console\Commands\ProcessProtocolsCommand;
 use App\Enum\UserRole;
 use App\Models\Document;
+use App\Models\Organisation;
 use App\Models\User;
 use App\Notifications\ExpiredProtocol;
 use App\Notifications\ExpiringProtocol;
@@ -33,6 +34,14 @@ class ProtocolsTest extends TestCase
         User::factory()
             ->platformAdmin()
             ->create();
+    }
+
+    protected function getPlatformAdmins(): Collection
+    {
+        return User::query()
+            ->withoutGlobalScopes()
+            ->role(UserRole::PLATFORM_ADMIN)
+            ->get();
     }
 
     /** @test */
@@ -190,11 +199,30 @@ class ProtocolsTest extends TestCase
         );
     }
 
-    private function getPlatformAdmins(): Collection
+    /** @test */
+    public function it_does_not_send_notifications_for_organisations_without_protocols(): void
     {
-        return User::query()
-            ->withoutGlobalScopes()
-            ->role(UserRole::PLATFORM_ADMIN)
-            ->get();
+        $organisation = Organisation::factory()
+            ->create();
+
+        $this->artisan(ProcessProtocolsCommand::class)
+            ->assertSuccessful();
+
+        Notification::assertNotSentTo(
+            $organisation,
+            ExpiringProtocol::class
+        );
+
+        Notification::assertNotSentTo(
+            $organisation
+                ->users
+                ->where('role', UserRole::ORG_ADMIN),
+            ExpiringProtocol::class
+        );
+
+        Notification::assertNotSentTo(
+            $this->getPlatformAdmins(),
+            SummaryExpiringProtocols::class
+        );
     }
 }
