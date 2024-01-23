@@ -90,9 +90,9 @@ class ProcessProtocolsCommand extends Command implements Isolatable
 
         $this->organisations
             ->filter(
-                fn (Organisation $organisation) => $organisation
+                fn (Organisation $organisation) => (bool) $organisation
                     ->last_protocol_expires_at
-                    ?->isSameDay($checkDate) ?? true
+                    ?->isSameDay($checkDate)
             )
             ->each(function (Organisation $organisation) {
                 $this->sendNotification(ExpiringProtocol::class, $organisation);
@@ -119,9 +119,9 @@ class ProcessProtocolsCommand extends Command implements Isolatable
 
         $this->organisations
             ->filter(
-                fn (Organisation $organisation) => $organisation
+                fn (Organisation $organisation) => (bool) $organisation
                     ->last_protocol_expires_at
-                    ?->lte($checkDate) ?? true
+                    ?->lte($checkDate)
             )
             ->each(function (Organisation $organisation) {
                 $organisation->setInactive();
