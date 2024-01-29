@@ -129,12 +129,12 @@ class DocumentsRelationManager extends RelationManager
                     ->label(__('document.field.expires_at'))
                     ->date()
                     ->sortable()
-                    ->formatStateUsing(function (Document $record) {
-                        if (DocumentType::protocol->isNot($record->type)) {
-                            return $record->expires_at?->format(config('tables.date_format'));
-                        }
+                    ->formatStateUsing(function (Document $record, $state) {
+                        $fallback = DocumentType::protocol->is($record->type) ?
+                            __('document.field.never_expires') :
+                            null;
 
-                        return $record->expires_at?->format(config('tables.date_format')) ?: __('document.field.never_expires');
+                        return $state?->format(config('tables.date_format')) ?? $fallback;
                     }),
             ])
             ->filters([

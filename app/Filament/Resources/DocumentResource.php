@@ -161,6 +161,13 @@ class DocumentResource extends Resource
                     ->label(__('document.field.expires_at'))
                     ->date()
                     ->sortable()
+                    ->formatStateUsing(function (Document $record, $state) {
+                        $fallback = DocumentType::protocol->is($record->type) ?
+                            __('document.field.never_expires') :
+                            null;
+
+                        return $state?->format(config('tables.date_format')) ?? $fallback;
+                    })
                     ->toggleable(),
             ])
             ->filters([
