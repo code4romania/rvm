@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\LimitsVisibility;
+use App\Enum\DocumentType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,6 +31,7 @@ class Document extends Model implements HasMedia
     protected $casts = [
         'signed_at' => 'date',
         'expires_at' => 'date',
+        'type' => DocumentType::class
     ];
 
     public function registerMediaConversions(Media $media = null): void
