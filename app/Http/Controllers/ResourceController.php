@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ResourceResource;
@@ -11,13 +13,16 @@ class ResourceController extends Controller
     {
         return ResourceResource::collection(
             Resource::query()
-                ->with('county')
-                ->with('organisation')
-                ->with('category')
-                ->with('subcategory')
-                ->with('types')
+                ->with([
+                    'county',
+                    'category',
+                    'subcategory',
+                    'types',
+                    'organisation' => fn ($query) => $query
+                        ->withoutEagerLoads()
+                        ->select('id', 'name'),
+                ])
                 ->get()
         );
     }
-
 }
