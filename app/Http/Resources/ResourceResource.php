@@ -20,7 +20,7 @@ class ResourceResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'county' => $this->county->name,
-            'organization' => IdAndNameResource::make($this->organisation),
+            'organisation' => IdAndNameResource::make($this->organisation),
             'category' => IdAndNameResource::make($this->category),
             'subcategory' => IdAndNameResource::make($this->subcategory),
             'types' => IdAndNameResource::collection($this->types),

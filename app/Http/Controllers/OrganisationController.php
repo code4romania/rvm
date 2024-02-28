@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\OrganizationResource;
+use App\Http\Resources\OrganisationResource;
 use App\Models\Organisation;
 
-class OrganizationController extends Controller
+class OrganisationController extends Controller
 {
     public function __invoke()
     {
-        return OrganizationResource::collection(
+        return OrganisationResource::collection(
             Organisation::query()
                 ->withoutEagerLoads(['city'])
                 ->select([

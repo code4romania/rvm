@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ResourceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')
     ->prefix('/v1')
     ->group(function () {
-        Route::get('/organizations', OrganizationController::class);
+        Route::get('/organisations', OrganisationController::class);
         Route::get('/resources', ResourceController::class);
     });
 
