@@ -11,10 +11,14 @@ class OrganizationController extends Controller
     {
         return OrganizationResource::collection(
             Organisation::query()
-                ->with('riskCategories')
-                ->with('activityCounties')
-                ->with('expertises')
-                ->with('resourceTypes')
+                ->withoutEagerLoads(['city'])
+                ->select(['id', 'name', 'county_id'])
+                ->with([
+                    'riskCategories',
+                    'activityCounties',
+                    'expertises',
+                    'resourceTypes',
+                ])
                 ->with('volunteers')
                 ->get()
         );
