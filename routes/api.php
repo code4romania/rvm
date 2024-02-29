@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Gate::define('viewApiDocs', fn () => true);
+
 Route::middleware('auth:sanctum')
     ->prefix('/v1')
     ->group(function () {

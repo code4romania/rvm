@@ -17,7 +17,7 @@ class OrganisationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
+            'id' => (int) $this->id,
             'name' => $this->name,
             'type' => $this->type,
             'status' => $this->status,
@@ -29,7 +29,7 @@ class OrganisationResource extends JsonResource
             'activity_counties' => IdAndNameResource::collection($this->activityCounties),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            'volunteers_count' => $this->volunteers_count,
+            'volunteers_count' => (int) $this->volunteers_count,
         ];
     }
 }
