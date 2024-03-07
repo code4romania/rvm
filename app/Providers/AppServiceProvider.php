@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Filament\Pages\Auth\Settings;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Navigation\UserMenuItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -51,6 +53,10 @@ class AppServiceProvider extends ServiceProvider
                     ->label(__('auth.settings'))
                     ->icon('heroicon-o-cog'),
             ]);
+        });
+
+        Gate::define('viewApiDocs', function (User $user) {
+            return $user->canAccessFilament() && $user->isPlatformAdmin();
         });
     }
 
