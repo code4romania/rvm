@@ -7,6 +7,9 @@ namespace App\Providers;
 use App\Filament\Pages\Auth\Settings;
 use App\Models\User;
 use Carbon\Carbon;
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Filament\Facades\Filament;
 use Filament\Navigation\UserMenuItem;
 use Illuminate\Database\Eloquent\Model;
@@ -57,6 +60,12 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('viewApiDocs', function (User $user) {
             return $user->canAccessFilament() && $user->isPlatformAdmin();
+        });
+
+        Scramble::extendOpenApi(function (OpenApi $openApi) {
+            $openApi->secure(
+                SecurityScheme::http('bearer', 'JWT')
+            );
         });
     }
 
