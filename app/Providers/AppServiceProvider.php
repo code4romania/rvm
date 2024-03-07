@@ -6,6 +6,9 @@ namespace App\Providers;
 
 use App\Filament\Pages\Auth\Settings;
 use Carbon\Carbon;
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Filament\Facades\Filament;
 use Filament\Navigation\UserMenuItem;
 use Illuminate\Database\Eloquent\Model;
@@ -51,6 +54,12 @@ class AppServiceProvider extends ServiceProvider
                     ->label(__('auth.settings'))
                     ->icon('heroicon-o-cog'),
             ]);
+        });
+
+        Scramble::extendOpenApi(function (OpenApi $openApi) {
+            $openApi->secure(
+                SecurityScheme::http('bearer', 'JWT')
+            );
         });
     }
 

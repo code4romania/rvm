@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,14 @@ class AuthServiceProvider extends ServiceProvider
         Auth::provider('eloquent', function ($app, array $config) {
             return (new EloquentUserProvider($app['hash'], $config['model']))
                 ->withQuery(fn (Builder $query) => $query->withoutGlobalScopes());
+        });
+
+        Gate::define('accessApi', function (User $user) {
+            if (! config('filament-breezy.enable_sanctum')) {
+                return false;
+            }
+
+            return $user->isPlatformAdmin();
         });
     }
 }

@@ -117,5 +117,7 @@ return [
     |--------------------------------------------------------------------------
     | Sanctum permissions
     */
-    'sanctum_permissions' => ['create', 'read', 'update', 'delete'],
+    'sanctum_permissions' => [
+        // 'create', 'read', 'update', 'delete',
+    ],
 ];

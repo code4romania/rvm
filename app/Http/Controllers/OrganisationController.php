@@ -6,11 +6,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\OrganisationResource;
 use App\Models\Organisation;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganisationController extends Controller
 {
-    public function __invoke()
+    public function __invoke(): JsonResource
     {
+        $this->authorize('accessApi');
+
         return OrganisationResource::collection(
             Organisation::query()
                 ->withoutEagerLoads(['city'])
