@@ -6,11 +6,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ResourceResource;
 use App\Models\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceController extends Controller
 {
-    public function __invoke()
+    public function __invoke(): JsonResource
     {
+        $this->authorize('accessApi');
+
         return ResourceResource::collection(
             Resource::query()
                 ->with([

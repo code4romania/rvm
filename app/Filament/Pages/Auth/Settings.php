@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Auth;
 
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use JeffGreco13\FilamentBreezy\Pages\MyProfile;
 
@@ -39,6 +40,17 @@ class Settings extends MyProfile
                 ->email(fn () => $this->loginColumn === 'email')
                 ->unique(config('filament-breezy.user_model'), ignorable: $this->user)
                 ->label(__('user.field.email')),
+        ];
+    }
+
+    protected function getCreateApiTokenFormSchema(): array
+    {
+        return [
+            TextInput::make('token_name')
+                ->label(__('filament-breezy::default.fields.token_name'))
+                ->required(),
+
+            Hidden::make('abilities'),
         ];
     }
 }
