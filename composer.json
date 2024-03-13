@@ -17,7 +17,8 @@
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.21",
         "pxlrbt/filament-excel": "^1.1",
-        "sentry/sentry-laravel": "^4.1"
+        "sentry/sentry-laravel": "^4.1",
+        "konnco/filament-import": "1.6.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
