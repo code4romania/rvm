@@ -96,7 +96,7 @@ class ListVolunteers extends ListRecords
                         'phone' => $data['phone'] ?? null,
                         'cnp' => $data['cnp'] ?? null,
                         'role' => $role,
-                        'specializations' => $newSpecializations,
+                        'specializations' => array_filter($newSpecializations),
                         'has_first_aid_accreditation' => $firstAID,
                     ];
 
