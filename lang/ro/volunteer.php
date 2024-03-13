@@ -22,6 +22,7 @@ return [
         'has_first_aid_accreditation' => 'Acreditare prim ajutor',
         'updated_at' => 'Ultima actualizare',
         'organisation' => 'Organizație',
+        'import' => 'Importa voluntari',
     ],
 
     'role' => [
