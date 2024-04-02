@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Console\Commands\ProcessProtocolsCommand;
+use App\Enum\OrganisationStatus;
 use App\Enum\UserRole;
 use App\Models\Document;
 use App\Models\Organisation;
@@ -166,6 +167,16 @@ class ProtocolsTest extends TestCase
             $this->getPlatformAdmins(),
             SummaryExpiredProtocols::class
         );
+
+        $this->assertDatabaseHas('organisations', [
+            'id' => $document->organisation->id,
+            'status' => OrganisationStatus::inactive,
+        ]);
+
+        $this->assertDatabaseMissing('organisations', [
+            'id' => $document->organisation->id,
+            'status' => OrganisationStatus::active,
+        ]);
     }
 
     /** @test */
