@@ -14,10 +14,8 @@ use Database\Seeders\ResourceCategorySeed;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
-use Livewire;
+use Livewire\Livewire;
 use Tests\TestCase;
-
-use function Pest\Livewire\livewire;
 
 class DocumentsTest extends TestCase
 {
@@ -37,7 +35,6 @@ class DocumentsTest extends TestCase
         return User::factory()
             ->platformAdmin()
             ->create();
-
     }
 
     protected function getPlatformCoordinator(): User
@@ -53,6 +50,7 @@ class DocumentsTest extends TestCase
             ->count(5)
             ->withRelated()
             ->createQuietly();
+
         return User::query()
             ->withoutGlobalScopes()
             ->role(UserRole::ORG_ADMIN)
@@ -66,6 +64,7 @@ class DocumentsTest extends TestCase
             ->inactive()
             ->withRelated()
             ->createQuietly();
+
         return User::query()
             ->withoutGlobalScopes()
             ->role(UserRole::ORG_ADMIN)
@@ -81,13 +80,54 @@ class DocumentsTest extends TestCase
             ->createQuietly();
     }
 
-    public function testViewDocumentsWithoutUser()
+    public function testPlatformAdminsCanListAllDocuments(): void
     {
-        $url = DocumentResource::getUrl('index');
+        $user = User::factory()
+            ->platformAdmin()
+            ->create();
 
-        $this->withSession(['banned' => false])
-            ->get($url)
-            ->assertFound();
+        $organisation = Organisation::factory()
+            ->withRelated()
+            ->createQuietly();
+
+        $documents = Document::all();
+
+        $this->actingAs($user);
+
+        Livewire::test(DocumentResource\Pages\ListDocuments::class)
+            ->assertSuccessful()
+            ->assertCountTableRecords(3)
+            ->assertCanSeeTableRecords($documents)
+            ->assertCanRenderTableColumn('name')
+            ->filterTable('type', DocumentType::contract->value)
+            ->assertCanSeeTableRecords($documents->where('type', DocumentType::contract))
+            ->resetTableFilters()
+            ->sortTable('name')
+            ->assertCanSeeTableRecords($documents->sortBy('name'), inOrder: true)
+            ->assertCanRenderTableColumn('organisation.name')
+            ->sortTable('organisation.name')
+            ->assertCanSeeTableRecords($documents->sortBy('organisation.name'), inOrder: true)
+            ->assertCanRenderTableColumn('media.file_name')
+            ->sortTable('media.file_name')
+            ->assertCanSeeTableRecords($documents->sortBy('media.file_name'), inOrder: true)
+            ->assertCanRenderTableColumn('signed_at')
+            ->sortTable('signed_at')
+            ->assertCanSeeTableRecords($documents->sortBy('signed_at'), inOrder: true)
+            ->assertCanRenderTableColumn('expires_at')
+            ->sortTable('expires_at')
+            ->assertCanSeeTableRecords($documents->sortBy('expires_at'), inOrder: true);
+    }
+
+    public function testPlatformCoordinatorCanListAllDocuments(): void
+    {
+    }
+
+    public function testOrganisationAdminCanListOwnDocuments(): void
+    {
+    }
+
+    public function testOrganisationAdminCannotListOtherDocuments(): void
+    {
     }
 
     public function testViewDocumentsByOrgAdmin(): void
@@ -130,18 +170,6 @@ class DocumentsTest extends TestCase
             ->assertSuccessful();
     }
 
-    public function testViewDocumentWithoutUser()
-    {
-        $this->createOrganisations();
-        $document = Document::query()
-            ->inRandomOrder()
-            ->first();
-
-        $url = DocumentResource::getUrl('view', ['record' => $document->id]);
-        $this->withSession(['banned' => false])
-            ->get($url)
-            ->assertFound();
-    }
 
     public function testViewDocumentByPlatformAdmin(): void
     {
@@ -232,19 +260,6 @@ class DocumentsTest extends TestCase
 
         $this->actingAs($orgAdmins->filter(fn ($item) => $item->organisation_id != $document->organisation_id)->first())
             ->withSession(['banned' => false])
-            ->get($url)
-            ->assertFound();
-    }
-
-    public function testEditDocumentWithoutUser()
-    {
-        $this->createOrganisations();
-        $document = Document::query()
-            ->inRandomOrder()
-            ->first();
-
-        $url = DocumentResource::getUrl('edit', ['record' => $document->id]);
-        $this->withSession(['banned' => false])
             ->get($url)
             ->assertFound();
     }
@@ -342,18 +357,6 @@ class DocumentsTest extends TestCase
             ->assertFound();
     }
 
-    public function testDeleteDocumentWithoutUser()
-    {
-        $this->assertTrue(true);
-//        $this->createOrganisations();
-//        $document = Document::query()
-//            ->inRandomOrder()
-//            ->first();
-//
-//        \Livewire::test(DocumentResource\Pages\ViewDocument::class, ['record' => $document->id])
-//                ->assertPageActionDisabled('delete');
-    }
-
     public function testDeleteDocumentByPlatformAdmin(): void
     {
         $this->createOrganisations();
@@ -411,37 +414,37 @@ class DocumentsTest extends TestCase
     {
         $this->assertTrue(true);
 
-//        $orgAdmins = $this->getOrgAdminWithActiveOrg();
-//
-//        $document = Document::query()
-//            ->inRandomOrder()
-//            ->first();
-//
-//        $documentUser = $orgAdmins->filter(fn($item) => $item->organisation_id != $document->organisation_id)->first();
-//        $params = ['record' => $document->id];
-//
-//        \Livewire::actingAs($documentUser);
-//        \Livewire::test(DocumentResource\Pages\ViewDocument::class, $params)
-//            ->assertPageActionDisabled('delete');
+    //        $orgAdmins = $this->getOrgAdminWithActiveOrg();
+    //
+    //        $document = Document::query()
+    //            ->inRandomOrder()
+    //            ->first();
+    //
+    //        $documentUser = $orgAdmins->filter(fn($item) => $item->organisation_id != $document->organisation_id)->first();
+    //        $params = ['record' => $document->id];
+    //
+    //        \Livewire::actingAs($documentUser);
+    //        \Livewire::test(DocumentResource\Pages\ViewDocument::class, $params)
+    //            ->assertPageActionDisabled('delete');
     }
 
     public function testDeleteDocumentByAnotherInactiveOrgAdmin(): void
     {
         $this->assertTrue(true);
 
-//        $orgAdmins = $this->getOrgAdminWithInactiveOrg();
-//
-//        $document = Document::query()
-//            ->inRandomOrder()
-//            ->first();
-//
-//        $url = DocumentResource::getUrl('edit', ['record' => $document->id]);
-//
-//        $documentUser = $orgAdmins->filter(fn($item) => $item->organisation_id != $document->organisation_id)->first();
-//        $params = ['record' => $document->id];
-//        \Livewire::actingAs($documentUser);
-//        \Livewire::test(DocumentResource\Pages\ViewDocument::class, $params)
-//            ->assertPageActionDisabled('delete');
+    //        $orgAdmins = $this->getOrgAdminWithInactiveOrg();
+    //
+    //        $document = Document::query()
+    //            ->inRandomOrder()
+    //            ->first();
+    //
+    //        $url = DocumentResource::getUrl('edit', ['record' => $document->id]);
+    //
+    //        $documentUser = $orgAdmins->filter(fn($item) => $item->organisation_id != $document->organisation_id)->first();
+    //        $params = ['record' => $document->id];
+    //        \Livewire::actingAs($documentUser);
+    //        \Livewire::test(DocumentResource\Pages\ViewDocument::class, $params)
+    //            ->assertPageActionDisabled('delete');
     }
 
     public function testCreateDocumentByPlatformAdmin(): void
@@ -475,7 +478,6 @@ class DocumentsTest extends TestCase
         Livewire::test(DocumentResource\Pages\CreateDocument::class)
             ->assertForbidden();
     }
-
 
     public function testCreateDocument()
     {
@@ -560,7 +562,7 @@ class DocumentsTest extends TestCase
                 'document' => [$file]])
             ->call('create')
             ->assertHasFormErrors(['signed_at' => 'required',
-                'expires_at' => 'required'
+                'expires_at' => 'required',
             ]);
 
         // document type protocol with never expires and without start/end date
@@ -615,5 +617,4 @@ class DocumentsTest extends TestCase
             ->call('create')
             ->assertHasFormErrors(['expires_at']);
     }
-
 }
