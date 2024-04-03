@@ -132,6 +132,30 @@ class OrganisationFactory extends Factory
         });
     }
 
+    public function withUserAndDocuments()
+    {
+        return $this->afterCreating(function (Organisation $organisation) {
+            User::factory(['email' => $organisation->email])
+                ->orgAdmin()
+                ->for($organisation)
+                ->create();
+
+            Document::factory()
+                ->for($organisation)
+                ->create();
+
+            Document::factory()
+                ->contract()
+                ->for($organisation)
+                ->create();
+
+            Document::factory()
+                ->protocol()
+                ->for($organisation)
+                ->create();
+        });
+    }
+
     protected function attachLocationByActivityArea(Organisation $organisation): void
     {
         $counties = null;
