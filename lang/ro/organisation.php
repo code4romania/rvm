@@ -85,8 +85,8 @@ return [
     'placeholder' => [
         'name' => 'Introdu denumirea organizației',
         'alias' => 'Introdu aliasul organizației',
-        'email' => 'Introdu adresă de email',
-        'phone' => 'Introdu număr de telefon',
+        'email' => 'Email de contact organizație',
+        'phone' => 'Telefon de contact organizație',
     ],
 
     'section' => [
