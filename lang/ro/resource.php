@@ -6,7 +6,7 @@ return [
 
     'label' => [
         'singular' => 'Resursă',
-        'plural' => 'Resurse',
+        'plural' => 'Logistică și Expertiză',
     ],
 
     'fields' => [
