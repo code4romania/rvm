@@ -54,14 +54,12 @@ abstract class DocumentsBaseTest extends TestCase
 
     protected function createOrganisations(int $count = 3, string $status = 'active'): void
     {
-        $options = ['user', 'document'];
         if ($status === 'inactive') {
             Organisation::factory()
                 ->count($count)
+                ->inactive()
                 ->withUserAndDocuments()
-                ->randomStatus()
                 ->createQuietly();
-
             return;
         }
         if ($status === 'random') {
