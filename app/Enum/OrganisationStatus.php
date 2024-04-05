@@ -16,4 +16,5 @@ enum OrganisationStatus: string
 
     case active = 'active';
     case inactive = 'inactive';
+    case guest = 'guest';
 }

@@ -379,21 +379,12 @@ class OrganisationResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
-                IconColumn::make('status')
-                    ->options([
-                        'heroicon-o-x-circle',
-                        'heroicon-o-x' => 'inactive',
-                        'heroicon-o-check' => 'active',
-                    ])
+                Tables\Columns\BadgeColumn::make('status')
                     ->colors([
-                        'secondary',
-                        'danger' => 'inactive',
+                        'secondary' => 'inactive',
+                        'warning' => 'guest',
                         'success' => 'active',
-                    ])
-                    ->label(__('organisation.field.status'))
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
+                    ]),
 
                 TextColumn::make('county.name')
                     ->label(__('organisation.field.hq'))
