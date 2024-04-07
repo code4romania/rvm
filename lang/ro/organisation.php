@@ -127,5 +127,11 @@ return [
                 'success' => 'Organizația a fost dezactivată cu succes.',
             ],
         ],
+        'resend_invitation' => [
+            'button' => 'Retrimite invitație',
+            'heading' => 'Retrimite invitație',
+            'subheading' => 'Ești sigur că vrei să retrimit invitația?',
+            'success' => 'Invitația a fost retimisă.',
+        ],
     ],
 ];
