@@ -21,7 +21,7 @@
         "konnco/filament-import": "1.6.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.9",
+        "barryvdh/laravel-debugbar": "^3.13",
         "barryvdh/laravel-ide-helper": "^2.13",
         "fakerphp/faker": "^1.23",
         "friendsofphp/php-cs-fixer": "^3.39",

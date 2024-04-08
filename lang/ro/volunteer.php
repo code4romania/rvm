@@ -6,7 +6,7 @@ return [
 
     'label' => [
         'singular' => 'Voluntar',
-        'plural' => 'Voluntari',
+        'plural' => 'Resursă umană',
     ],
 
     'field' => [

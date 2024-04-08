@@ -71,6 +71,8 @@ class Welcome extends Component implements HasForms
             data_get($this->form->getState(), 'password')
         );
 
+        $this->user->activateOrganisation();
+
         Filament::auth()->login($this->user);
 
         return app(LoginResponse::class);

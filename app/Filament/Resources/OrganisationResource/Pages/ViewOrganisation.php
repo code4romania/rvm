@@ -7,6 +7,7 @@ namespace App\Filament\Resources\OrganisationResource\Pages;
 use App\Filament\Resources\OrganisationResource;
 use App\Filament\Resources\OrganisationResource\Actions\ActivateOrganisationAction;
 use App\Filament\Resources\OrganisationResource\Actions\DeactivateOrganisationAction;
+use App\Filament\Resources\OrganisationResource\Actions\ResendInvitationAction;
 use App\Models\Organisation;
 use Filament\Pages\Actions\DeleteAction;
 use Filament\Pages\Actions\EditAction;
@@ -26,6 +27,10 @@ class ViewOrganisation extends ViewRecord
         return [
             ActivateOrganisationAction::make()
                 ->visible(fn (Organisation $record) => auth()->user()->isPlatformAdmin() && $record->isInactive())
+                ->record($this->getRecord()),
+
+            ResendInvitationAction::make()
+                ->visible(fn (Organisation $record) => auth()->user()->isPlatformAdmin() && $record->isInvited())
                 ->record($this->getRecord()),
 
             DeactivateOrganisationAction::make()
