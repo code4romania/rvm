@@ -30,7 +30,7 @@ class ViewOrganisation extends ViewRecord
                 ->record($this->getRecord()),
 
             ResendInvitationAction::make()
-                ->visible(fn (Organisation $record) => auth()->user()->isPlatformAdmin() && $record->isGuest())
+                ->visible(fn (Organisation $record) => auth()->user()->isPlatformAdmin() && $record->isInvited())
                 ->record($this->getRecord()),
 
             DeactivateOrganisationAction::make()

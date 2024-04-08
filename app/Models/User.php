@@ -88,7 +88,7 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function activateOrganisation(): void
     {
         $organisation = $this->organisation;
-        if ($this->isOrgAdmin($organisation) && $this->organisation->status === OrganisationStatus::guest)
+        if ($this->isOrgAdmin($organisation) && $this->organisation->status === OrganisationStatus::invited)
         {
             $organisation->setActive();
         }

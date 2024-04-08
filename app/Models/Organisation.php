@@ -182,9 +182,9 @@ class Organisation extends Model implements HasMedia
         return $this->status->is(OrganisationStatus::inactive);
     }
 
-    public function isGuest(): bool
+    public function isInvited(): bool
     {
-        return $this->status->is(OrganisationStatus::guest);
+        return $this->status->is(OrganisationStatus::invited);
     }
 
     public function routeNotificationForMail(?Notification $notification = null): string

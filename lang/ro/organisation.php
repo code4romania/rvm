@@ -134,4 +134,10 @@ return [
             'success' => 'Invitația a fost retimisă.',
         ],
     ],
+
+    'status' => [
+        'active' => 'Activ',
+        'inactive' => 'Inactiv',
+        'invited' => 'Invitat',
+    ],
 ];

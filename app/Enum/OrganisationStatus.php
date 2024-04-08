@@ -16,5 +16,10 @@ enum OrganisationStatus: string
 
     case active = 'active';
     case inactive = 'inactive';
-    case guest = 'guest';
+    case invited = 'invited';
+
+    protected function labelKeyPrefix(): ?string
+    {
+        return 'organisation.status';
+    }
 }
