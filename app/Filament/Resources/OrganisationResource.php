@@ -127,6 +127,7 @@ class OrganisationResource extends Resource
                                     ->maxLength(1000)
                                     ->rows(2)
                                     ->helperText(__('organisation.help.description'))
+                                    ->required()
                                     ->columnSpanFull(),
                             ]),
 
