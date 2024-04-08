@@ -132,6 +132,8 @@ return [
             'heading' => 'Retrimite invitație',
             'subheading' => 'Ești sigur că vrei să retrimit invitația?',
             'success' => 'Invitația a fost retimisă.',
+            'failure_title' => 'Invitația nu a putut fi trimisă.',
+            'failure_body' => 'Acestei organizații i-a fost retrimisă invitația recent. Te rugăm să mai încerci peste o oră.',
         ],
     ],
 
