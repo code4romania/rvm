@@ -8,6 +8,7 @@ use App\Concerns\BelongsToOrganisation;
 use App\Concerns\HasRole;
 use App\Concerns\LimitsVisibility;
 use App\Concerns\MustSetInitialPassword;
+use App\Enum\OrganisationStatus;
 use App\Enum\UserRole;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
@@ -82,5 +83,14 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function getFilamentName(): string
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function activateOrganisation(): void
+    {
+        $organisation = $this->organisation;
+        if ($this->isOrgAdmin($organisation) && $this->organisation->status === OrganisationStatus::invited)
+        {
+            $organisation->setActive();
+        }
     }
 }
