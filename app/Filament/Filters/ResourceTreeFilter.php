@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Filters;
 
 use App\Models\Resource\Category;
+use Cache;
 use Closure;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\BaseFilter;
@@ -30,9 +31,13 @@ class ResourceTreeFilter extends BaseFilter
     {
         parent::setUp();
 
-        $categories = Category::query()
-            ->with('subcategories.types')
-            ->get();
+        $categories = Cache::driver('array')
+            ->rememberForever(
+                'resource-tree-filter-categories',
+                fn () => Category::query()
+                    ->with('subcategories.types')
+                    ->get()
+            );
 
         $this->form(fn () => [
             Select::make('category')
@@ -64,16 +69,16 @@ class ResourceTreeFilter extends BaseFilter
                 ->hidden(fn (Select $component) => empty($component->getOptions())),
         ])
             ->query(function (Builder $query, array $data) use ($categories) {
-                $categoryID = $data['category'];
-                $categoryData = $categories->firstWhere('id', $categoryID);
-                $subcategory = $categoryData?->subcategories->firstWhere('id', $data['subcategory']);
-                $subcategoryID = $subcategory?->id;
-                $type = $subcategory?->types->firstWhere('id', $data['type']);
-                $typeID = $type?->id;
+                $subcategory = $categories->firstWhere('id', $data['category'])
+                    ?->subcategories
+                    ->firstWhere('id', $data['subcategory']);
 
-                return $query->when($categoryID, fn (Builder $query) => $query->where('category_id', $categoryID))
-                    ->when($subcategoryID, fn (Builder $query) => $query->where('subcategory_id', $subcategoryID))
-                    ->when($typeID, fn (Builder $query) => $query->whereHas('types', fn (Builder $query) => $query->where('type_id', $typeID)));
+                $type = $subcategory?->types
+                    ->firstWhere('id', $data['type']);
+
+                return $query->when($data['category'], fn (Builder $query, $value) => $query->where('category_id', $value))
+                    ->when($subcategory?->id, fn (Builder $query, $value) => $query->where('subcategory_id', $value))
+                    ->when($type?->id, fn (Builder $query, $value) => $query->whereRelation('types', 'type_id', $value));
             });
     }
 }
