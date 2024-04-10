@@ -22,7 +22,11 @@ return [
         'has_first_aid_accreditation' => 'Acreditare prim ajutor',
         'updated_at' => 'Ultima actualizare',
         'organisation' => 'Organizație',
+    ],
+
+    'labels' => [
         'import' => 'Importa voluntari',
+        'download_example' => 'Descarca exemplu de import',
     ],
 
     'role' => [
