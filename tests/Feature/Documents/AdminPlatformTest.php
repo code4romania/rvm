@@ -9,17 +9,17 @@ use App\Filament\Resources\DocumentResource\Pages\CreateDocument;
 use App\Filament\Resources\DocumentResource\Pages\ViewDocument;
 use App\Models\Document;
 use App\Models\Organisation;
-use App\Models\User;
 use Livewire;
+use Tests\Traits\ActingAsPlatformAdmin;
 
 class AdminPlatformTest extends DocumentsBaseTest
 {
+    use ActingAsPlatformAdmin;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()
-            ->platformAdmin()
-            ->create();
+        $this->user = $this->getUser();
         Livewire::actingAs($this->user);
 
         $this->createOrganisations(3, 'random');
