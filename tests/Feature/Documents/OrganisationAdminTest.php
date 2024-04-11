@@ -17,11 +17,12 @@ class OrganisationAdminTest extends DocumentsBaseTest
     {
         parent::setUp();
         $this->createOrganisations();
-        $this->createOrganisations(2, 'inactive');
         $this->user = User::query()
             ->role(UserRole::ORG_ADMIN)
             ->inRandomOrder()
             ->first();
+        $this->createOrganisations(2, 'inactive');
+
 //        $this->actingAs($this->user);
     }
 
