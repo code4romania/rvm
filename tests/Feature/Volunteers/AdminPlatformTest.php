@@ -61,7 +61,7 @@ class AdminPlatformTest extends VolunteersBaseTest
 
         \Livewire::test(ListVolunteers::class)
             ->assertSuccessful()
-            ->assertCountTableRecords(25)
+            ->assertCountTableRecords(10)
             ->assertCanSeeTableRecords($volunteers)
             ->assertCanRenderTableColumn('organisation.name')
             ->assertCanRenderTableColumn('full_name')
