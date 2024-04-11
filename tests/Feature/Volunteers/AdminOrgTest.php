@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Volunteers;
 
+use App\Enum\UserRole;
 use App\Enum\VolunteerRole;
 use App\Enum\VolunteerSpecialization;
 use App\Filament\Resources\VolunteerResource\Pages\CreateVolunteer;
@@ -12,31 +13,27 @@ use App\Filament\Resources\VolunteerResource\Pages\ListVolunteers;
 use App\Filament\Resources\VolunteerResource\Pages\ViewVolunteer;
 use App\Models\City;
 use App\Models\County;
-use App\Models\Organisation;
+use App\Models\User;
 use App\Models\Volunteer;
-use Tests\Traits\ActingAsPlatformAdmin;
 
-class AdminPlatformTest extends VolunteersBaseTest
+class AdminOrgTest extends VolunteersBaseTest
 {
-    use ActingAsPlatformAdmin;
-
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actingAsPlatformAdmin();
+        $this->user = User::query()
+            ->where('role', UserRole::ORG_ADMIN)
+            ->inRandomOrder()
+            ->first();
+        $this->actingAs($this->user);
     }
 
-    public function testPlatformAdminCanViewVolunteers()
+    public function testAdminOngCanViewVolunteers()
     {
         $volunteers = Volunteer::query()
             ->orderByDesc('id')
             ->limit(10)
             ->get();
-
-        $organisation = Organisation::query()
-            ->with('volunteers')
-            ->inRandomOrder()
-            ->first();
 
         $county = $volunteers->first()->county;
         $volunteersFromCounty = Volunteer::query()
@@ -61,16 +58,14 @@ class AdminPlatformTest extends VolunteersBaseTest
 
         \Livewire::test(ListVolunteers::class)
             ->assertSuccessful()
-            ->assertCountTableRecords(25)
+            ->assertCountTableRecords(5)
             ->assertCanSeeTableRecords($volunteers)
-            ->assertCanRenderTableColumn('organisation.name')
+            ->assertCanNotRenderTableColumn('organisation.name')
             ->assertCanRenderTableColumn('full_name')
             ->assertCanRenderTableColumn('email')
             ->assertCanRenderTableColumn('phone')
             ->assertCanRenderTableColumn('specializations')
             ->assertCanRenderTableColumn('has_first_aid_accreditation')
-            ->filterTable('organisation', $organisation->id)
-            ->assertCanSeeTableRecords($organisation->volunteers)
             ->resetTableFilters()
             ->filterTable('county', $county->id)
             ->assertCanSeeTableRecords($volunteersFromCounty)
@@ -84,7 +79,7 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->assertPageActionEnabled('create');
     }
 
-    public function testPlatformAdminCanViewVolunteer()
+    public function testAdminOngCanViewVolunteer()
     {
         $volunteer = Volunteer::query()
             ->whereJsonDoesntContain('specializations', VolunteerSpecialization::translator)
@@ -93,8 +88,6 @@ class AdminPlatformTest extends VolunteersBaseTest
 
         \Livewire::test(ViewVolunteer::class, ['record' => $volunteer->id])
             ->assertSuccessful()
-            ->assertFormFieldIsVisible('organisation_id')
-            ->assertFormFieldIsDisabled('organisation_id')
             ->assertFormFieldIsVisible('first_name')
             ->assertFormFieldIsDisabled('first_name')
             ->assertFormFieldIsVisible('last_name')
@@ -119,15 +112,13 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->assertPageActionEnabled('edit')
             ->assertFormFieldIsHidden('language');
 
-        $volunteerTranslator = Volunteer::query()
-            ->whereJsonContains('specializations', VolunteerSpecialization::translator)
-            ->inRandomOrder()
-            ->first();
+        $volunteerTranslator = Volunteer::factory()
+            ->for($this->user->organisation)
+            ->state(['specializations' => VolunteerSpecialization::translator])
+            ->create();
 
         \Livewire::test(ViewVolunteer::class, ['record' => $volunteerTranslator->id])
             ->assertSuccessful()
-            ->assertFormFieldIsVisible('organisation_id')
-            ->assertFormFieldIsDisabled('organisation_id')
             ->assertFormFieldIsVisible('first_name')
             ->assertFormFieldIsDisabled('first_name')
             ->assertFormFieldIsVisible('last_name')
@@ -154,7 +145,7 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->assertPageActionEnabled('edit');
     }
 
-    public function testPlatformAdminCanEditVolunteer()
+    public function testAdminOngCanEditVolunteer()
     {
         $volunteer = Volunteer::query()
             ->whereJsonDoesntContain('specializations', VolunteerSpecialization::translator)
@@ -163,8 +154,6 @@ class AdminPlatformTest extends VolunteersBaseTest
 
         \Livewire::test(EditVolunteer::class, ['record' => $volunteer->id])
             ->assertSuccessful()
-            ->assertFormFieldIsVisible('organisation_id')
-            ->assertFormFieldIsEnabled('organisation_id')
             ->assertFormFieldIsVisible('first_name')
             ->assertFormFieldIsEnabled('first_name')
             ->assertFormFieldIsVisible('last_name')
@@ -191,11 +180,11 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->assertFormFieldIsEnabled('language');
     }
 
-    public function testPlatformAdminCanCreateVolunteer()
+    public function testAdminOngCanCreateVolunteer()
     {
         \Livewire::test(CreateVolunteer::class)
             ->assertSuccessful()
-            ->assertFormFieldIsVisible('organisation_id')
+            ->assertFormFieldIsHidden('organisation_id')
             ->assertFormFieldIsEnabled('organisation_id')
             ->assertFormFieldIsVisible('first_name')
             ->assertFormFieldIsEnabled('first_name')
@@ -219,7 +208,6 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->assertFormFieldIsVisible('city_id')
             ->assertFormFieldIsEnabled('city_id')
             ->fillForm([
-                'organisation_id' => null,
                 'first_name' => fake()->realTextBetween(256, 300),
                 'last_name' => fake()->realTextBetween(256, 300),
                 'email' => fake()->phoneNumber,
@@ -234,7 +222,6 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->assertFormFieldIsVisible('language')
             ->call('create')
             ->assertHasFormErrors([
-                'organisation_id',
                 'first_name',
                 'last_name',
                 'email',
@@ -246,13 +233,12 @@ class AdminPlatformTest extends VolunteersBaseTest
                 'city_id',
             ])
             ->fillForm([
-                'organisation_id' => Organisation::query()->max('id') + 1,
                 'language' => fake()->word,
                 'has_first_aid_accreditation' => rand(2, 99),
             ])
             ->call('create')
             ->assertHasNoFormErrors(['language'])
-            ->assertHasFormErrors(['has_first_aid_accreditation', 'organisation_id'])
+            ->assertHasFormErrors(['has_first_aid_accreditation'])
             ->fillForm([
                 'specializations' => [VolunteerSpecialization::cook],
                 'has_first_aid_accreditation' => rand(0, 1),
@@ -261,7 +247,6 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->call('create')
             ->assertHasNoFormErrors(['has_first_aid_accreditation'])
             ->fillForm([
-                'organisation_id' => Organisation::query()->inRandomOrder()->first()->id,
                 'first_name' => fake()->firstName,
                 'last_name' => fake()->lastName,
                 'email' => fake()->email,
