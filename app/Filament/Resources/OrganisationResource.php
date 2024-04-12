@@ -383,9 +383,9 @@ class OrganisationResource extends Resource
 
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
-                        'secondary' => 'inactive',
-                        'warning' => 'guest',
-                        'success' => 'active',
+                        'secondary' => OrganisationStatus::inactive->value,
+                        'warning' => OrganisationStatus::invited->value,
+                        'success' => OrganisationStatus::active->value,
                     ])
                     ->enum(OrganisationStatus::options()),
 
