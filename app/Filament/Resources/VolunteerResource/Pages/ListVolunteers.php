@@ -20,7 +20,7 @@ class ListVolunteers extends ListRecords
         return [
             Actions\CreateAction::make(),
             ImportVolunteersAction::make(),
-//            ExportVolunteersExample::make(),
+            ExportVolunteersExample::make(),
         ];
     }
 

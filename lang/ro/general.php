@@ -16,4 +16,11 @@ return [
         'date_from' => 'Dată început',
         'date_until' => 'Dată sfârșit',
     ],
+
+    'boolean' => [
+        'yes' => 'Da',
+        'no' => 'Nu',
+        'true' => 'Adevarat',
+        'false' => 'Fals',
+    ],
 ];
