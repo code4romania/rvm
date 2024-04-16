@@ -83,6 +83,14 @@ class ListOrganisations extends ListRecords
                         ->inlineLabel(),
 
                 ])
+                ->mutateFormDataUsing(function (array $data) {
+                    $data['contact_person'] = [
+                        'email' => $data['email'],
+                        'phone' => $data['phone'],
+                    ];
+
+                    return $data;
+                })
                 ->successRedirectUrl(fn ($record) => OrganisationResource::getUrl('view', $record))
                 ->disableCreateAnother(),
         ];
