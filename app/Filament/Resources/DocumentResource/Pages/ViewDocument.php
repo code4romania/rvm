@@ -15,8 +15,8 @@ class ViewDocument extends ViewRecord
     protected function getActions(): array
     {
         return [
-            Actions\EditAction::make(),
-            Actions\DeleteAction::make(),
+            'edit' => Actions\EditAction::make(),
+            'delete' => Actions\DeleteAction::make(),
         ];
     }
 }

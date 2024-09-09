@@ -36,4 +36,11 @@ class VolunteerFactory extends Factory
             'has_first_aid_accreditation' => fake()->boolean(),
         ];
     }
+
+    public function translator(): static
+    {
+        return $this->state(fn ($attributes) => [
+            'specializations' => array_merge($attributes['specializations'], [VolunteerSpecialization::translator]),
+        ]);
+    }
 }
