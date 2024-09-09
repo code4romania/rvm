@@ -25,6 +25,7 @@ class OrganisationController extends Controller
                     'status',
                     'area',
                     'contact_person_in_teams',
+                    'description',
                     'created_at',
                     'updated_at',
                 ])

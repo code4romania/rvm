@@ -27,6 +27,7 @@ class OrganisationResource extends JsonResource
             'area' => $this->area,
             'county' => $this->county->name,
             'activity_counties' => IdAndNameResource::collection($this->activityCounties),
+            'description' => $this->description,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
             'volunteers_count' => (int) $this->volunteers_count,

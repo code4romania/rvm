@@ -130,6 +130,9 @@ class OrganisationFactory extends Factory
             $organisation->riskCategories()
                 ->attach($this->randomRiskCategories(3));
 
+            $organisation->resourceTypes()
+                ->attach($this->randomResourceTypes(3));
+
             if ($organisation->has_branches) {
                 Branch::factory()
                     ->for($organisation)
@@ -184,6 +187,13 @@ class OrganisationFactory extends Factory
     {
         return Cache::driver('array')
             ->rememberForever('risk_categories', fn () => RiskCategory::pluck('id'))
+            ->random($count);
+    }
+
+    protected function randomResourceTypes(int $count = 1): Collection
+    {
+        return Cache::driver('array')
+            ->rememberForever('resource_types', fn () => Organisation\ResourceType::pluck('id'))
             ->random($count);
     }
 }
