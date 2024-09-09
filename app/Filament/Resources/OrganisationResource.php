@@ -216,7 +216,8 @@ class OrganisationResource extends Resource
                             ->label(__('organisation.field.risk_category'))
                             ->helperText(__('general.help.multi_select'))
                             ->multiple()
-                            ->preload(),
+                            ->preload()
+                            ->required(),
 
                         Select::make('resource_types')
                             ->relationship('resourceTypes', 'name')
@@ -224,7 +225,8 @@ class OrganisationResource extends Resource
                             ->helperText(__('general.help.multi_select'))
                             ->multiple()
                             ->preload()
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->required(),
                     ]),
 
                 Section::make(__('organisation.section.area_of_activity'))
