@@ -17,8 +17,7 @@
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.21",
         "pxlrbt/filament-excel": "^1.1",
-        "sentry/sentry-laravel": "^4.1",
-        "konnco/filament-import": "1.6.0"
+        "sentry/sentry-laravel": "^4.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
@@ -31,8 +30,6 @@
         "laravel/telescope": "^4.17",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^7.10",
-        "pestphp/pest": "^2.34",
-        "pestphp/pest-plugin-livewire": "^2.1",
         "phpunit/phpunit": "^10.4",
         "spatie/laravel-ignition": "^2.3"
     },

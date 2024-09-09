@@ -17,7 +17,7 @@ use App\Models\Volunteer;
 use Livewire\Livewire;
 use Tests\Traits\ActingAsPlatformAdmin;
 
-class PlatformAdminTest extends VolunteersBaseTest
+class PlatformAdminTest extends VolunteersBase
 {
     use ActingAsPlatformAdmin;
 

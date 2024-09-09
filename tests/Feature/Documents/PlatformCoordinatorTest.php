@@ -10,7 +10,7 @@ use App\Models\Document;
 use App\Models\User;
 use Livewire\Livewire;
 
-class PlatformCoordinatorTest extends DocumentsBaseTest
+class PlatformCoordinatorTest extends DocumentsBase
 {
     protected function setUp(): void
     {

@@ -159,16 +159,19 @@ class OrganisationFactory extends Factory
     public function withUserAndVolunteers()
     {
         return $this->afterCreating(function (Organisation $organisation) {
-//            var_dump($organisation->email, $organisation->id, User::all()->pluck('email'));
-//            dd(Organisation::all()->pluck('email', 'id'), $organisation);
-//            User::factory(['email' => $organisation->email])
-//                ->orgAdmin()
-//                ->for($organisation)
-//                ->create();
+            // User::factory(['email' => $organisation->email])
+            //     ->orgAdmin()
+            //     ->for($organisation)
+            //     ->create();
 
             Volunteer::factory()
                 ->for($organisation)
-                ->count(5)
+                ->translator()
+                ->create();
+
+            Volunteer::factory()
+                ->for($organisation)
+                ->count(4)
                 ->create();
         });
     }

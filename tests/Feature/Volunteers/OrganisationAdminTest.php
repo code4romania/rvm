@@ -17,7 +17,7 @@ use App\Models\User;
 use App\Models\Volunteer;
 use Livewire\Livewire;
 
-class OrganisationAdminTest extends VolunteersBaseTest
+class OrganisationAdminTest extends VolunteersBase
 {
     protected function setUp(): void
     {

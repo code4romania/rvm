@@ -14,7 +14,7 @@ use App\Models\User;
 use App\Models\Volunteer;
 use Livewire\Livewire;
 
-class PlatformCoordinatorTest extends VolunteersBaseTest
+class PlatformCoordinatorTest extends VolunteersBase
 {
     protected function setUp(): void
     {

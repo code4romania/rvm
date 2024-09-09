@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
-abstract class VolunteersBaseTest extends TestCase
+abstract class VolunteersBase extends TestCase
 {
     use RefreshDatabase;
 

@@ -12,7 +12,7 @@ use App\Models\Organisation;
 use Livewire\Livewire;
 use Tests\Traits\ActingAsPlatformAdmin;
 
-class PlatformAdminTest extends DocumentsBaseTest
+class PlatformAdminTest extends DocumentsBase
 {
     use ActingAsPlatformAdmin;
 

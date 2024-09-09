@@ -11,7 +11,7 @@ use App\Models\Document;
 use App\Models\User;
 use Livewire\Livewire;
 
-class OrganisationAdminTest extends DocumentsBaseTest
+class OrganisationAdminTest extends DocumentsBase
 {
     protected function setUp(): void
     {

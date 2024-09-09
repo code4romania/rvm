@@ -21,7 +21,7 @@ use Livewire\Livewire;
 use Livewire\Testing\TestableLivewire;
 use Tests\TestCase;
 
-abstract class DocumentsBaseTest extends TestCase
+abstract class DocumentsBase extends TestCase
 {
     use RefreshDatabase;
 
