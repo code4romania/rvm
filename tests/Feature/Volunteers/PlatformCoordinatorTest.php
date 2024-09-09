@@ -12,15 +12,18 @@ use App\Filament\Resources\VolunteerResource\Pages\ViewVolunteer;
 use App\Models\Organisation;
 use App\Models\User;
 use App\Models\Volunteer;
+use Livewire\Livewire;
 
 class PlatformCoordinatorTest extends VolunteersBaseTest
 {
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->user = User::factory()
             ->platformCoordinator()
             ->create();
+
         $this->actingAs($this->user);
     }
 
@@ -57,7 +60,7 @@ class PlatformCoordinatorTest extends VolunteersBaseTest
             ->limit(10)
             ->get();
 
-        \Livewire::test(ListVolunteers::class)
+        Livewire::test(ListVolunteers::class)
             ->assertSuccessful()
             ->assertCountTableRecords(10)
             ->assertCanSeeTableRecords($volunteers)
@@ -89,7 +92,7 @@ class PlatformCoordinatorTest extends VolunteersBaseTest
             ->inRandomOrder()
             ->first();
 
-        \Livewire::test(ViewVolunteer::class, ['record' => $volunteer->id])
+        Livewire::test(ViewVolunteer::class, ['record' => $volunteer->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('organisation_id')
             ->assertFormFieldIsDisabled('organisation_id')
@@ -121,7 +124,7 @@ class PlatformCoordinatorTest extends VolunteersBaseTest
             ->inRandomOrder()
             ->first();
 
-        \Livewire::test(ViewVolunteer::class, ['record' => $volunteerTranslator->id])
+        Livewire::test(ViewVolunteer::class, ['record' => $volunteerTranslator->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('organisation_id')
             ->assertFormFieldIsDisabled('organisation_id')
@@ -157,13 +160,13 @@ class PlatformCoordinatorTest extends VolunteersBaseTest
             ->inRandomOrder()
             ->first();
 
-        \Livewire::test(EditVolunteer::class, ['record' => $volunteer->id])
+        Livewire::test(EditVolunteer::class, ['record' => $volunteer->id])
             ->assertForbidden();
     }
 
     public function testPlatformCoordinatorCanNotCreateVolunteer()
     {
-        \Livewire::test(CreateVolunteer::class)
+        Livewire::test(CreateVolunteer::class)
             ->assertForbidden();
     }
 }

@@ -15,20 +15,23 @@ use App\Models\City;
 use App\Models\County;
 use App\Models\User;
 use App\Models\Volunteer;
+use Livewire\Livewire;
 
-class AdminOrgTest extends VolunteersBaseTest
+class OrganisationAdminTest extends VolunteersBaseTest
 {
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->user = User::query()
             ->where('role', UserRole::ORG_ADMIN)
             ->inRandomOrder()
             ->first();
+
         $this->actingAs($this->user);
     }
 
-    public function testAdminOngCanViewVolunteers()
+    public function testOrganisationAdminCanViewVolunteers()
     {
         $volunteers = Volunteer::query()
             ->orderByDesc('id')
@@ -56,7 +59,7 @@ class AdminOrgTest extends VolunteersBaseTest
             ->limit(10)
             ->get();
 
-        \Livewire::test(ListVolunteers::class)
+        Livewire::test(ListVolunteers::class)
             ->assertSuccessful()
             ->assertCountTableRecords(5)
             ->assertCanSeeTableRecords($volunteers)
@@ -79,14 +82,14 @@ class AdminOrgTest extends VolunteersBaseTest
             ->assertPageActionEnabled('create');
     }
 
-    public function testAdminOngCanViewVolunteer()
+    public function testOrganisationAdminCanViewVolunteer()
     {
         $volunteer = Volunteer::query()
             ->whereJsonDoesntContain('specializations', VolunteerSpecialization::translator)
             ->inRandomOrder()
             ->first();
 
-        \Livewire::test(ViewVolunteer::class, ['record' => $volunteer->id])
+        Livewire::test(ViewVolunteer::class, ['record' => $volunteer->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('first_name')
             ->assertFormFieldIsDisabled('first_name')
@@ -117,7 +120,7 @@ class AdminOrgTest extends VolunteersBaseTest
             ->state(['specializations' => VolunteerSpecialization::translator])
             ->create();
 
-        \Livewire::test(ViewVolunteer::class, ['record' => $volunteerTranslator->id])
+        Livewire::test(ViewVolunteer::class, ['record' => $volunteerTranslator->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('first_name')
             ->assertFormFieldIsDisabled('first_name')
@@ -145,14 +148,14 @@ class AdminOrgTest extends VolunteersBaseTest
             ->assertPageActionEnabled('edit');
     }
 
-    public function testAdminOngCanEditVolunteer()
+    public function testOrganisationAdminCanEditVolunteer()
     {
         $volunteer = Volunteer::query()
             ->whereJsonDoesntContain('specializations', VolunteerSpecialization::translator)
             ->inRandomOrder()
             ->first();
 
-        \Livewire::test(EditVolunteer::class, ['record' => $volunteer->id])
+        Livewire::test(EditVolunteer::class, ['record' => $volunteer->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('first_name')
             ->assertFormFieldIsEnabled('first_name')
@@ -180,9 +183,9 @@ class AdminOrgTest extends VolunteersBaseTest
             ->assertFormFieldIsEnabled('language');
     }
 
-    public function testAdminOngCanCreateVolunteer()
+    public function testOrganisationAdminCanCreateVolunteer()
     {
-        \Livewire::test(CreateVolunteer::class)
+        Livewire::test(CreateVolunteer::class)
             ->assertSuccessful()
             ->assertFormFieldIsHidden('organisation_id')
             ->assertFormFieldIsEnabled('organisation_id')

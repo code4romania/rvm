@@ -9,10 +9,10 @@ use App\Filament\Resources\DocumentResource\Pages\CreateDocument;
 use App\Filament\Resources\DocumentResource\Pages\ViewDocument;
 use App\Models\Document;
 use App\Models\Organisation;
-use Livewire;
+use Livewire\Livewire;
 use Tests\Traits\ActingAsPlatformAdmin;
 
-class AdminPlatformTest extends DocumentsBaseTest
+class PlatformAdminTest extends DocumentsBaseTest
 {
     use ActingAsPlatformAdmin;
 
@@ -25,14 +25,14 @@ class AdminPlatformTest extends DocumentsBaseTest
         $this->createOrganisations(3, 'random');
     }
 
-    public function testAdminPlatformCanViewDocuments(): void
+    public function testPlatformAdminCanViewDocuments(): void
     {
         $this->viewDocuments()
             ->assertPageActionVisible('create')
             ->assertPageActionEnabled('create');
     }
 
-    public function testViewAdminPlatformCanViewDocument(): void
+    public function testViewPlatformAdminCanViewDocument(): void
     {
         $document = Document::query()
             ->whereType(DocumentType::protocol)
@@ -51,7 +51,7 @@ class AdminPlatformTest extends DocumentsBaseTest
             ->assertPageActionVisible('delete');
     }
 
-    public function testAdminPlatformCanEditDocument(): void
+    public function testPlatformAdminCanEditDocument(): void
     {
         $protocolDocument = Document::query()
             ->whereType(DocumentType::protocol)
@@ -75,7 +75,7 @@ class AdminPlatformTest extends DocumentsBaseTest
             ->assertFormFieldIsHidden('never_expires');
     }
 
-    public function testAdminPlatformCanDeleteDocument(): void
+    public function testPlatformAdminCanDeleteDocument(): void
     {
         $document = Document::query()
             ->inRandomOrder()
@@ -87,7 +87,7 @@ class AdminPlatformTest extends DocumentsBaseTest
         $this->assertNull(Document::find($document->id));
     }
 
-    public function testAdminPlatformCanCreateDocument()
+    public function testPlatformAdminCanCreateDocument()
     {
         $file = \Illuminate\Http\UploadedFile::fake()
             ->image(fake()->word() . '.jpg')

@@ -9,7 +9,7 @@ use App\Enum\UserRole;
 use App\Filament\Resources\DocumentResource;
 use App\Models\Document;
 use App\Models\User;
-use Livewire;
+use Livewire\Livewire;
 
 class OrganisationAdminTest extends DocumentsBaseTest
 {
@@ -26,7 +26,7 @@ class OrganisationAdminTest extends DocumentsBaseTest
 //        $this->actingAs($this->user);
     }
 
-    public function testOrgAdminCanViewDocuments(): void
+    public function testOrganisationAdminCanViewDocuments(): void
     {
         $this->actingAs($this->user);
         $userOganisationID = $this->user->organisation_id;
@@ -36,6 +36,7 @@ class OrganisationAdminTest extends DocumentsBaseTest
         $documentsFromAnotherOrg = Document::query()
             ->whereNot('organisation_id', $userOganisationID)
             ->get();
+
         Livewire::test(DocumentResource\Pages\ListDocuments::class)
             ->assertSuccessful()
             ->assertPageActionHidden('create')
@@ -66,13 +67,13 @@ class OrganisationAdminTest extends DocumentsBaseTest
         $url = DocumentResource::getUrl('index');
 
         $this->createOrganisations(2, 'inactive');
-        $orgAdmin = $this->getOrgAdminWithInactiveOrg(2);
+        $orgAdmin = $this->getOrganisationAdminWithInactiveOrganisation(2);
         $this->actingAs($orgAdmin)
             ->get($url)
             ->assertRedirect('/login');
     }
 
-    public function testOrgAdminCanViewDocument(): void
+    public function testOrganisationAdminCanViewDocument(): void
     {
         $document = $this->user
             ->organisation
@@ -103,7 +104,7 @@ class OrganisationAdminTest extends DocumentsBaseTest
     public function testInactiveOrgAdminCanNotViewDocument(): void
     {
         $this->createOrganisations(2, 'inactive');
-        $orgAdmins = $this->getOrgAdminWithInactiveOrg();
+        $orgAdmins = $this->getOrganisationAdminWithInactiveOrganisation();
 
         $document = Document::query()
             ->inRandomOrder()
@@ -116,7 +117,7 @@ class OrganisationAdminTest extends DocumentsBaseTest
             ->assertRedirect('/login');
     }
 
-    public function testAnotherOrgAdminCanNotViewDocument(): void
+    public function testOtherOrganisationAdminCanNotViewDocument(): void
     {
 //        dd(Document::all()->count());
         $document = Document::query()
@@ -129,10 +130,10 @@ class OrganisationAdminTest extends DocumentsBaseTest
             ->assertForbidden();
     }
 
-    public function testAnotherInactiveOrgAdminCanNotViewDocument(): void
+    public function testOtherInactiveOrganisationAdminCanNotViewDocument(): void
     {
         $this->createOrganisations(2, 'inactive');
-        $orgAdmin = $this->getOrgAdminWithInactiveOrg();
+        $orgAdmin = $this->getOrganisationAdminWithInactiveOrganisation();
 
         $document = Document::query()
             ->whereNot('organisation_id', $orgAdmin->organisation_id)
@@ -147,7 +148,7 @@ class OrganisationAdminTest extends DocumentsBaseTest
             ->assertRedirect('/login');
     }
 
-    public function testOrgAdminCanNotEditDocument(): void
+    public function testOrganisationAdminCanNotEditDocument(): void
     {
         $document = $this->user
             ->organisation
@@ -158,10 +159,10 @@ class OrganisationAdminTest extends DocumentsBaseTest
             ->assertForbidden();
     }
 
-    public function testInactiveOrgAdminCanNotEditDocument(): void
+    public function testInactiveOrganisationAdminCanNotEditDocument(): void
     {
         $this->createOrganisations(2, 'inactive');
-        $orgAdmin = $this->getOrgAdminWithInactiveOrg();
+        $orgAdmin = $this->getOrganisationAdminWithInactiveOrganisation();
 
         $document = Document::query()
             ->where('organisation_id', $orgAdmin->organisation_id)
@@ -175,7 +176,7 @@ class OrganisationAdminTest extends DocumentsBaseTest
             ->assertRedirect('/login');
     }
 
-    public function testAnotherOrgAdminCanNotEditDocument(): void
+    public function testOtherOrganisationAdminCanNotEditDocument(): void
     {
         $document = Document::query()
             ->whereNot('organisation_id', $this->user->organisation_id)
@@ -190,10 +191,10 @@ class OrganisationAdminTest extends DocumentsBaseTest
             ->assertNotFound();
     }
 
-    public function testAnotherInactiveOrgAdminCanNotEditDocument(): void
+    public function testOtherInactiveOrganisationAdminCanNotEditDocument(): void
     {
         $this->createOrganisations(2, 'inactive');
-        $orgAdmin = $this->getOrgAdminWithInactiveOrg();
+        $orgAdmin = $this->getOrganisationAdminWithInactiveOrganisation();
 
         $document = Document::query()
             ->whereNot('organisation_id', $orgAdmin->organisation_id)
@@ -208,10 +209,10 @@ class OrganisationAdminTest extends DocumentsBaseTest
             ->assertRedirect('/login');
     }
 
-    public function testInactiveOrgAdminCanNotDeleteDocument(): void
+    public function testInactiveOrganisationAdminCanNotDeleteDocument(): void
     {
         $this->createOrganisations(2, 'inactive');
-        $orgAdmin = $this->getOrgAdminWithInactiveOrg();
+        $orgAdmin = $this->getOrganisationAdminWithInactiveOrganisation();
 
         $document = Document::query()
             ->where('organisation_id', $orgAdmin->organisation_id)
@@ -223,19 +224,19 @@ class OrganisationAdminTest extends DocumentsBaseTest
             ->assertPageActionDisabled('delete');
     }
 
-    public function testOrgAdminCanNotCreateDocument()
+    public function testOrganisationAdminCanNotCreateDocument()
     {
-        $orgAdmins = $this->getOrgAdmin()->random();
+        $orgAdmins = $this->getOrganisationAdmin()->random();
 
         Livewire::actingAs($orgAdmins);
         Livewire::test(DocumentResource\Pages\CreateDocument::class)
             ->assertForbidden();
     }
 
-    public function testInactiveOrgAdminCanNotCreateDocument()
+    public function testInactiveOrganisationAdminCanNotCreateDocument()
     {
         $this->createOrganisations(2, 'inactive');
-        $orgAdmins = $this->getOrgAdminWithInactiveOrg();
+        $orgAdmins = $this->getOrganisationAdminWithInactiveOrganisation();
 
         Livewire::actingAs($orgAdmins);
         Livewire::test(DocumentResource\Pages\CreateDocument::class)

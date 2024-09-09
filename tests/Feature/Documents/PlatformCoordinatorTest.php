@@ -8,16 +8,18 @@ use App\Enum\DocumentType;
 use App\Filament\Resources\DocumentResource;
 use App\Models\Document;
 use App\Models\User;
-use Livewire;
+use Livewire\Livewire;
 
 class PlatformCoordinatorTest extends DocumentsBaseTest
 {
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->user = User::factory()
             ->platformCoordinator()
             ->create();
+
         Livewire::actingAs($this->user);
 
         $this->createOrganisations(3, 'random');

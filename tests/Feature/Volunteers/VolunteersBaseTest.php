@@ -24,6 +24,7 @@ abstract class VolunteersBaseTest extends TestCase
         parent::setUp();
 
         Notification::fake();
+
         $this->createOrganisationsWithVolunteers();
     }
 

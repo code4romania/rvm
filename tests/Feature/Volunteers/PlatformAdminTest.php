@@ -14,15 +14,17 @@ use App\Models\City;
 use App\Models\County;
 use App\Models\Organisation;
 use App\Models\Volunteer;
+use Livewire\Livewire;
 use Tests\Traits\ActingAsPlatformAdmin;
 
-class AdminPlatformTest extends VolunteersBaseTest
+class PlatformAdminTest extends VolunteersBaseTest
 {
     use ActingAsPlatformAdmin;
 
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->actingAsPlatformAdmin();
     }
 
@@ -59,7 +61,7 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->limit(10)
             ->get();
 
-        \Livewire::test(ListVolunteers::class)
+        Livewire::test(ListVolunteers::class)
             ->assertSuccessful()
             ->assertCountTableRecords(10)
             ->assertCanSeeTableRecords($volunteers)
@@ -91,7 +93,7 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->inRandomOrder()
             ->first();
 
-        \Livewire::test(ViewVolunteer::class, ['record' => $volunteer->id])
+        Livewire::test(ViewVolunteer::class, ['record' => $volunteer->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('organisation_id')
             ->assertFormFieldIsDisabled('organisation_id')
@@ -124,7 +126,7 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->inRandomOrder()
             ->first();
 
-        \Livewire::test(ViewVolunteer::class, ['record' => $volunteerTranslator->id])
+        Livewire::test(ViewVolunteer::class, ['record' => $volunteerTranslator->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('organisation_id')
             ->assertFormFieldIsDisabled('organisation_id')
@@ -161,7 +163,7 @@ class AdminPlatformTest extends VolunteersBaseTest
             ->inRandomOrder()
             ->first();
 
-        \Livewire::test(EditVolunteer::class, ['record' => $volunteer->id])
+        Livewire::test(EditVolunteer::class, ['record' => $volunteer->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('organisation_id')
             ->assertFormFieldIsEnabled('organisation_id')
@@ -193,7 +195,7 @@ class AdminPlatformTest extends VolunteersBaseTest
 
     public function testPlatformAdminCanCreateVolunteer()
     {
-        \Livewire::test(CreateVolunteer::class)
+        Livewire::test(CreateVolunteer::class)
             ->assertSuccessful()
             ->assertFormFieldIsVisible('organisation_id')
             ->assertFormFieldIsEnabled('organisation_id')

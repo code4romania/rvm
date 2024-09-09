@@ -7,7 +7,9 @@ namespace Tests\Feature\Documents;
 use App\Enum\DocumentType;
 use App\Enum\OrganisationStatus;
 use App\Enum\UserRole;
-use App\Filament\Resources\DocumentResource;
+use App\Filament\Resources\DocumentResource\Pages\EditDocument;
+use App\Filament\Resources\DocumentResource\Pages\ListDocuments;
+use App\Filament\Resources\DocumentResource\Pages\ViewDocument;
 use App\Models\Document;
 use App\Models\Organisation;
 use App\Models\User;
@@ -15,7 +17,8 @@ use Database\Seeders\ResourceCategorySeed;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
-use Livewire;
+use Livewire\Livewire;
+use Livewire\Testing\TestableLivewire;
 use Tests\TestCase;
 
 abstract class DocumentsBaseTest extends TestCase
@@ -33,7 +36,7 @@ abstract class DocumentsBaseTest extends TestCase
         Notification::fake();
     }
 
-    protected function getOrgAdmin(): Collection
+    protected function getOrganisationAdmin(): Collection
     {
         return User::query()
             ->role(UserRole::ORG_ADMIN)
@@ -41,7 +44,7 @@ abstract class DocumentsBaseTest extends TestCase
             ->get();
     }
 
-    protected function getOrgAdminWithInactiveOrg(): User
+    protected function getOrganisationAdminWithInactiveOrganisation(): User
     {
         return Organisation::query()
             ->whereStatus(OrganisationStatus::inactive)
@@ -60,8 +63,10 @@ abstract class DocumentsBaseTest extends TestCase
                 ->inactive()
                 ->withUserAndDocuments()
                 ->createQuietly();
+
             return;
         }
+
         if ($status === 'random') {
             Organisation::factory()
                 ->count($count)
@@ -71,17 +76,18 @@ abstract class DocumentsBaseTest extends TestCase
 
             return;
         }
+
         Organisation::factory()
             ->count($count)
             ->withUserAndDocuments()
             ->createQuietly();
     }
 
-    public function viewDocuments(): Livewire\Testing\TestableLivewire
+    public function viewDocuments(): TestableLivewire
     {
         $documents = Document::all();
 
-        return Livewire::test(DocumentResource\Pages\ListDocuments::class)
+        return Livewire::test(ListDocuments::class)
             ->assertSuccessful()
             ->assertCountTableRecords(9)
             ->assertCanSeeTableRecords($documents)
@@ -103,9 +109,9 @@ abstract class DocumentsBaseTest extends TestCase
             ->assertCanSeeTableRecords($documents->sortBy('expires_at'), inOrder: true);
     }
 
-    public function viewProtocolDocumentByUser(Document $document): Livewire\Testing\TestableLivewire
+    public function viewProtocolDocumentByUser(Document $document): TestableLivewire
     {
-        return Livewire::test(DocumentResource\Pages\ViewDocument::class, ['record' => $document->id])
+        return Livewire::test(ViewDocument::class, ['record' => $document->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('organisation_id')
             ->assertFormFieldIsVisible('name')
@@ -116,9 +122,9 @@ abstract class DocumentsBaseTest extends TestCase
             ->assertFormFieldIsVisible('document');
     }
 
-    public function viewDocumentByUser(Document $document): Livewire\Testing\TestableLivewire
+    public function viewDocumentByUser(Document $document): TestableLivewire
     {
-        return Livewire::test(DocumentResource\Pages\ViewDocument::class, ['record' => $document->id])
+        return Livewire::test(ViewDocument::class, ['record' => $document->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('organisation_id')
             ->assertFormFieldIsVisible('name')
@@ -129,9 +135,9 @@ abstract class DocumentsBaseTest extends TestCase
             ->assertFormFieldIsVisible('document');
     }
 
-    public function editDocument(Document $document): Livewire\Testing\TestableLivewire
+    public function editDocument(Document $document): TestableLivewire
     {
-        return Livewire::test(DocumentResource\Pages\EditDocument::class, ['record' => $document->id])
+        return Livewire::test(EditDocument::class, ['record' => $document->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('organisation_id')
             ->assertFormFieldIsEnabled('organisation_id')
