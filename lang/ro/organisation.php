@@ -106,7 +106,7 @@ return [
         'other_information' => 'Alte informatii',
         'profile' => 'Profil',
         'contact_person' => 'Persoană de contact în relația cu DSU',
-        'contact_person_in_teams' => 'Persoană de contact pentru Platforma Teams \'Sprijin Umanitar DSU-GOV / FiiPregătit\''
+        'contact_person_in_teams' => 'Persoană de contact pentru Platforma Teams "Sprijin Umanitar DSU-GOV / FiiPregătit"'
     ],
 
     'help' => [

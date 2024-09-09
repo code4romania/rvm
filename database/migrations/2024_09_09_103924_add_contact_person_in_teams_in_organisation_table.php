@@ -17,14 +17,4 @@ return new class extends Migration
             $table->json('contact_person_in_teams')->nullable()->after('contact_person');
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('organisations', function (Blueprint $table) {
-            //
-        });
-    }
 };
