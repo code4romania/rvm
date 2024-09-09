@@ -28,12 +28,13 @@ return [
         'description' => 'Descriere extinsă organizație',
         'short_description' => 'Descriere scurtă organizație',
         'logo' => 'Logo organizație',
-        'contact_person' => 'Persoană de contact în relația cu DSU',
         'choose' => 'Alege',
         'email' => 'Email',
         'phone' => 'Telefon',
         'contact_person_first_name' => 'Prenume persoană de contact',
         'contact_person_last_name' => 'Nume persoană de contact',
+        'contact_person_in_teams_first_name' => 'Nume',
+        'contact_person_in_teams_last_name' => 'Prenume',
         'other_information' => 'Alte informații',
         'social_services_accreditation' => 'ONG acreditat pentru servicii sociale',
         'risk_categories' => 'Tipuri de riscuri acoperite',
@@ -104,6 +105,8 @@ return [
         'localities' => 'Localitati',
         'other_information' => 'Alte informatii',
         'profile' => 'Profil',
+        'contact_person' => 'Persoană de contact în relația cu DSU',
+        'contact_person_in_teams' => 'Persoană de contact pentru Platforma Teams \'Sprijin Umanitar DSU-GOV / FiiPregătit\''
     ],
 
     'help' => [
