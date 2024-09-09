@@ -15,4 +15,8 @@ return [
         'date_from' => 'Dată început',
         'date_until' => 'Dată sfârșit',
     ],
+
+    'warnings' => [
+        'reset_password_too_many_attempts' => 'Numărul maxim de email-uri trimise pentru resetarea parolei pentru acest utilizator a fost atins! Încercați din nou mai târziu.',
+    ],
 ];
