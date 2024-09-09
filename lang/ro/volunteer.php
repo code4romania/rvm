@@ -24,6 +24,15 @@ return [
         'organisation' => 'Organizație',
     ],
 
+    'labels' => [
+        'import' => 'Importa voluntari',
+        'download_example' => 'Descarca exemplu de import',
+    ],
+
+    'file_name' => [
+        'download_example' => 'Exemplu import voluntari',
+    ],
+
     'role' => [
         'volunteer' => 'Voluntar',
         'coordinator' => 'Coordonator voluntari',
