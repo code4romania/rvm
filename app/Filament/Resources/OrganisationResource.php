@@ -31,7 +31,6 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
@@ -124,7 +123,7 @@ class OrganisationResource extends Resource
 
                                 Textarea::make('description')
                                     ->label(__('organisation.field.short_description'))
-                                    ->maxLength(1000)
+                                    ->maxLength(1500)
                                     ->rows(2)
                                     ->helperText(__('organisation.help.description'))
                                     ->required()
