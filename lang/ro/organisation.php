@@ -108,7 +108,7 @@ return [
 
     'help' => [
         'short_description' => 'Descrie organizația ta în 200 - 250 caractere. Descrierea va fi vizibilă în alte aplicații, după caz.',
-        'description' => 'Adaugă o descriere a organizației tale (maximum 1000 caractere).',
+        'description' => 'Adaugă o descriere a organizației tale (maximum 1500 caractere).',
         'logo' => 'Încarcă logo-ul organizației tale, la o calitate cât mai bună.',
     ],
 
