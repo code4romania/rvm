@@ -35,6 +35,14 @@ class OrganisationFactory extends Factory
             'role' => fake()->jobTitle(),
         ];
 
+        $contactPersonInTeams = [
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'email' => fake()->unique()->safeEmail(),
+            'phone' => fake()->phoneNumber(),
+            'role' => fake()->jobTitle(),
+        ];
+
         $otherInfo = [
             'facebook' => fake()->boolean() ? 'https://www.facebook.com/#link' : null,
             'website' => fake()->boolean() ? fake()->url() : null,
@@ -60,6 +68,7 @@ class OrganisationFactory extends Factory
             'description' => fake()->sentence('10'),
             'address' => fake()->address(),
             'contact_person' => $contactPerson,
+            'contact_person_in_teams' => $contactPersonInTeams,
             'other_information' => $otherInfo,
             'has_branches' => fake()->boolean(),
             'city_id' => $city->id,
