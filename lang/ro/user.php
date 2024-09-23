@@ -23,4 +23,8 @@ return [
         'platform_coordinator' => 'Coordonator local IGSU/ISUJ',
         'org_admin' => 'Admin organizație',
     ],
+
+    'actions' => [
+        'reset_password' => 'Resetează parola',
+    ],
 ];
