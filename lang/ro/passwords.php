@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'reset' => 'Parola a fost resetată!',
+    'reset' => 'Emailul de resetare a parolei a fost trimis cu succes!',
     'sent' => 'Am trimis un e-mail cu link-ul de resetare a parolei!',
     'throttled' => 'Vă rugăm să așteptați înainte de a încerca din nou.',
     'token' => 'Codul de resetare a parolei este greșit.',

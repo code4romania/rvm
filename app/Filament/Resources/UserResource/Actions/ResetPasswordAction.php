@@ -42,7 +42,7 @@ class ResetPasswordAction extends Action
             $response = Password::broker(config('filament-breezy.reset_broker', config('auth.defaults.passwords')))->sendResetLink(['email' => $record->email]);
             if ($response === Password::RESET_LINK_SENT) {
                 Notification::make()
-                    ->title(__('filament-breezy::default.reset_password.notification_success'))
+                    ->title(__('passwords.reset'))
                     ->success()
                     ->send();
 
