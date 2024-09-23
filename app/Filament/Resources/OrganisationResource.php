@@ -206,20 +206,20 @@ class OrganisationResource extends Resource
                     ->schema([
                         TextInput::make('contact_person_in_teams.first_name')
                             ->label(__('organisation.field.contact_person_in_teams_first_name'))
-                            ->maxLength(50),
+                            ->maxLength(100),
 
                         TextInput::make('contact_person_in_teams.last_name')
                             ->label(__('organisation.field.contact_person_in_teams_last_name'))
-                            ->maxLength(50),
+                            ->maxLength(100),
 
                         TextInput::make('contact_person_in_teams.role')
                             ->label(__('organisation.field.role'))
                             ->columnSpanFull()
-                            ->maxLength(50),
+                            ->maxLength(200),
 
                         TextInput::make('contact_person_in_teams.email')
                             ->label(__('organisation.field.email'))
-                            ->maxLength(50)
+                            ->maxLength(200)
                             ->email(),
 
                         TextInput::make('contact_person_in_teams.phone')
