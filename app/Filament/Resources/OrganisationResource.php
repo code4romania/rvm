@@ -130,7 +130,7 @@ class OrganisationResource extends Resource
                                     ->columnSpanFull(),
                             ]),
 
-                        Section::make(__('organisation.field.contact_person'))
+                        Section::make(__('organisation.section.contact_person'))
                             ->columns()
                             ->schema([
                                 TextInput::make('contact_person.first_name')
@@ -199,6 +199,33 @@ class OrganisationResource extends Resource
                                     ->url()
                                     ->nullable(),
                             ]),
+                    ]),
+
+                Section::make(__('organisation.section.contact_person_in_teams'))
+                    ->columns()
+                    ->schema([
+                        TextInput::make('contact_person_in_teams.first_name')
+                            ->label(__('organisation.field.contact_person_in_teams_first_name'))
+                            ->maxLength(100),
+
+                        TextInput::make('contact_person_in_teams.last_name')
+                            ->label(__('organisation.field.contact_person_in_teams_last_name'))
+                            ->maxLength(100),
+
+                        TextInput::make('contact_person_in_teams.role')
+                            ->label(__('organisation.field.role'))
+                            ->columnSpanFull()
+                            ->maxLength(200),
+
+                        TextInput::make('contact_person_in_teams.email')
+                            ->label(__('organisation.field.email'))
+                            ->maxLength(200)
+                            ->email(),
+
+                        TextInput::make('contact_person_in_teams.phone')
+                            ->label(__('organisation.field.phone'))
+                            ->maxLength(14)
+                            ->tel(),
                     ]),
 
                 Section::make(__('organisation.section.activity'))

@@ -60,6 +60,7 @@ class Organisation extends Model implements HasMedia
         'cif',
         'registration_number',
         'contact_person',
+        'contact_person_in_teams',
         'other_information',
         'description',
         'address',
@@ -75,6 +76,7 @@ class Organisation extends Model implements HasMedia
         'ngo_type' => NGOType::class,
         'status' => OrganisationStatus::class,
         'contact_person' => 'array',
+        'contact_person_in_teams' => 'array',
         'other_information' => AsCollection::class,
         'has_branches' => 'boolean',
     ];

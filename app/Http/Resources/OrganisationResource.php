@@ -31,6 +31,7 @@ class OrganisationResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
             'volunteers_count' => (int) $this->volunteers_count,
+            'contact_person_in_teams' => $this->contact_person_in_teams,
         ];
     }
 }
