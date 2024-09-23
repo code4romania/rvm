@@ -10,6 +10,7 @@ use Filament\Pages\Actions\Action;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
 
+const HOUR_IN_SECONDS = 3600;
 class ResetPasswordAction extends Action
 {
     public static function getDefaultName(): ?string
@@ -36,17 +37,23 @@ class ResetPasswordAction extends Action
                 return;
             }
 
-            RateLimiter::increment($key, 3600);
+            RateLimiter::increment($key, HOUR_IN_SECONDS);
 
             $response = Password::broker(config('filament-breezy.reset_broker', config('auth.defaults.passwords')))->sendResetLink(['email' => $record->email]);
-            if ($response == Password::RESET_LINK_SENT) {
-                Notification::make()->title(__('filament-breezy::default.reset_password.notification_success'))->success()->send();
-            } else {
-                Notification::make()->title(match ($response) {
-                    'passwords.throttled' => __('passwords.throttled'),
-                    'passwords.user' => __('passwords.user')
-                })->danger()->send();
+            if ($response === Password::RESET_LINK_SENT) {
+                Notification::make()
+                    ->title(__('filament-breezy::default.reset_password.notification_success'))
+                    ->success()
+                    ->send();
+
+                return;
             }
+            Notification::make()->title(match ($response) {
+                'passwords.throttled' => __('passwords.throttled'),
+                'passwords.user' => __('passwords.user')
+            })
+                ->danger()
+                ->send();
         });
     }
 
