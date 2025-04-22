@@ -8,6 +8,7 @@ use App\Enum\NGOType;
 use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
+use App\Models\Article;
 use App\Models\City;
 use App\Models\County;
 use App\Models\Document;
@@ -87,7 +88,7 @@ class OrganisationFactory extends Factory
 
     public function randomStatus(): static
     {
-        return $this->state(fn () => [
+        return $this->state(fn() => [
             'status' => fake()->randomElement(OrganisationStatus::values()),
         ]);
     }
@@ -139,6 +140,12 @@ class OrganisationFactory extends Factory
                     ->count(fake()->numberBetween(1, 3))
                     ->create();
             }
+
+            Article::factory()
+                ->for($organisation)
+                ->count(fake()
+                    ->randomDigitNotZero())
+                ->create();
 
             $this->attachLocationByActivityArea($organisation);
         });
@@ -223,21 +230,21 @@ class OrganisationFactory extends Factory
     private function randomExpertises(int $count = 1): Collection
     {
         return Cache::driver('array')
-            ->rememberForever('expertises', fn () => Expertise::pluck('id'))
+            ->rememberForever('expertises', fn() => Expertise::pluck('id'))
             ->random($count);
     }
 
     protected function randomRiskCategories(int $count = 1): Collection
     {
         return Cache::driver('array')
-            ->rememberForever('risk_categories', fn () => RiskCategory::pluck('id'))
+            ->rememberForever('risk_categories', fn() => RiskCategory::pluck('id'))
             ->random($count);
     }
 
     protected function randomResourceTypes(int $count = 1): Collection
     {
         return Cache::driver('array')
-            ->rememberForever('resource_types', fn () => Organisation\ResourceType::pluck('id'))
+            ->rememberForever('resource_types', fn() => Organisation\ResourceType::pluck('id'))
             ->random($count);
     }
 }

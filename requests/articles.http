@@ -1,0 +1,6 @@
+
+# lists articles
+# @name articles
+GET https://rvm.test/api/v1/articles
+Content-Type: application/json
+###
