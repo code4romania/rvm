@@ -17,7 +17,8 @@ return [
         'organisation' => 'Organizație',
         'updated_at' => 'Ultima actualizare',
         'media_files' => 'Atașamente',
-        'cover_photo' => 'Poză de coperta'
+        'cover_photo' => 'Poză de coperta',
+        'media_files_count' => '# atașamente'
     ],
 
     'status' => [

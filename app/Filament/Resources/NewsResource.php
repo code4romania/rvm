@@ -115,12 +115,19 @@ class NewsResource extends Resource
                     ->visibility('private')
                     ->toggleable(),
 
-
                 TextColumn::make('title')
                     ->label(__('news.field.title'))
                     ->sortable()
                     ->toggleable()
                     ->searchable(),
+
+                TextColumn::make('media_count')
+                    ->label(__('news.field.media_files_count'))
+                    ->counts([
+                        'media' => fn(Builder $query) => $query->where('collection_name', 'media_files'),
+                    ])
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('status')
                     ->label(__('news.field.status'))
