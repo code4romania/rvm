@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Resources\NewsResource;
@@ -16,7 +18,7 @@ class NewsController extends Controller
             Resource::query()
                 ->with([
                     'media',
-                    'organisation' => fn($query) => $query
+                    'organisation' => fn ($query) => $query
                         ->withoutEagerLoads()
                         ->select('id', 'name'),
                 ])

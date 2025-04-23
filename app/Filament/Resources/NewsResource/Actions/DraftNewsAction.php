@@ -14,7 +14,6 @@ class DraftNewsAction extends Action
         return 'draft_news';
     }
 
-
     protected function setUp(): void
     {
         parent::setUp();

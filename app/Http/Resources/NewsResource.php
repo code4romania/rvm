@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -30,7 +32,7 @@ class NewsResource extends ResourceCollection
                 'url' => $coverPhoto->getUrl(),
                 'thumb' => $coverPhoto->getUrl('thumb'),
             ] : null,
-            'media_files' => $this->getMedia('media_files')->map(fn($media) => [
+            'media_files' => $this->getMedia('media_files')->map(fn ($media) => [
                 'id' => $media->id,
                 'name' => $media->name,
                 'url' => $media->getUrl(),

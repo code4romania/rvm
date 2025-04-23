@@ -9,19 +9,19 @@ use App\Filament\Resources\NewsResource\Pages;
 use App\Models\News;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class NewsResource extends Resource
 {
@@ -50,7 +50,7 @@ class NewsResource extends Resource
                     ->schema([
 
                         Group::make()
-                            ->hidden(fn() => auth()->user()->belongsToOrganisation())
+                            ->hidden(fn () => auth()->user()->belongsToOrganisation())
                             ->columns()
                             ->columnSpanFull()
                             ->schema([
@@ -100,7 +100,7 @@ class NewsResource extends Resource
 
                 TextColumn::make('organisation.name')
                     ->label(__('news.field.organisation'))
-                    ->hidden(fn() => auth()->user()->belongsToOrganisation())
+                    ->hidden(fn () => auth()->user()->belongsToOrganisation())
                     ->sortable()
                     ->toggleable(),
 
@@ -124,7 +124,7 @@ class NewsResource extends Resource
                 TextColumn::make('media_count')
                     ->label(__('news.field.media_files_count'))
                     ->counts([
-                        'media' => fn(Builder $query) => $query->where('collection_name', 'media_files'),
+                        'media' => fn (Builder $query) => $query->where('collection_name', 'media_files'),
                     ])
                     ->sortable()
                     ->toggleable(),
@@ -145,14 +145,14 @@ class NewsResource extends Resource
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
-                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
-                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -178,7 +178,7 @@ class NewsResource extends Resource
             ])
             ->filtersLayout(Layout::AboveContent)
             ->actions([
-                Tables\Actions\ViewAction::make()
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 //

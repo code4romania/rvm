@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ResourceController;
-use App\Http\Controllers\NewsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

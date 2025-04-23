@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\BelongsToOrganisation;
+use App\Concerns\LimitsVisibility;
+use App\Enum\NewsStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use App\Enum\NewsStatus;
-use App\Concerns\LimitsVisibility;
-use App\Concerns\BelongsToOrganisation;
-use Illuminate\Database\Eloquent\Builder;
 
 class News extends Model implements HasMedia
 {
@@ -21,6 +21,7 @@ class News extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
     use LimitsVisibility;
+
     public function registerMediaConversions(Media $media = null): void
     {
         $this
@@ -32,7 +33,7 @@ class News extends Model implements HasMedia
     protected $fillable = [
         'title',
         'body',
-        'status'
+        'status',
     ];
 
     protected $casts = [
@@ -58,7 +59,6 @@ class News extends Model implements HasMedia
         ]);
     }
 
-
     public function draft(): bool
     {
         return $this->update([
@@ -75,7 +75,6 @@ class News extends Model implements HasMedia
     {
         return $this->status->is(NewsStatus::published);
     }
-
 
     public function isDrafted(): bool
     {

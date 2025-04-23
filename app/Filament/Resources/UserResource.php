@@ -79,14 +79,14 @@ class UserResource extends Resource
                             ->required(),
 
                         Select::make('organisation_id')
-                            ->relationship('organisation', 'name', fn(Builder $query) => $query->whereActive())
+                            ->relationship('organisation', 'name', fn (Builder $query) => $query->whereActive())
                             ->label(__('user.field.organisation'))
-                            ->visible(fn(callable $get) => UserRole::ORG_ADMIN->is($get('role')))
+                            ->visible(fn (callable $get) => UserRole::ORG_ADMIN->is($get('role')))
                             ->searchable()
                             ->required(),
                     ])
                     ->visible(
-                        fn() => auth()->user()->isPlatformAdmin(),
+                        fn () => auth()->user()->isPlatformAdmin(),
                     ),
             ]);
     }
@@ -121,10 +121,10 @@ class UserResource extends Resource
 
                 TextColumn::make('role')
                     ->label(__('user.field.role'))
-                    ->formatStateUsing(fn(User $record) => $record->role?->label())
+                    ->formatStateUsing(fn (User $record) => $record->role?->label())
                     ->description(function (User $record) {
                         if (
-                            !$record->belongsToOrganisation() ||
+                            ! $record->belongsToOrganisation() ||
                             auth()->user()->belongsToOrganisation()
                         ) {
                             return null;
@@ -141,7 +141,7 @@ class UserResource extends Resource
                     ->multiple()
                     ->label(__('user.field.role'))
                     ->options(UserRole::options())
-                    ->hidden(fn() => auth()->user()->belongsToOrganisation()),
+                    ->hidden(fn () => auth()->user()->belongsToOrganisation()),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

@@ -31,7 +31,7 @@ class Document extends Model implements HasMedia
     protected $casts = [
         'signed_at' => 'date',
         'expires_at' => 'date',
-        'type' => DocumentType::class
+        'type' => DocumentType::class,
     ];
 
     public function registerMediaConversions(Media $media = null): void

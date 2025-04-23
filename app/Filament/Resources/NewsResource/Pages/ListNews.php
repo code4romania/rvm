@@ -23,6 +23,5 @@ class ListNews extends ListRecords
     protected function getTableQuery(): Builder
     {
         return parent::getTableQuery()->with('organisation');
-        ;
     }
 }

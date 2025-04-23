@@ -87,8 +87,8 @@ class DocumentsRelationManager extends RelationManager
                                     }
                                 })
                                 ->reactive(),
+                        ]),
                     ]),
-                ]),
 
                 SpatieMediaLibraryFileUpload::make('document')
                     ->enableDownload()

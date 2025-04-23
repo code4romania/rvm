@@ -10,6 +10,6 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateNews extends CreateRecord
 {
     protected static string $resource = NewsResource::class;
-    protected static bool $canCreateAnother = false;
 
+    protected static bool $canCreateAnother = false;
 }
