@@ -11,6 +11,7 @@ use App\Enum\OrganisationType;
 use App\Models\City;
 use App\Models\County;
 use App\Models\Document;
+use App\Models\News;
 use App\Models\Organisation;
 use App\Models\Organisation\Branch;
 use App\Models\Organisation\Expertise;
@@ -139,6 +140,11 @@ class OrganisationFactory extends Factory
                     ->count(fake()->numberBetween(1, 3))
                     ->create();
             }
+
+            News::factory()
+                ->for($organisation)
+                ->count(fake()->randomDigitNotZero())
+                ->create();
 
             $this->attachLocationByActivityArea($organisation);
         });

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ResourceController;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ Route::middleware('auth:sanctum')
     ->group(function () {
         Route::get('/organisations', OrganisationController::class);
         Route::get('/resources', ResourceController::class);
+        Route::get('/news', NewsController::class);
     });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
