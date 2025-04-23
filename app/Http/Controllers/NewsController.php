@@ -17,7 +17,7 @@ class NewsController extends Controller
 
         return NewsResource::collection(
             News::query()
-                ->with(relations: [
+                ->with([
                     'media',
                     'organisation' => fn(BelongsTo $query) => $query
                         ->withoutEagerLoads()
