@@ -12,7 +12,7 @@ return [
 
     'field' => [
         'title' => 'Titlu',
-        'body' => 'Continut',
+        'body' => 'Conținut',
         'status' => 'Status',
         'organisation' => 'Organizație',
         'updated_at' => 'Ultima actualizare',
