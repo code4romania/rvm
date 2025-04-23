@@ -21,6 +21,7 @@ use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class NewsResource extends Resource
 {
@@ -28,7 +29,7 @@ class NewsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
 
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 5;
 
     public static function getModelLabel(): string
     {
@@ -101,6 +102,17 @@ class NewsResource extends Resource
                     ->label(__('news.field.organisation'))
                     ->hidden(fn() => auth()->user()->belongsToOrganisation())
                     ->sortable()
+                    ->toggleable(),
+
+                SpatieMediaLibraryImageColumn::make('cover_photo')
+                    ->collection('cover_photos')
+                    ->conversion('thumb')
+                    ->extraImgAttributes([
+                        'class' => 'object-contain',
+                    ])
+                    ->width(80)
+                    ->height(40)
+                    ->visibility('private')
                     ->toggleable(),
 
 
