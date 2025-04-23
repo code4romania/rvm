@@ -22,7 +22,7 @@ return [
     ],
 
     'status' => [
-        'drafted' => 'In Draft',
+        'drafted' => 'Draft',
         'published' => 'Publicat',
         'archived' => 'Arhivat',
     ],
