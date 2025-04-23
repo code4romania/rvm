@@ -143,8 +143,7 @@ class OrganisationFactory extends Factory
 
             News::factory()
                 ->for($organisation)
-                ->count(fake()
-                    ->randomDigitNotZero())
+                ->count(fake()->randomDigitNotZero())
                 ->create();
 
             $this->attachLocationByActivityArea($organisation);
