@@ -19,7 +19,7 @@ class NewsController extends Controller
             News::query()
                 ->with([
                     'media',
-                    'organisation' => fn ($query) => $query
+                    'organisation' => fn (Builder $query) => $query
                         ->withoutEagerLoads()
                         ->select('id', 'name'),
                 ])
