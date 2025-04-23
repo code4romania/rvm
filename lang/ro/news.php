@@ -18,6 +18,7 @@ return [
         'updated_at' => 'Ultima actualizare',
         'media_files' => 'Poze galerie',
         'cover_photo' => 'Poză de copertă',
+        'published_at' => 'Publicat la'
     ],
 
     'status' => [

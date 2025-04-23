@@ -14,6 +14,7 @@ use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Support\Facades\Date;
 
 class News extends Model implements HasMedia
 {
@@ -34,10 +35,12 @@ class News extends Model implements HasMedia
         'title',
         'body',
         'status',
+        'published_at'
     ];
 
     protected $casts = [
         'status' => NewsStatus::class,
+        'published_at' => 'datetime',
     ];
 
     public function scopeWherePublished(Builder $query): Builder
@@ -56,6 +59,7 @@ class News extends Model implements HasMedia
     {
         return $this->update([
             'status' => NewsStatus::published,
+            'published_at' => Date::now()
         ]);
     }
 

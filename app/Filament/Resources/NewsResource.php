@@ -8,6 +8,7 @@ use App\Enum\NewsStatus;
 use App\Filament\Resources\NewsResource\Pages;
 use App\Models\News;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -48,6 +49,12 @@ class NewsResource extends Resource
                 Card::make()
                     ->columns(1)
                     ->schema([
+
+                        DateTimePicker::make('published_at')
+                            ->label(__('news.field.published_at'))
+                            ->visible(fn(News $record) => $record->isPublished())
+                            ->columnSpan(1) // reduce width in grid
+                            ->extraAttributes(['class' => 'max-w-sm']),
 
                         Group::make()
                             ->hidden(fn() => auth()->user()->belongsToOrganisation())
@@ -135,6 +142,14 @@ class NewsResource extends Resource
                         'success' => NewsStatus::published->value,
                     ])
                     ->enum(NewsStatus::options()),
+
+
+                TextColumn::make('published_at')
+                    ->label(__('news.field.published_at'))
+                    ->formatStateUsing(fn($state) => $state?->toDateTimeString() ?? '-')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
