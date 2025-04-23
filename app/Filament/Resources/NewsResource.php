@@ -44,7 +44,7 @@ class NewsResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema(schema: [
+            ->schema([
                 Card::make()
                     ->columns(1)
                     ->schema([
