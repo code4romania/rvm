@@ -10,12 +10,12 @@ use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use App\Enum\ArticleStatus;
+use App\Enum\NewsStatus;
 use App\Concerns\LimitsVisibility;
 use App\Concerns\BelongsToOrganisation;
 use Illuminate\Database\Eloquent\Builder;
 
-class Article extends Model implements HasMedia
+class News extends Model implements HasMedia
 {
     use BelongsToOrganisation;
     use HasFactory;
@@ -36,25 +36,25 @@ class Article extends Model implements HasMedia
     ];
 
     protected $casts = [
-        'status' => ArticleStatus::class,
+        'status' => NewsStatus::class,
     ];
 
     public function scopeWherePublished(Builder $query): Builder
     {
-        return $query->where('status', ArticleStatus::published);
+        return $query->where('status', NewsStatus::published);
     }
 
     public function archive(): bool
     {
         return $this->update([
-            'status' => ArticleStatus::archived,
+            'status' => NewsStatus::archived,
         ]);
     }
 
     public function publish(): bool
     {
         return $this->update([
-            'status' => ArticleStatus::published,
+            'status' => NewsStatus::published,
         ]);
     }
 
@@ -62,23 +62,23 @@ class Article extends Model implements HasMedia
     public function draft(): bool
     {
         return $this->update([
-            'status' => ArticleStatus::drafted,
+            'status' => NewsStatus::drafted,
         ]);
     }
 
     public function isArchived(): bool
     {
-        return $this->status->is(ArticleStatus::archived);
+        return $this->status->is(NewsStatus::archived);
     }
 
     public function isPublished(): bool
     {
-        return $this->status->is(ArticleStatus::published);
+        return $this->status->is(NewsStatus::published);
     }
 
 
     public function isDrafted(): bool
     {
-        return $this->status->is(ArticleStatus::drafted);
+        return $this->status->is(NewsStatus::drafted);
     }
 }

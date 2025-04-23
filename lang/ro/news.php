@@ -5,8 +5,8 @@ declare(strict_types=1);
 return [
 
     'label' => [
-        'singular' => 'Articol',
-        'plural' => 'Articole',
+        'singular' => 'Știre',
+        'plural' => 'Știri',
 
     ],
 

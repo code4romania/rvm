@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enum\ArticleStatus;
+use App\Enum\NewsStatus;
 use App\Models\Organisation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Article>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\News>
  */
-class ArticleFactory extends Factory
+class NewsFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -23,7 +23,7 @@ class ArticleFactory extends Factory
         return [
             'title' => fake()->sentence(),
             'body' => fake()->paragraph(),
-            'status' => fake()->randomElement(ArticleStatus::cases()),
+            'status' => fake()->randomElement(NewsStatus::cases()),
             'organisation_id' => Organisation::factory(),
 
         ];

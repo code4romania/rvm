@@ -8,7 +8,7 @@ use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\Comparable;
 use App\Concerns\Enums\HasLabel;
 
-enum ArticleStatus: string
+enum NewsStatus: string
 {
     use Arrayable;
     use Comparable;
@@ -20,6 +20,6 @@ enum ArticleStatus: string
 
     protected function labelKeyPrefix(): ?string
     {
-        return 'article.status';
+        return 'news.status';
     }
 }

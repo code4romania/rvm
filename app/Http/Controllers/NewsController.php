@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ArticleResource;
+use App\Http\Resources\NewsResource;
 use App\Models\Resource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ArticleController extends Controller
+class NewsController extends Controller
 {
     public function __invoke(): JsonResource
     {
         $this->authorize('accessApi');
 
-        return ArticleResource::collection(
+        return NewsResource::collection(
             Resource::query()
                 ->with([
                     'media',

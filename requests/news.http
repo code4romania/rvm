@@ -1,0 +1,6 @@
+
+# lists news
+# @name news
+GET https://rvm.test/api/v1/news
+Content-Type: application/json
+###

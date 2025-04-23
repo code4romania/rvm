@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
-use App\Enum\ArticleStatus;
-use App\Filament\Resources\ArticleResource\Pages;
-use App\Models\Article;
+use App\Enum\NewsStatus;
+use App\Filament\Resources\NewsResource\Pages;
+use App\Models\News;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
@@ -22,9 +22,9 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
-class ArticleResource extends Resource
+class NewsResource extends Resource
 {
-    protected static ?string $model = Article::class;
+    protected static ?string $model = News::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
 
@@ -32,12 +32,12 @@ class ArticleResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('article.label.singular');
+        return __('news.label.singular');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('article.label.plural');
+        return __('news.label.plural');
     }
 
     public static function form(Form $form): Form
@@ -54,7 +54,7 @@ class ArticleResource extends Resource
                             ->columnSpanFull()
                             ->schema([
                                 Select::make('organisation_id')
-                                    ->label(__('article.field.organisation'))
+                                    ->label(__('news.field.organisation'))
                                     ->relationship('organisation', 'name')
                                     ->required(),
                             ]),
@@ -65,16 +65,16 @@ class ArticleResource extends Resource
                             ->maxFiles(1)
                             ->conversion('thumb')
                             ->visibility('public')
-                            ->label(__('article.field.cover_photo'))
+                            ->label(__('news.field.cover_photo'))
                             ->image(),
 
                         TextInput::make('title')
-                            ->label(__('article.field.title'))
+                            ->label(__('news.field.title'))
                             ->maxLength(200)
                             ->required(),
 
                         RichEditor::make('body')
-                            ->label(__('article.field.body'))
+                            ->label(__('news.field.body'))
                             ->required(),
 
                         SpatieMediaLibraryFileUpload::make('media_files')
@@ -83,7 +83,7 @@ class ArticleResource extends Resource
                             ->multiple()
                             ->conversion('thumb')
                             ->visibility('public')
-                            ->label(__('article.field.media_files'))
+                            ->label(__('news.field.media_files'))
                             ->image(),
                     ]),
             ]);
@@ -98,31 +98,31 @@ class ArticleResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('organisation.name')
-                    ->label(__('article.field.organisation'))
+                    ->label(__('news.field.organisation'))
                     ->hidden(fn() => auth()->user()->belongsToOrganisation())
                     ->sortable()
                     ->toggleable(),
 
 
                 TextColumn::make('title')
-                    ->label(__('article.field.title'))
+                    ->label(__('news.field.title'))
                     ->sortable()
                     ->toggleable()
                     ->searchable(),
 
                 TextColumn::make('status')
-                    ->label(__('article.field.status'))
+                    ->label(__('news.field.status'))
                     ->sortable()
                     ->toggleable()
                     ->searchable(),
 
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
-                        'secondary' => ArticleStatus::drafted->value,
-                        'warning' => ArticleStatus::archived->value,
-                        'success' => ArticleStatus::published->value,
+                        'secondary' => NewsStatus::drafted->value,
+                        'warning' => NewsStatus::archived->value,
+                        'success' => NewsStatus::published->value,
                     ])
-                    ->enum(ArticleStatus::options()),
+                    ->enum(NewsStatus::options()),
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
@@ -143,8 +143,8 @@ class ArticleResource extends Resource
 
                 SelectFilter::make('status')
                     ->multiple()
-                    ->label(__('article.field.status'))
-                    ->options(ArticleStatus::options())
+                    ->label(__('news.field.status'))
+                    ->options(NewsStatus::options())
                     ->query(function (Builder $query, array $state) {
                         $values = $state['values'] ?? null;
 
@@ -178,10 +178,10 @@ class ArticleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListArticles::route('/'),
-            'create' => Pages\CreateArticle::route('/create'),
-            'view' => Pages\ViewArticle::route('/{record}'),
-            'edit' => Pages\EditArticle::route('/{record}/edit'),
+            'index' => Pages\ListNews::route('/'),
+            'create' => Pages\CreateNews::route('/create'),
+            'view' => Pages\ViewNews::route('/{record}'),
+            'edit' => Pages\EditNews::route('/{record}/edit'),
         ];
     }
 }

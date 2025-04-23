@@ -8,7 +8,7 @@ use App\Enum\NGOType;
 use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
-use App\Models\Article;
+use App\Models\News;
 use App\Models\City;
 use App\Models\County;
 use App\Models\Document;
@@ -141,7 +141,7 @@ class OrganisationFactory extends Factory
                     ->create();
             }
 
-            Article::factory()
+            News::factory()
                 ->for($organisation)
                 ->count(fake()
                     ->randomDigitNotZero())

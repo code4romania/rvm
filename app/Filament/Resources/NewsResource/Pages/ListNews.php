@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\ArticleResource\Pages;
+namespace App\Filament\Resources\NewsResource\Pages;
 
-use App\Filament\Resources\ArticleResource;
+use App\Filament\Resources\NewsResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 
-class ListArticles extends ListRecords
+class ListNews extends ListRecords
 {
-    protected static string $resource = ArticleResource::class;
+    protected static string $resource = NewsResource::class;
 
     protected function getActions(): array
     {
