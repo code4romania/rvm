@@ -15,7 +15,7 @@ class NewsController extends Controller
         $this->authorize('accessApi');
 
         return NewsResource::collection(
-            Resource::query()
+            News::query()
                 ->with([
                     'media',
                     'organisation' => fn ($query) => $query
