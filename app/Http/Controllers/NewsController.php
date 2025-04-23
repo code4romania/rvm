@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\NewsResource;
 use App\Models\News;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class NewsController extends Controller
@@ -17,9 +17,9 @@ class NewsController extends Controller
 
         return NewsResource::collection(
             News::query()
-                ->with([
+                ->with(relations: [
                     'media',
-                    'organisation' => fn (Builder $query) => $query
+                    'organisation' => fn(BelongsTo $query) => $query
                         ->withoutEagerLoads()
                         ->select('id', 'name'),
                 ])

@@ -1,6 +1,13 @@
 
 # lists news
 # @name news
-GET https://rvm.test/api/v1/news
+GET http://rvm.test/api/v1/news
+Authorization: Bearer <token>
+Content-Type: application/json
+###
+
+# @name user
+GET http://rvm.test/api/user
+Authorization: Bearer <token>
 Content-Type: application/json
 ###

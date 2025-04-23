@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class NewsResource extends ResourceCollection
+class NewsResource extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -32,7 +32,7 @@ class NewsResource extends ResourceCollection
                 'url' => $coverPhoto->getUrl(),
                 'thumb' => $coverPhoto->getUrl('thumb'),
             ] : null,
-            'media_files' => $this->getMedia('media_files')->map(fn ($media) => [
+            'media_files' => $this->getMedia('media_files')->map(fn($media) => [
                 'id' => $media->id,
                 'name' => $media->name,
                 'url' => $media->getUrl(),
