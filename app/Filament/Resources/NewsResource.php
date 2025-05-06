@@ -8,6 +8,7 @@ use App\Enum\NewsStatus;
 use App\Filament\Resources\NewsResource\Pages;
 use App\Models\News;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -49,8 +50,14 @@ class NewsResource extends Resource
                     ->columns(1)
                     ->schema([
 
+                        DateTimePicker::make('published_at')
+                            ->label(__('news.field.published_at'))
+                            ->visible(fn(News $record) => $record->isPublished())
+                            ->columnSpan(1) // reduce width in grid
+                            ->extraAttributes(['class' => 'max-w-sm']),
+
                         Group::make()
-                            ->hidden(fn () => auth()->user()->belongsToOrganisation())
+                            ->hidden(fn() => auth()->user()->belongsToOrganisation())
                             ->columns()
                             ->columnSpanFull()
                             ->schema([
@@ -100,11 +107,12 @@ class NewsResource extends Resource
 
                 TextColumn::make('organisation.name')
                     ->label(__('news.field.organisation'))
-                    ->hidden(fn () => auth()->user()->belongsToOrganisation())
+                    ->hidden(fn() => auth()->user()->belongsToOrganisation())
                     ->sortable()
                     ->toggleable(),
 
                 SpatieMediaLibraryImageColumn::make('cover_photo')
+                    ->label(__('news.field.cover_photo'))
                     ->collection('cover_photos')
                     ->conversion('thumb')
                     ->extraImgAttributes([
@@ -112,7 +120,7 @@ class NewsResource extends Resource
                     ])
                     ->width(80)
                     ->height(40)
-                    ->visibility('private')
+                    ->visibility('public')
                     ->toggleable(),
 
                 TextColumn::make('title')
@@ -120,14 +128,6 @@ class NewsResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->searchable(),
-
-                TextColumn::make('media_count')
-                    ->label(__('news.field.media_files_count'))
-                    ->counts([
-                        'media' => fn (Builder $query) => $query->where('collection_name', 'media_files'),
-                    ])
-                    ->sortable()
-                    ->toggleable(),
 
                 TextColumn::make('status')
                     ->label(__('news.field.status'))
@@ -143,16 +143,24 @@ class NewsResource extends Resource
                     ])
                     ->enum(NewsStatus::options()),
 
+
+                TextColumn::make('published_at')
+                    ->label(__('news.field.published_at'))
+                    ->formatStateUsing(fn($state) => $state?->toDateTimeString() ?? '-')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
-                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
-                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),

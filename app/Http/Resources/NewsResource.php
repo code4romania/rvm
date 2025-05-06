@@ -17,12 +17,18 @@ class NewsResource extends JsonResource
     public function toArray(Request $request): array
     {
         $coverPhoto = $this->getFirstMedia('cover_photos');
+        // Get organisation logo
+        $organisationLogo = $this->organisation?->getFirstMedia();
 
         return [
             'id' => $this->id,
             'organisation' => [
                 'id' => $this->organisation->id ?? null,
                 'name' => $this->organisation->name ?? null,
+                'logo' => $organisationLogo ? [
+                    'url' => $organisationLogo->getUrl(),
+                    'thumb' => $organisationLogo->getUrl('thumb'),
+                ] : null,
             ],
             'title' => $this->title,
             'body' => $this->body,
@@ -40,6 +46,7 @@ class NewsResource extends JsonResource
             ]),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            'published_at' => $this->published_at?->format('Y-m-d H:i:s'),
         ];
     }
 }

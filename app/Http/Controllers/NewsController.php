@@ -23,6 +23,7 @@ class NewsController extends Controller
                         ->withoutEagerLoads()
                         ->select('id', 'name'),
                 ])
+                ->orderBy('id', 'desc')
                 ->paginate(25)
         );
     }
