@@ -49,10 +49,9 @@ class NewsResource extends Resource
                 Card::make()
                     ->columns(1)
                     ->schema([
-
                         DateTimePicker::make('published_at')
                             ->label(__('news.field.published_at'))
-                            ->visible(fn(News $record) => $record->isPublished())
+                            ->visible(fn(?News $record) => $record?->isPublished())
                             ->columnSpan(1) // reduce width in grid
                             ->extraAttributes(['class' => 'max-w-sm']),
 
@@ -142,7 +141,6 @@ class NewsResource extends Resource
                         'success' => NewsStatus::published->value,
                     ])
                     ->enum(NewsStatus::options()),
-
 
                 TextColumn::make('published_at')
                     ->label(__('news.field.published_at'))
