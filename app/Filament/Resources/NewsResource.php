@@ -52,12 +52,12 @@ class NewsResource extends Resource
 
                         DateTimePicker::make('published_at')
                             ->label(__('news.field.published_at'))
-                            ->visible(fn(News $record) => $record->isPublished())
+                            ->visible(fn (?News $record) => $record?->isPublished())
                             ->columnSpan(1) // reduce width in grid
                             ->extraAttributes(['class' => 'max-w-sm']),
 
                         Group::make()
-                            ->hidden(fn() => auth()->user()->belongsToOrganisation())
+                            ->hidden(fn () => auth()->user()->belongsToOrganisation())
                             ->columns()
                             ->columnSpanFull()
                             ->schema([
@@ -107,7 +107,7 @@ class NewsResource extends Resource
 
                 TextColumn::make('organisation.name')
                     ->label(__('news.field.organisation'))
-                    ->hidden(fn() => auth()->user()->belongsToOrganisation())
+                    ->hidden(fn () => auth()->user()->belongsToOrganisation())
                     ->sortable()
                     ->toggleable(),
 
@@ -143,24 +143,23 @@ class NewsResource extends Resource
                     ])
                     ->enum(NewsStatus::options()),
 
-
                 TextColumn::make('published_at')
                     ->label(__('news.field.published_at'))
-                    ->formatStateUsing(fn($state) => $state?->toDateTimeString() ?? '-')
+                    ->formatStateUsing(fn ($state) => $state?->toDateTimeString() ?? '-')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
-                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
-                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
