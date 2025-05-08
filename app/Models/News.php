@@ -77,7 +77,6 @@ class News extends Model implements HasMedia
 
     public function isPublished(): bool
     {
-        debug($this);
 
         return $this->status?->is(NewsStatus::published);
     }
