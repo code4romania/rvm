@@ -10,11 +10,11 @@ use App\Enum\NewsStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Illuminate\Support\Facades\Date;
 
 class News extends Model implements HasMedia
 {
@@ -35,7 +35,7 @@ class News extends Model implements HasMedia
         'title',
         'body',
         'status',
-        'published_at'
+        'published_at',
     ];
 
     protected $casts = [
@@ -59,7 +59,7 @@ class News extends Model implements HasMedia
     {
         return $this->update([
             'status' => NewsStatus::published,
-            'published_at' => Date::now()
+            'published_at' => Date::now(),
         ]);
     }
 
@@ -77,7 +77,9 @@ class News extends Model implements HasMedia
 
     public function isPublished(): bool
     {
-        return $this->status->is(NewsStatus::published);
+        debug($this);
+
+        return $this->status?->is(NewsStatus::published);
     }
 
     public function isDrafted(): bool

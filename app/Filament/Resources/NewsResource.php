@@ -10,6 +10,7 @@ use App\Models\News;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -56,6 +57,9 @@ class NewsResource extends Resource
                             ->columnSpan(1) // reduce width in grid
                             ->extraAttributes(['class' => 'max-w-sm']),
 
+                        Hidden::make('status')
+                            ->default(NewsStatus::drafted),
+
                         Group::make()
                             ->hidden(fn () => auth()->user()->belongsToOrganisation())
                             ->columns()
@@ -88,6 +92,7 @@ class NewsResource extends Resource
                         SpatieMediaLibraryFileUpload::make('media_files')
                             ->collection('media_files')
                             ->enableOpen()
+                            ->panelLayout('grid')
                             ->multiple()
                             ->conversion('thumb')
                             ->visibility('public')
