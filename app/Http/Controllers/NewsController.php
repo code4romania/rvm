@@ -17,6 +17,7 @@ class NewsController extends Controller
 
         return NewsResource::collection(
             News::query()
+                ->wherePublished()
                 ->with([
                     'media',
                     'organisation' => fn(BelongsTo $query) => $query
