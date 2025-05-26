@@ -91,8 +91,7 @@ class ResourceResource extends Resource
                             ->required(),
                     ]),
 
-                // The logic that toggles the visibility of the field groups
-                // is included in the abstract FieldGroup class.
+
                 FieldGroups\AircraftFieldGroup::make(),
                 FieldGroups\BoatFieldGroup::make(),
                 FieldGroups\BroadcastFieldGroup::make(),
