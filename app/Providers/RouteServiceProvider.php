@@ -40,6 +40,9 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix(config('filament.path'))
                 ->name('filament.')
                 ->group(base_path('routes/filament.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
         });
     }
 
