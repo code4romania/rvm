@@ -21,6 +21,7 @@ class OrganisationResource extends JsonResource
             'name' => $this->name,
             'type' => $this->type,
             'status' => $this->status,
+            'logo' => $this->getFirstMediaUrl('logo'),
             'expertises' => IdAndNameResource::collection($this->expertises),
             'risk_categories' => IdAndNameResource::collection($this->riskCategories),
             'resource_types' => IdAndNameResource::collection($this->resourceTypes),
