@@ -32,7 +32,7 @@ class NewsController extends Controller
                         $query->withoutEagerLoads()->select('id', 'name'),
                 ])
                 ->where('status', 'published')
-                ->defaultSort('-id')
+                ->defaultSort('-published_at')
                 ->paginate(25)
                 ->appends(request()->query())
         );
