@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\PublishedAfterFilter;
+use App\Http\Filters\PublishedAtFilter;
+use App\Http\Filters\PublishedBeforeFilter;
 use App\Http\Resources\NewsResource;
 use App\Models\News;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
-use App\Http\Filters\PublishedAtFilter;
-use App\Http\Filters\PublishedBeforeFilter;
-use App\Http\Filters\PublishedAfterFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class NewsController extends Controller
 {
@@ -28,8 +28,9 @@ class NewsController extends Controller
                 ])
                 ->with([
                     'media',
-                    'organisation' => fn($query) =>
-                        $query->withoutEagerLoads()->select('id', 'name'),
+                    'organisation' => fn ($query) => $query
+                        ->withoutEagerLoads()
+                        ->select('id', 'name'),
                 ])
                 ->where('status', 'published')
                 ->defaultSort('-published_at')
