@@ -6,8 +6,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\NewsResource;
 use App\Models\News;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use App\Http\Filters\PublishedAtFilter;
+use App\Http\Filters\PublishedBeforeFilter;
+use App\Http\Filters\PublishedAfterFilter;
 
 class NewsController extends Controller
 {
@@ -16,16 +20,21 @@ class NewsController extends Controller
         $this->authorize('accessApi');
 
         return NewsResource::collection(
-            News::query()
-                ->wherePublished()
+            QueryBuilder::for(News::class)
+                ->allowedFilters([
+                    AllowedFilter::custom('published_at', new PublishedAtFilter),
+                    AllowedFilter::custom('published_before', new PublishedBeforeFilter),
+                    AllowedFilter::custom('published_after', new PublishedAfterFilter),
+                ])
                 ->with([
                     'media',
-                    'organisation' => fn(BelongsTo $query) => $query
-                        ->withoutEagerLoads()
-                        ->select('id', 'name'),
+                    'organisation' => fn($query) =>
+                        $query->withoutEagerLoads()->select('id', 'name'),
                 ])
-                ->orderBy('id', 'desc')
+                ->where('status', 'published')
+                ->defaultSort('-id')
                 ->paginate(25)
+                ->appends(request()->query())
         );
     }
 }
