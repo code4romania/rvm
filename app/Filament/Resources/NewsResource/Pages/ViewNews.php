@@ -12,8 +12,8 @@ use App\Models\News;
 use Filament\Pages\Actions\DeleteAction;
 use Filament\Pages\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
-use Illuminate\Support\HtmlString;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\HtmlString;
 
 class ViewNews extends ViewRecord
 {
@@ -28,15 +28,15 @@ class ViewNews extends ViewRecord
     {
         return [
             PublishNewsAction::make()
-                ->hidden(fn(News $record) => $record->isPublished())
+                ->hidden(fn (News $record) => $record->isPublished())
                 ->record($this->getRecord()),
 
             DraftNewsAction::make()
-                ->hidden(fn(News $record) => $record->isDrafted())
+                ->hidden(fn (News $record) => $record->isDrafted())
                 ->record($this->getRecord()),
 
             ArchiveNewsAction::make()
-                ->hidden(fn(News $record) => $record->isArchived())
+                ->hidden(fn (News $record) => $record->isArchived())
                 ->record($this->getRecord()),
 
             EditAction::make(),
@@ -45,7 +45,7 @@ class ViewNews extends ViewRecord
         ];
     }
 
-    protected function getSubheading(): string|Htmlable|null
+    protected function getSubheading(): Htmlable
     {
         return new HtmlString(__('news.disclaimer'));
     }
