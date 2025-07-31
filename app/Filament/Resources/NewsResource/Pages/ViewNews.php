@@ -12,6 +12,8 @@ use App\Models\News;
 use Filament\Pages\Actions\DeleteAction;
 use Filament\Pages\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\HtmlString;
 
 class ViewNews extends ViewRecord
 {
@@ -41,5 +43,10 @@ class ViewNews extends ViewRecord
 
             DeleteAction::make(),
         ];
+    }
+
+    protected function getSubheading(): Htmlable
+    {
+        return new HtmlString(__('news.disclaimer'));
     }
 }

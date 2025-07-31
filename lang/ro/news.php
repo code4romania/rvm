@@ -7,7 +7,6 @@ return [
     'label' => [
         'singular' => 'Știre',
         'plural' => 'Știri',
-
     ],
 
     'field' => [
@@ -49,5 +48,7 @@ return [
             ],
         ]
     ],
+
+    'disclaimer' => '<b>Important:</b> Știrile publicate în această secțiune trebuie să aibă legătură directă cu situații de urgență, protecție civilă sau alte subiecte relevante pentru colaborarea cu Departamentul pentru Situații de Urgență.'
 
 ];
