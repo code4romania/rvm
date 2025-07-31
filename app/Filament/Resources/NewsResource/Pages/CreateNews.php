@@ -17,6 +17,6 @@ class CreateNews extends CreateRecord
 
     protected function getSubheading(): HtmlString
     {
-        return new HtmlString('<b>Important:</b> Știrile publicate în această secțiune trebuie să aibă legătură directă cu situații de urgență, protecție civilă sau alte subiecte relevante pentru colaborarea cu Departamentul pentru Situații de Urgență.');
+        return new HtmlString(__('news.disclaimer'));
     }
 }
