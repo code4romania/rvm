@@ -12,6 +12,8 @@ use App\Models\News;
 use Filament\Pages\Actions\DeleteAction;
 use Filament\Pages\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Support\HtmlString;
+use Illuminate\Contracts\Support\Htmlable;
 
 class ViewNews extends ViewRecord
 {
@@ -26,20 +28,25 @@ class ViewNews extends ViewRecord
     {
         return [
             PublishNewsAction::make()
-                ->hidden(fn (News $record) => $record->isPublished())
+                ->hidden(fn(News $record) => $record->isPublished())
                 ->record($this->getRecord()),
 
             DraftNewsAction::make()
-                ->hidden(fn (News $record) => $record->isDrafted())
+                ->hidden(fn(News $record) => $record->isDrafted())
                 ->record($this->getRecord()),
 
             ArchiveNewsAction::make()
-                ->hidden(fn (News $record) => $record->isArchived())
+                ->hidden(fn(News $record) => $record->isArchived())
                 ->record($this->getRecord()),
 
             EditAction::make(),
 
             DeleteAction::make(),
         ];
+    }
+
+    protected function getSubheading(): string|Htmlable|null
+    {
+        return new HtmlString('<b>Important:</b> Știrile publicate în această secțiune trebuie să aibă legătură directă cu situații de urgență, protecție civilă sau alte subiecte relevante pentru colaborarea cu Departamentul pentru Situații de Urgență.');
     }
 }
