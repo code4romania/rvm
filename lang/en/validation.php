@@ -1,9 +1,5 @@
 <?php
-
-declare(strict_types=1);
-
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Validation Language Lines
@@ -14,17 +10,16 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
     */
-
     'accepted' => 'The :attribute must be accepted.',
     'accepted_if' => 'The :attribute must be accepted when :other is :value.',
     'active_url' => 'The :attribute is not a valid URL.',
     'after' => 'The :attribute must be a date after :date.',
     'after_or_equal' => 'The :attribute must be a date after or equal to :date.',
     'alpha' => 'The :attribute must only contain letters.',
-    'alpha_dash' => 'The :attribute must only contain letters, numbers, dashes and underscores.',
+    'alpha_dash' => 'The :attribute must only contain letters, numbers and hyphens.',
     'alpha_num' => 'The :attribute must only contain letters and numbers.',
     'array' => 'The :attribute must be an array.',
-    'ascii' => 'The :attribute must only contain single-byte alphanumeric characters and symbols.',
+    'ascii' => 'The :attribute must contain only single-byte alphanumeric characters and symbols.',
     'before' => 'The :attribute must be a date before :date.',
     'before_or_equal' => 'The :attribute must be a date before or equal to :date.',
     'between' => [
@@ -37,13 +32,13 @@ return [
     'confirmed' => 'The :attribute confirmation does not match.',
     'current_password' => 'The password is incorrect.',
     'date' => 'The :attribute is not a valid date.',
-    'date_equals' => 'The :attribute must be a date equal to :date.',
+    'date_equals' => 'The :attribute must be a date matching :date.',
     'date_format' => 'The :attribute does not match the format :format.',
     'decimal' => 'The :attribute must have :decimal decimal places.',
     'declined' => 'The :attribute must be declined.',
     'declined_if' => 'The :attribute must be declined when :other is :value.',
     'different' => 'The :attribute and :other must be different.',
-    'digits' => 'The :attribute must be :digits digits.',
+    'digits' => 'The :attribute field must have :digits digits.',
     'digits_between' => 'The :attribute must be between :min and :max digits.',
     'dimensions' => 'The :attribute has invalid image dimensions.',
     'distinct' => 'The :attribute field has a duplicate value.',
@@ -122,7 +117,7 @@ return [
     'prohibited_unless' => 'The :attribute field is prohibited unless :other is in :values.',
     'prohibits' => 'The :attribute field prohibits :other from being present.',
     'regex' => 'The :attribute format is invalid.',
-    'required' => 'The :attribute field is required.',
+    'required' => 'The :attribute field is mandatory.',
     'required_array_keys' => 'The :attribute field must contain entries for: :values.',
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_if_accepted' => 'The :attribute field is required when :other is accepted.',
@@ -141,41 +136,90 @@ return [
     'starts_with' => 'The :attribute must start with one of the following: :values.',
     'string' => 'The :attribute must be a string.',
     'timezone' => 'The :attribute must be a valid timezone.',
-    'unique' => 'The :attribute has already been taken.',
+    'unique' => 'The :attribute has already been used.',
     'uploaded' => 'The :attribute failed to upload.',
     'uppercase' => 'The :attribute must be uppercase.',
     'url' => 'The :attribute must be a valid URL.',
     'ulid' => 'The :attribute must be a valid ULID.',
     'uuid' => 'The :attribute must be a valid UUID.',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Custom Validation Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify custom validation messages for attributes using the
-    | convention "attribute.rule" to name the lines. This makes it quick to
-    | specify a specific custom language line for a given attribute rule.
-    |
-    */
-
-    'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
-        ],
+    'attributes' => [
+        'password' => 'password',
+        'address' => 'approach',
+        'age' => 'age',
+        'amount' => 'Amount',
+        'area' => 'area',
+        'available' => 'available',
+        'birthday' => 'birthday',
+        'body' => 'body',
+        'city' => 'town',
+        'content' => 'content',
+        'country' => 'country',
+        'created_at' => 'created at',
+        'creator' => 'creator',
+        'current_password' => 'Current password',
+        'date' => 'Date',
+        'date_of_birth' => 'Date of birth',
+        'day' => 'day',
+        'deleted_at' => 'deleted at',
+        'description' => 'Description',
+        'district' => 'municipality',
+        'duration' => 'duration',
+        'email' => 'email',
+        'excerpt' => 'extract',
+        'filter' => 'filter',
+        'first_name' => 'Name',
+        'gender' => 'gender',
+        'group' => 'group',
+        'hour' => 'time',
+        'image' => 'image',
+        'last_name' => 'Surname',
+        'lesson' => 'lesson',
+        'line_address_1' => 'address line 1',
+        'line_address_2' => 'address line 2',
+        'message' => 'message',
+        'middle_name' => 'middle name',
+        'minute' => 'minute',
+        'mobile' => 'mobile phone',
+        'month' => 'month',
+        'name' => 'Name',
+        'national_code' => 'National code',
+        'number' => 'number',
+        'password_confirmation' => 'Password confirmation',
+        'phone' => 'telephone',
+        'photo' => 'picture',
+        'postal_code' => 'Postcode',
+        'price' => 'Price',
+        'province' => 'province',
+        'recaptcha_response_field' => 'recaptcha response field',
+        'remember' => 'keep in mind',
+        'restored_at' => 'restored to',
+        'result_text_under_image' => 'the text displayed below the image',
+        'role' => 'role',
+        'second' => 'second',
+        'sex' => 'sex',
+        'short_text' => 'short text',
+        'size' => 'size',
+        'state' => 'country',
+        'street' => 'street',
+        'student' => 'undergraduate',
+        'subject' => 'topic',
+        'teacher' => 'teacher',
+        'terms' => 'terms',
+        'test_description' => 'Test Description',
+        'test_locale' => 'Local testing',
+        'test_name' => 'test name',
+        'text' => 'text',
+        'time' => 'time',
+        'title' => 'title',
+        'updated_at' => 'updated on',
+        'username' => 'username',
+        'year' => 'year',
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Custom Validation Attributes
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used to swap our attribute placeholder
-    | with something more reader friendly such as "E-Mail Address" instead
-    | of "email". This simply helps us make our message more expressive.
-    |
-    */
-
-    'attributes' => [],
-
+    'can' => 'The field :attribute contains an unauthorized value.',
+    'cnp' => 'The field :attribute does not have a valid format.',
+    'missing' => 'The field:attribute must be missing.',
+    'missing_if' => 'The field:attribute must be missing when:other is:value.',
+    'missing_unless' => 'The field :attribute must be missing, unless the :other is :value.',
+    'missing_with' => 'The field :attribute must be missing when it is present :values.',
+    'missing_with_all' => 'The field :attribute must be missing when :values are present.',
 ];
