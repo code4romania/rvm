@@ -1,14 +1,10 @@
 <?php
-
-declare(strict_types=1);
-
 return [
     'label' => [
         'singular' => 'Organizație',
         'plural' => 'Organizații',
         'profile' => 'Profil organizație',
     ],
-
     'modal' => [
         'heading' => 'Adaugă organizație nouă',
         'subheading' => 'Trimite o invitatie către  organizații folosind câmpurile de mai jos. ',
@@ -82,14 +78,12 @@ return [
         ],
         'role' => 'Rol',
     ],
-
     'placeholder' => [
         'name' => 'Introdu denumirea organizației',
         'alias' => 'Introdu aliasul organizației',
         'email' => 'Introdu adresă de email',
         'phone' => 'Introdu număr de telefon',
     ],
-
     'section' => [
         'organisation_data' => 'Date organizație',
         'general_data' => 'Date generale',
@@ -106,15 +100,13 @@ return [
         'other_information' => 'Alte informatii',
         'profile' => 'Profil',
         'contact_person' => 'Persoană de contact în relația cu DSU',
-        'contact_person_in_teams' => 'Persoană de contact pentru Platforma Teams "Sprijin Umanitar DSU-GOV / FiiPregătit"'
+        'contact_person_in_teams' => 'Persoană de contact pentru Platforma Teams "Sprijin Umanitar DSU-GOV / FiiPregătit"',
     ],
-
     'help' => [
         'short_description' => 'Descrie organizația ta în 200 - 250 caractere. Descrierea va fi vizibilă în alte aplicații, după caz.',
         'description' => 'Adaugă o descriere a organizației tale (maximum 1500 caractere).',
         'logo' => 'Încarcă logo-ul organizației tale, la o calitate cât mai bună.',
     ],
-
     'action' => [
         'change_status' => [
             'inactive' => [
@@ -134,12 +126,11 @@ return [
             'button' => 'Retrimite invitație',
             'heading' => 'Retrimite invitație',
             'subheading' => 'Ești sigur că vrei să retrimit invitația?',
-            'success' => 'Invitația a fost retimisă.',
+            'success' => 'Invitația a fost retrimisă.',
             'failure_title' => 'Invitația nu a putut fi trimisă.',
             'failure_body' => 'Acestei organizații i-a fost retrimisă invitația recent. Te rugăm să mai încerci peste o oră.',
         ],
     ],
-
     'status' => [
         'active' => 'Activ',
         'inactive' => 'Inactiv',
