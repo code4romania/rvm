@@ -126,7 +126,7 @@ return [
             'button' => 'Resend invitation',
             'heading' => 'Resend invitation',
             'subheading' => 'Are you sure you want to resend the invitation?',
-            'success' => 'The invitation was resent.',
+            'success' => 'The invitation was rescheduled.',
             'failure_title' => 'The invitation could not be sent.',
             'failure_body' => 'An invitation was recently resent to this organization. Please try again in an hour.',
         ],
