@@ -34,7 +34,7 @@ RUN composer install \
     --no-dev \
     --prefer-dist
 
-FROM node:20-alpine AS assets
+FROM node:24-alpine AS assets
 
 WORKDIR /build
 
