@@ -2,16 +2,22 @@
     "name": "code4romania/rvm",
     "type": "project",
     "description": "A management system for volunteers and resources in case of an earthquake.",
-    "keywords": ["code4romania", "laravel", "resource", "volunteer", "management"],
+    "keywords": [
+        "code4romania",
+        "laravel",
+        "resource",
+        "volunteer",
+        "management"
+    ],
     "license": "MPL-2.0",
     "require": {
         "php": "^8.1",
         "alcea/cnp": "^3.0",
         "dedoc/scramble": "^0.13",
-        "filament/filament": "^2.17",
-        "filament/spatie-laravel-media-library-plugin": "^2.17",
+        "filament/filament": "^3.2",
+        "filament/spatie-laravel-media-library-plugin": "^3.2",
         "guzzlehttp/guzzle": "^7.10",
-        "jeffgreco13/filament-breezy": "^1.5",
+        "jeffgreco13/filament-breezy": "^2.0",
         "laravel/framework": "^10.50",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.11",
@@ -24,6 +30,7 @@
         "barryvdh/laravel-debugbar": "^3.16",
         "barryvdh/laravel-ide-helper": "^2.15",
         "fakerphp/faker": "^1.24",
+        "filament/upgrade": "^3.2",
         "friendsofphp/php-cs-fixer": "^3.92",
         "itsgoingd/clockwork": "^5.3",
         "laravel/sail": "^1.52",
@@ -48,7 +55,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",

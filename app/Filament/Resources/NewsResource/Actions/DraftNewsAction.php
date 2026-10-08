@@ -18,7 +18,7 @@ class DraftNewsAction extends Action
     {
         parent::setUp();
 
-        $this->color('secondary');
+        $this->color('gray');
 
         $this->action(function (News $record, Action $action) {
             $record->draft();

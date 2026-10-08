@@ -13,7 +13,7 @@ class ListVolunteers extends ListRecords
 {
     protected static string $resource = VolunteerResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),

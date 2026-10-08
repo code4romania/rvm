@@ -7,17 +7,17 @@ namespace App\Filament\Resources;
 use App\Enum\NewsStatus;
 use App\Filament\Resources\NewsResource\Pages;
 use App\Models\News;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -47,7 +47,8 @@ class NewsResource extends Resource
     {
         return $form
             ->schema([
-                Card::make()
+                Section::make()
+                    ->heading('')
                     ->columns(1)
                     ->schema([
 
@@ -142,13 +143,8 @@ class NewsResource extends Resource
                     ->toggleable()
                     ->searchable(),
 
-                Tables\Columns\BadgeColumn::make('status')
-                    ->colors([
-                        'secondary' => NewsStatus::drafted->value,
-                        'warning' => NewsStatus::archived->value,
-                        'success' => NewsStatus::published->value,
-                    ])
-                    ->enum(NewsStatus::options()),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge(),
 
                 TextColumn::make('published_at')
                     ->label(__('news.field.published_at'))
@@ -190,7 +186,7 @@ class NewsResource extends Resource
                     }),
 
             ])
-            ->filtersLayout(Layout::AboveContent)
+            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

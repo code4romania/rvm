@@ -22,7 +22,7 @@ class ViewOrganisation extends ViewRecord
         return $this->getRecord()->name;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             ActivateOrganisationAction::make()
@@ -48,7 +48,7 @@ class ViewOrganisation extends ViewRecord
         return true;
     }
 
-    public function getFormTabLabel(): ?string
+    public function getContentTabLabel(): ?string
     {
         return __('organisation.section.profile');
     }

@@ -18,7 +18,7 @@ class ActivateOrganisationAction extends Action
     {
         parent::setUp();
 
-        $this->color('secondary');
+        $this->color('gray');
 
         $this->action(function (Organisation $record, Action $action) {
             $record->setActive();

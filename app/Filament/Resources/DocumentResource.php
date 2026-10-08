@@ -10,7 +10,6 @@ use App\Filament\Resources\DocumentResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Document;
 use Closure;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
@@ -19,9 +18,9 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
@@ -49,7 +48,8 @@ class DocumentResource extends Resource
     {
         return $form
             ->schema([
-                Card::make()
+                Section::make()
+                    ->heading('')
                     ->columns(2)
                     ->schema([
                         Grid::make()
@@ -72,7 +72,6 @@ class DocumentResource extends Resource
                         Select::make('type')
                             ->label(__('document.field.type'))
                             ->options(DocumentType::options())
-                            ->enum(DocumentType::class)
                             ->reactive()
                             ->required(),
 
@@ -88,9 +87,9 @@ class DocumentResource extends Resource
                                         DatePicker::make('expires_at')
                                             ->label(__('document.field.expires_at'))
                                             ->after('signed_at')
-                                            ->required(fn (Closure $get) => ! $get('never_expires'))
-                                            ->disabled(fn (Closure $get) => (bool) $get('never_expires'))
-                                            ->afterStateHydrated(function (Closure $set, $state) {
+                                            ->required(fn (\Filament\Forms\Get $get) => ! $get('never_expires'))
+                                            ->disabled(fn (\Filament\Forms\Get $get) => (bool) $get('never_expires'))
+                                            ->afterStateHydrated(function (\Filament\Forms\Set $set, $state) {
                                                 if (blank($state)) {
                                                     $set('never_expires', true);
                                                 }
@@ -98,7 +97,7 @@ class DocumentResource extends Resource
 
                                         Checkbox::make('never_expires')
                                             ->label(__('document.field.never_expires'))
-                                            ->afterStateUpdated(function (Closure $set, $state) {
+                                            ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
                                                 if ($state === true) {
                                                     $set('expires_at', null);
                                                 }
@@ -137,7 +136,6 @@ class DocumentResource extends Resource
 
                 TextColumn::make('type')
                     ->label(__('document.field.type'))
-                    ->enum(DocumentType::options())
                     ->sortable(),
 
                 TextColumn::make('organisation.name')
@@ -190,7 +188,7 @@ class DocumentResource extends Resource
                     ->label(__('document.field.expires_at'))
                     ->columns(),
             ])
-            ->filtersLayout(Layout::AboveContent)
+            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

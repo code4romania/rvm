@@ -18,7 +18,7 @@ class ViewResource extends ViewRecord
         return $this->getRecord()->name;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             EditAction::make(),

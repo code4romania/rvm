@@ -24,7 +24,7 @@ class ListOrganisations extends ListRecords
             ->with('media', 'activityCounties');
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             CreateAction::make()

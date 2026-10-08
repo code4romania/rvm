@@ -11,14 +11,14 @@ use App\Filament\Resources\VolunteerResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Volunteer;
 use App\Rules\ValidCNP;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -49,7 +49,8 @@ class VolunteerResource extends Resource
     {
         return $form
             ->schema([
-                Card::make()
+                Section::make()
+                    ->heading('')
                     ->columns()
                     ->schema([
                         Group::make()
@@ -153,12 +154,6 @@ class VolunteerResource extends Resource
 
                 TextColumn::make('specializations')
                     ->label(__('volunteer.field.specializations'))
-                    ->formatStateUsing(
-                        static fn ($state): ?string => collect($state)
-                            ->map(fn (VolunteerSpecialization $specialization) => $specialization->label())
-                            ->filter()
-                            ->join(', ')
-                    )
                     ->toggleable(),
 
                 IconColumn::make('has_first_aid_accreditation')
@@ -191,7 +186,7 @@ class VolunteerResource extends Resource
                 TernaryFilter::make('has_first_aid_accreditation')
                     ->label(__('volunteer.field.has_first_aid_accreditation')),
             ])
-            ->filtersLayout(Layout::AboveContent)
+            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

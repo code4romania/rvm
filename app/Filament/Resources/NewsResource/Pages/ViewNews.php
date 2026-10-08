@@ -24,7 +24,7 @@ class ViewNews extends ViewRecord
         return $this->getRecord()->title;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             PublishNewsAction::make()
@@ -45,7 +45,7 @@ class ViewNews extends ViewRecord
         ];
     }
 
-    protected function getSubheading(): Htmlable
+    public function getSubheading(): Htmlable
     {
         return new HtmlString(__('news.disclaimer'));
     }

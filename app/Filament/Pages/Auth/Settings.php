@@ -6,18 +6,18 @@ namespace App\Filament\Pages\Auth;
 
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use JeffGreco13\FilamentBreezy\Pages\MyProfile;
+use Filament\Pages\Auth\EditProfile;
 
-class Settings extends MyProfile
+class Settings extends EditProfile
 {
     protected static ?string $slug = 'settings';
 
-    protected function getTitle(): string
+    public function getTitle(): string
     {
         return __('auth.settings');
     }
 
-    protected function getBreadcrumbs(): array
+    public function getBreadcrumbs(): array
     {
         return [
             url()->current() => $this->getTitle(),

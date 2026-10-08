@@ -16,9 +16,9 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -34,7 +34,7 @@ class DocumentsRelationManager extends RelationManager
         return DocumentResource::class;
     }
 
-    protected static function getModelLabel(): string
+    protected static function getModelLabel(): ?string
     {
         return static::getResource()::getModelLabel();
     }
@@ -44,7 +44,7 @@ class DocumentsRelationManager extends RelationManager
         return static::getResource()::getPluralModelLabel();
     }
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -71,9 +71,9 @@ class DocumentsRelationManager extends RelationManager
                             DatePicker::make('expires_at')
                                 ->label(__('document.field.expires_at'))
                                 ->after('signed_at')
-                                ->required(fn (Closure $get) => ! $get('never_expires'))
-                                ->disabled(fn (Closure $get) => (bool) $get('never_expires'))
-                                ->afterStateHydrated(function (Closure $set, $state) {
+                                ->required(fn (\Filament\Forms\Get $get) => ! $get('never_expires'))
+                                ->disabled(fn (\Filament\Forms\Get $get) => (bool) $get('never_expires'))
+                                ->afterStateHydrated(function (\Filament\Forms\Set $set, $state) {
                                     if (blank($state)) {
                                         $set('never_expires', true);
                                     }
@@ -81,7 +81,7 @@ class DocumentsRelationManager extends RelationManager
 
                             Checkbox::make('never_expires')
                                 ->label(__('document.field.never_expires'))
-                                ->afterStateUpdated(function (Closure $set, $state) {
+                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
                                     if ($state === true) {
                                         $set('expires_at', null);
                                     }
@@ -99,7 +99,7 @@ class DocumentsRelationManager extends RelationManager
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

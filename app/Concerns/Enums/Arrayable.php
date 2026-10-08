@@ -24,7 +24,7 @@ trait Arrayable
     {
         return collect(self::cases())
             ->mapWithKeys(fn (self $case) => [
-                $case->value => $case->label(),
+                $case->value => $case->getLabel(),
             ])
             ->all();
     }

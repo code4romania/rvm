@@ -50,7 +50,7 @@
 
                 <x-filament::hr />
 
-                @livewire(\JeffGreco13\FilamentBreezy\Http\Livewire\BreezySanctumTokens::class)
+                @livewire(\Jeffgreco13\FilamentBreezy\Http\Livewire\BreezySanctumTokens::class)
 
             </div>
         </x-filament-breezy::grid-section>

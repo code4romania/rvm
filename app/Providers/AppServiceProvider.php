@@ -10,6 +10,7 @@ use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Filament\Facades\Filament;
+use Filament\Navigation\MenuItem;
 use Filament\Navigation\UserMenuItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -43,17 +44,6 @@ class AppServiceProvider extends ServiceProvider
         tap($this->app->isLocal(), function (bool $shouldBeEnabled) {
             Model::preventLazyLoading($shouldBeEnabled);
             Model::preventAccessingMissingAttributes($shouldBeEnabled);
-        });
-
-        Filament::serving(function () {
-            Filament::registerViteTheme('resources/css/app.css');
-
-            Filament::registerUserMenuItems([
-                'account' => UserMenuItem::make()
-                    ->url(Settings::getUrl())
-                    ->label(__('auth.settings'))
-                    ->icon('heroicon-o-cog'),
-            ]);
         });
 
         Scramble::extendOpenApi(function (OpenApi $openApi) {
