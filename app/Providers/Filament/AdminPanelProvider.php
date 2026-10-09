@@ -6,14 +6,12 @@ use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\Settings;
 use App\Filament\Pages\PersonalInfo;
 use App\Filament\Widgets as CustomWidgets;
-use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationGroup;
-use Filament\Navigation\UserMenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -66,11 +64,13 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-//            ->userMenuItems([
-//                Action::make('settings')
-//                    ->label(__('auth.settings'))
-//                    ->url(fn () => Settings::getUrl()),
-//            ])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->sort(1)
+                    ->icon('heroicon-o-cog')
+                    ->label(__('auth.settings'))
+                    ->url(fn () => Settings::getUrl()),
+            ])
             ->passwordReset()
             ->plugins([
                 BreezyCore::make()
