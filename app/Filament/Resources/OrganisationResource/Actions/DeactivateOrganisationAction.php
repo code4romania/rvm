@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\OrganisationResource\Actions;
 
 use App\Models\Organisation;
-use Filament\Pages\Actions\Action;
+use Filament\Actions\Action;
 
 class DeactivateOrganisationAction extends Action
 {

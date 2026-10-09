@@ -10,7 +10,7 @@ use App\Filament\Forms\Components\Location;
 use App\Filament\Resources\OrganisationResource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Pages\Actions\CreateAction;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 

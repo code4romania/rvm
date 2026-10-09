@@ -6,6 +6,7 @@ use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\Settings;
 use App\Filament\Pages\PersonalInfo;
 use App\Filament\Widgets as CustomWidgets;
+use App\Http\Middleware\CheckOrganisationIsActive;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -62,6 +63,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
+                CheckOrganisationIsActive::class,
                 Authenticate::class,
             ])
             ->userMenuItems([

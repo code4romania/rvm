@@ -9,8 +9,8 @@ use App\Filament\Resources\OrganisationResource\Actions\ActivateOrganisationActi
 use App\Filament\Resources\OrganisationResource\Actions\DeactivateOrganisationAction;
 use App\Filament\Resources\OrganisationResource\Actions\ResendInvitationAction;
 use App\Models\Organisation;
-use Filament\Pages\Actions\DeleteAction;
-use Filament\Pages\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewOrganisation extends ViewRecord
