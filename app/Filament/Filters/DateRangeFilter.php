@@ -37,11 +37,11 @@ class DateRangeFilter extends BaseFilter
                 ->schema([
                     DatePicker::make('date_from')
                         ->label(__('general.filter.date_from'))
-                        ->placeholder(today()->subYear()->toFormattedDate()),
+                        ->placeholder(today()->subYear()->toFormattedDateString()),
 
                     DatePicker::make('date_until')
                         ->label(__('general.filter.date_until'))
-                        ->placeholder(today()->toFormattedDate()),
+                        ->placeholder(today()->toFormattedDateString()),
                 ]),
         ]);
 

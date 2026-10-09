@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\NewsResource\Actions;
 
 use App\Models\News;
-use Filament\Pages\Actions\Action;
+use Filament\Actions\Action;
 
 class DraftNewsAction extends Action
 {
@@ -18,7 +18,7 @@ class DraftNewsAction extends Action
     {
         parent::setUp();
 
-        $this->color('secondary');
+        $this->color('gray');
 
         $this->action(function (News $record, Action $action) {
             $record->draft();

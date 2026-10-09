@@ -6,13 +6,13 @@ namespace App\Enum;
 
 use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\Comparable;
-use App\Concerns\Enums\HasLabel;
+use Filament\Support\Contracts\HasLabel;
+use Filament\Support\Contracts\HasColor;
 
-enum OrganisationStatus: string
+enum OrganisationStatus: string implements HasLabel, HasColor
 {
     use Arrayable;
     use Comparable;
-    use HasLabel;
 
     case active = 'active';
     case inactive = 'inactive';
@@ -21,5 +21,23 @@ enum OrganisationStatus: string
     protected function labelKeyPrefix(): ?string
     {
         return 'organisation.status';
+    }
+
+    public function getLabel(): ?string
+    {
+        return match ($this) {
+            self::active => __('organisation.status.active'),
+            self::inactive => __('organisation.status.inactive'),
+            self::invited => __('organisation.status.invited'),
+        };
+    }
+
+    public function getColor(): ?string
+    {
+        return match ($this) {
+            self::inactive => 'secondary',
+            self::invited => 'warning',
+            self::active => 'success',
+        };
     }
 }

@@ -12,9 +12,9 @@ use App\Filament\Tables\Actions\ExportAction;
 use App\Rules\ValidCNP;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 
@@ -29,7 +29,7 @@ class VolunteersRelationManager extends RelationManager
         return VolunteerResource::class;
     }
 
-    protected static function getModelLabel(): string
+    protected static function getModelLabel(): ?string
     {
         return static::getResource()::getModelLabel();
     }
@@ -39,7 +39,7 @@ class VolunteersRelationManager extends RelationManager
         return static::getResource()::getPluralModelLabel();
     }
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -95,7 +95,7 @@ class VolunteersRelationManager extends RelationManager
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -119,7 +119,7 @@ class VolunteersRelationManager extends RelationManager
                     ->label(__('volunteer.field.specializations'))
                     ->formatStateUsing(
                         static fn ($state): ?string => collect($state)
-                            ->map(fn (VolunteerSpecialization $specialization) => $specialization->label())
+                            ->map(fn (VolunteerSpecialization $specialization) => $specialization->getLabel())
                             ->filter()
                             ->join(', ')
                     ),

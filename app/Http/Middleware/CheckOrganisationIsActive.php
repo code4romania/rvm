@@ -29,7 +29,7 @@ class CheckOrganisationIsActive
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('filament.auth.login')
+        return redirect()->route('filament.admin.auth.login')
             ->with('organisation_inactive', true);
     }
 }

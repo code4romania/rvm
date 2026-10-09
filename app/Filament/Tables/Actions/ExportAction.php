@@ -13,7 +13,7 @@ class ExportAction extends BaseAction
     {
         parent::setUp();
 
-        $this->color('secondary');
+        $this->color('gray');
 
         $this->exports([
             ExcelExport::make(),

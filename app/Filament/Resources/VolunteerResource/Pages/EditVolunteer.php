@@ -11,7 +11,7 @@ class EditVolunteer extends EditRecord
 {
     protected static string $resource = VolunteerResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             //
@@ -20,6 +20,6 @@ class EditVolunteer extends EditRecord
 
     protected function getRedirectUrl(): ?string
     {
-        return static::getResource()::getUrl('view', $this->getRecord());
+        return static::getResource()::getUrl('view', [$this->getRecord()]);
     }
 }

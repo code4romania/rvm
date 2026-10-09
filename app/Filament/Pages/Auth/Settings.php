@@ -4,53 +4,21 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Auth;
 
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\TextInput;
-use JeffGreco13\FilamentBreezy\Pages\MyProfile;
+use Jeffgreco13\FilamentBreezy\Pages\MyProfilePage;
 
-class Settings extends MyProfile
+class Settings extends MyProfilePage
 {
     protected static ?string $slug = 'settings';
 
-    protected function getTitle(): string
+    public function getTitle(): string
     {
         return __('auth.settings');
     }
 
-    protected function getBreadcrumbs(): array
+    public function getBreadcrumbs(): array
     {
         return [
             url()->current() => $this->getTitle(),
-        ];
-    }
-
-    protected function getUpdateProfileFormSchema(): array
-    {
-        return [
-            TextInput::make('first_name')
-                ->required()
-                ->label(__('user.field.first_name')),
-
-            TextInput::make('last_name')
-                ->required()
-                ->label(__('user.field.last_name')),
-
-            TextInput::make($this->loginColumn)
-                ->required()
-                ->email(fn () => $this->loginColumn === 'email')
-                ->unique(config('filament-breezy.user_model'), ignorable: $this->user)
-                ->label(__('user.field.email')),
-        ];
-    }
-
-    protected function getCreateApiTokenFormSchema(): array
-    {
-        return [
-            TextInput::make('token_name')
-                ->label(__('filament-breezy::default.fields.token_name'))
-                ->required(),
-
-            Hidden::make('abilities'),
         ];
     }
 }

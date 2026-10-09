@@ -14,7 +14,7 @@ class EditProfile extends EditRecord
 
     protected static string $resource = ProfileResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             //
@@ -26,7 +26,7 @@ class EditProfile extends EditRecord
         return $this->getRecord()->name;
     }
 
-    protected function getRelationManagers(): array
+    public function getRelationManagers(): array
     {
         return [
             //
@@ -43,7 +43,7 @@ class EditProfile extends EditRecord
         return static::getResource()::getUrl('index');
     }
 
-    public function getFormTabLabel(): ?string
+    public function getContentTabLabel(): ?string
     {
         return __('organisation.section.profile');
     }

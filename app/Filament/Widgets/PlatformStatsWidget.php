@@ -15,13 +15,13 @@ use App\Models\User;
 use App\Models\Volunteer;
 use Filament\Forms\Components\Select;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Card;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class PlatformStatsWidget extends BaseWidget
 {
-    protected static string $view = 'filament.widgets.platform-stats-widget';
+//    protected static string $view = 'filament.widgets.platform-stats-widget';
 
     /**
      * County id to filter by.
@@ -51,20 +51,20 @@ class PlatformStatsWidget extends BaseWidget
     protected function getCards(): array
     {
         return [
-            Card::make(__('organisation.label.plural'), $this->getOrganisationCount())
-                ->icon('heroicon-o-office-building')
+            Stat::make(__('organisation.label.plural'), $this->getOrganisationCount())
+                ->icon('heroicon-o-building-office')
                 ->url(OrganisationResource::getUrl('index')),
 
-            Card::make(__('resource.label.plural'), $this->getResourceCount())
-                ->icon('heroicon-o-collection')
+            Stat::make(__('resource.label.plural'), $this->getResourceCount())
+                ->icon('heroicon-o-rectangle-stack')
                 ->url(ResourceResource::getUrl('index')),
 
-            Card::make(__('volunteer.label.plural'), $this->getVolunteerCount())
+            Stat::make(__('volunteer.label.plural'), $this->getVolunteerCount())
                 ->icon('heroicon-o-user-group')
                 ->url(VolunteerResource::getUrl('index')),
 
-            Card::make(__('user.label.plural'), $this->getUserCount())
-                ->icon('heroicon-o-office-building')
+            Stat::make(__('user.label.plural'), $this->getUserCount())
+                ->icon('heroicon-o-building-office')
                 ->url(UserResource::getUrl('index')),
         ];
     }

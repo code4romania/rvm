@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Resources\ResourceResource\Pages;
 
 use App\Filament\Resources\ResourceResource;
-use Filament\Pages\Actions\DeleteAction;
-use Filament\Pages\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewResource extends ViewRecord
@@ -18,7 +18,7 @@ class ViewResource extends ViewRecord
         return $this->getRecord()->name;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             EditAction::make(),

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\OrganisationResource\Actions;
 
 use App\Models\Organisation;
-use Filament\Pages\Actions\Action;
+use Filament\Actions\Action;
 
 class ActivateOrganisationAction extends Action
 {
@@ -18,7 +18,7 @@ class ActivateOrganisationAction extends Action
     {
         parent::setUp();
 
-        $this->color('secondary');
+        $this->color('gray');
 
         $this->action(function (Organisation $record, Action $action) {
             $record->setActive();

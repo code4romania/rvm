@@ -8,12 +8,12 @@ use App\Enum\UserRole;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\User;
-use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -41,7 +41,8 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Card::make()
+                Section::make()
+                    ->heading('')
                     ->columns()
                     ->schema([
                         TextInput::make('first_name')
@@ -68,7 +69,8 @@ class UserResource extends Resource
                             ->required(),
                     ]),
 
-                Card::make()
+                Section::make()
+                    ->heading('')
                     ->columns()
                     ->schema([
                         Select::make('role')
@@ -121,7 +123,6 @@ class UserResource extends Resource
 
                 TextColumn::make('role')
                     ->label(__('user.field.role'))
-                    ->formatStateUsing(fn (User $record) => $record->role?->label())
                     ->description(function (User $record) {
                         if (
                             ! $record->belongsToOrganisation() ||

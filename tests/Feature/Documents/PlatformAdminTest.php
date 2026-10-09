@@ -28,8 +28,8 @@ class PlatformAdminTest extends DocumentsBase
     public function testPlatformAdminCanViewDocuments(): void
     {
         $this->viewDocuments()
-            ->assertPageActionVisible('create')
-            ->assertPageActionEnabled('create');
+            ->assertActionVisible('create')
+            ->assertActionEnabled('create');
     }
 
     public function testViewPlatformAdminCanViewDocument(): void
@@ -39,16 +39,16 @@ class PlatformAdminTest extends DocumentsBase
             ->first();
 
         $this->viewProtocolDocumentByUser($document)
-            ->assertPageActionVisible('edit')
-            ->assertPageActionVisible('delete');
+            ->assertActionVisible('edit')
+            ->assertActionVisible('delete');
 
         $document = Document::query()
             ->whereNot('type', DocumentType::protocol)
             ->first();
 
         $this->viewDocumentByUser($document)
-            ->assertPageActionVisible('edit')
-            ->assertPageActionVisible('delete');
+            ->assertActionVisible('edit')
+            ->assertActionVisible('delete');
     }
 
     public function testPlatformAdminCanEditDocument(): void
@@ -82,7 +82,7 @@ class PlatformAdminTest extends DocumentsBase
             ->first();
 
         Livewire::test(ViewDocument::class, ['record' => $document->id])
-            ->callPageAction('delete')
+            ->callAction('delete')
             ->assertSuccessful();
         $this->assertNull(Document::find($document->id));
     }
