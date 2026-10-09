@@ -82,8 +82,8 @@ class PlatformAdminTest extends VolunteersBase
             ->resetTableFilters()
             ->filterTable('has_first_aid_accreditation', $hasFirstAid)
             ->assertCanSeeTableRecords($firstAidVolunteers)
-            ->assertPageActionVisible('create')
-            ->assertPageActionEnabled('create');
+            ->assertActionVisible('create')
+            ->assertActionEnabled('create');
     }
 
     public function testPlatformAdminCanViewVolunteer()
@@ -117,8 +117,8 @@ class PlatformAdminTest extends VolunteersBase
             ->assertFormFieldIsDisabled('county_id')
             ->assertFormFieldIsVisible('city_id')
             ->assertFormFieldIsDisabled('city_id')
-            ->assertPageActionVisible('edit')
-            ->assertPageActionEnabled('edit')
+            ->assertActionVisible('edit')
+            ->assertActionEnabled('edit')
             ->assertFormFieldIsHidden('language');
 
         $volunteerTranslator = Volunteer::query()
@@ -152,8 +152,8 @@ class PlatformAdminTest extends VolunteersBase
             ->assertFormFieldIsDisabled('county_id')
             ->assertFormFieldIsVisible('city_id')
             ->assertFormFieldIsDisabled('city_id')
-            ->assertPageActionVisible('edit')
-            ->assertPageActionEnabled('edit');
+            ->assertActionVisible('edit')
+            ->assertActionEnabled('edit');
     }
 
     public function testPlatformAdminCanEditVolunteer()

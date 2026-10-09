@@ -2,8 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\Settings;
+use App\Filament\Pages\PersonalInfo;
 use App\Filament\Widgets as CustomWidgets;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -22,6 +25,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -31,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('')
-            ->login()
+            ->login(Login::class)
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -62,7 +66,19 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+//            ->userMenuItems([
+//                Action::make('settings')
+//                    ->label(__('auth.settings'))
+//                    ->url(fn () => Settings::getUrl()),
+//            ])
             ->passwordReset()
-            ->profile(Settings::class);
+            ->plugins([
+                BreezyCore::make()
+                    ->customMyProfilePage(Settings::class)
+                    ->enableTwoFactorAuthentication()
+                    ->enableSanctumTokens()
+                    ->myProfile(slug: 'settings', shouldRegisterUserMenu: false)
+                    ->myProfileComponents(['personal_info' => PersonalInfo::class]),
+            ]);
     }
 }
