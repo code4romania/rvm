@@ -28,8 +28,8 @@ class PlatformCoordinatorTest extends DocumentsBase
     public function testPlatformCoordinatorCanViewDocuments(): void
     {
         $this->viewDocuments()
-            ->assertPageActionHidden('create')
-            ->assertPageActionDisabled('create');
+            ->assertActionHidden('create')
+            ->assertActionDisabled('create');
     }
 
     public function testPlatformCoordinatorCanViewDocument(): void
@@ -40,10 +40,10 @@ class PlatformCoordinatorTest extends DocumentsBase
             ->first();
 
         $this->viewProtocolDocumentByUser($document)
-            ->assertPageActionHidden('edit')
-            ->assertPageActionHidden('delete')
-            ->assertPageActionDisabled('edit')
-            ->assertPageActionDisabled('delete');
+            ->assertActionHidden('edit')
+            ->assertActionHidden('delete')
+            ->assertActionDisabled('edit')
+            ->assertActionDisabled('delete');
 
         $document = Document::query()
             ->whereNot('type', DocumentType::protocol)
@@ -51,10 +51,10 @@ class PlatformCoordinatorTest extends DocumentsBase
             ->first();
 
         $this->viewDocumentByUser($document)
-            ->assertPageActionHidden('edit')
-            ->assertPageActionHidden('delete')
-            ->assertPageActionDisabled('edit')
-            ->assertPageActionDisabled('delete');
+            ->assertActionHidden('edit')
+            ->assertActionHidden('delete')
+            ->assertActionDisabled('edit')
+            ->assertActionDisabled('delete');
     }
 
     public function testPlatformCoordinatorCanNotEditDocument(): void

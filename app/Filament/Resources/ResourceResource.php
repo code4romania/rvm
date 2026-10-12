@@ -10,14 +10,13 @@ use App\Filament\Resources\ResourceResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Resource as ResourceModel;
 use App\Models\Resource\Subcategory;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
@@ -28,7 +27,7 @@ class ResourceResource extends Resource
 {
     protected static ?string $model = ResourceModel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = 3;
 
@@ -46,7 +45,8 @@ class ResourceResource extends Resource
     {
         return $form
             ->schema([
-                Card::make()
+                Section::make()
+                    ->heading('')
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
@@ -115,7 +115,8 @@ class ResourceResource extends Resource
                             ->required(),
                     ]),
 
-                Card::make()
+                Section::make()
+                    ->heading('')
                     ->schema([
                         Textarea::make('comments')
                             ->label(__('resource.fields.comments'))
@@ -173,9 +174,9 @@ class ResourceResource extends Resource
 
                 ResourceTreeFilter::make('cat')
                     ->columns(3)
-                    ->columnSpan(3),
+                    ->columnSpan(3), //remove this
             ])
-            ->filtersLayout(Layout::AboveContent)
+            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

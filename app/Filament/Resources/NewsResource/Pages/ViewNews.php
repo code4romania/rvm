@@ -9,8 +9,8 @@ use App\Filament\Resources\NewsResource\Actions\ArchiveNewsAction;
 use App\Filament\Resources\NewsResource\Actions\DraftNewsAction;
 use App\Filament\Resources\NewsResource\Actions\PublishNewsAction;
 use App\Models\News;
-use Filament\Pages\Actions\DeleteAction;
-use Filament\Pages\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
@@ -24,7 +24,7 @@ class ViewNews extends ViewRecord
         return $this->getRecord()->title;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             PublishNewsAction::make()
@@ -45,7 +45,7 @@ class ViewNews extends ViewRecord
         ];
     }
 
-    protected function getSubheading(): Htmlable
+    public function getSubheading(): Htmlable
     {
         return new HtmlString(__('news.disclaimer'));
     }

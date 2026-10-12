@@ -15,7 +15,7 @@ class CreateNews extends CreateRecord
 
     protected static bool $canCreateAnother = false;
 
-    protected function getSubheading(): Htmlable
+    public function getSubheading(): Htmlable
     {
         return new HtmlString(__('news.disclaimer'));
     }

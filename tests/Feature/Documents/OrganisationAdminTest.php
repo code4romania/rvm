@@ -39,8 +39,8 @@ class OrganisationAdminTest extends DocumentsBase
 
         Livewire::test(DocumentResource\Pages\ListDocuments::class)
             ->assertSuccessful()
-            ->assertPageActionHidden('create')
-            ->assertPageActionDisabled('create')
+            ->assertActionHidden('create')
+            ->assertActionDisabled('create')
             ->assertCountTableRecords(3)
             ->assertCanSeeTableRecords($documents)
             ->assertCanNotSeeTableRecords($documentsFromAnotherOrg)
@@ -83,10 +83,10 @@ class OrganisationAdminTest extends DocumentsBase
         $this->actingAs($this->user);
 
         $this->viewProtocolDocumentByUser($document)
-            ->assertPageActionHidden('edit')
-            ->assertPageActionHidden('delete')
-            ->assertPageActionDisabled('edit')
-            ->assertPageActionDisabled('delete');
+            ->assertActionHidden('edit')
+            ->assertActionHidden('delete')
+            ->assertActionDisabled('edit')
+            ->assertActionDisabled('delete');
 
         $document = $this->user
             ->organisation
@@ -95,10 +95,10 @@ class OrganisationAdminTest extends DocumentsBase
             ->first();
 
         $this->viewDocumentByUser($document)
-            ->assertPageActionHidden('edit')
-            ->assertPageActionHidden('delete')
-            ->assertPageActionDisabled('edit')
-            ->assertPageActionDisabled('delete');
+            ->assertActionHidden('edit')
+            ->assertActionHidden('delete')
+            ->assertActionDisabled('edit')
+            ->assertActionDisabled('delete');
     }
 
     public function testInactiveOrgAdminCanNotViewDocument(): void
@@ -221,7 +221,7 @@ class OrganisationAdminTest extends DocumentsBase
 
         Livewire::actingAs($orgAdmin);
         Livewire::test(DocumentResource\Pages\ViewDocument::class, ['record' => $document->id])
-            ->assertPageActionDisabled('delete');
+            ->assertActionDisabled('delete');
     }
 
     public function testOrganisationAdminCanNotCreateDocument()

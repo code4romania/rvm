@@ -6,13 +6,12 @@ namespace App\Enum;
 
 use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\Comparable;
-use App\Concerns\Enums\HasLabel;
+use Filament\Support\Contracts\HasLabel;
 
-enum Coverage: string
+enum Coverage: string implements HasLabel
 {
     use Arrayable;
     use Comparable;
-    use HasLabel;
 
     case national = 'national';
     case local = 'local';
@@ -20,5 +19,13 @@ enum Coverage: string
     protected function labelKeyPrefix(): ?string
     {
         return 'resource.attributes.coverage';
+    }
+
+    public function getLabel(): ?string
+    {
+        return match ($this) {
+            self::national => __('resource.attributes.coverage.national'),
+            self::local => __('resource.attributes.coverage.local'),
+        };
     }
 }

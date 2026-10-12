@@ -13,9 +13,9 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Layout;
@@ -33,7 +33,7 @@ class ResourcesRelationManager extends RelationManager
         return ResourceResource::class;
     }
 
-    protected static function getModelLabel(): string
+    protected static function getModelLabel(): ?string
     {
         return static::getResource()::getModelLabel();
     }
@@ -43,7 +43,7 @@ class ResourcesRelationManager extends RelationManager
         return static::getResource()::getPluralModelLabel();
     }
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -114,7 +114,7 @@ class ResourcesRelationManager extends RelationManager
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -183,7 +183,7 @@ class ResourcesRelationManager extends RelationManager
 
     protected function getTableFiltersLayout(): ?string
     {
-        return Layout::AboveContent;
+        return \Filament\Tables\Enums\FiltersLayout::AboveContent;
     }
 
     protected function shouldPersistTableFiltersInSession(): bool

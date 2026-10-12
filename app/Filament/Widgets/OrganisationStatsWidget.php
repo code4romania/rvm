@@ -11,7 +11,7 @@ use App\Models\Resource;
 use App\Models\User;
 use App\Models\Volunteer;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Card;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class OrganisationStatsWidget extends BaseWidget
 {
@@ -23,16 +23,16 @@ class OrganisationStatsWidget extends BaseWidget
     protected function getCards(): array
     {
         return [
-            Card::make(__('resource.label.plural'), Resource::count())
-                ->icon('heroicon-o-collection')
+            Stat::make(__('resource.label.plural'), Resource::count())
+                ->icon('heroicon-o-rectangle-stack')
                 ->url(ResourceResource::getUrl('index')),
 
-            Card::make(__('volunteer.label.plural'), Volunteer::count())
+            Stat::make(__('volunteer.label.plural'), Volunteer::count())
                 ->icon('heroicon-o-user-group')
                 ->url(VolunteerResource::getUrl('index')),
 
-            Card::make(__('user.label.plural'), User::count())
-                ->icon('heroicon-o-office-building')
+            Stat::make(__('user.label.plural'), User::count())
+                ->icon('heroicon-o-building-office')
                 ->url(UserResource::getUrl('index')),
         ];
     }

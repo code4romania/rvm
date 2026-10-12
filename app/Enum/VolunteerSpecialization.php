@@ -6,13 +6,12 @@ namespace App\Enum;
 
 use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\Comparable;
-use App\Concerns\Enums\HasLabel;
+use Filament\Support\Contracts\HasLabel;
 
-enum VolunteerSpecialization: string
+enum VolunteerSpecialization: string implements HasLabel
 {
     use Arrayable;
     use Comparable;
-    use HasLabel;
 
     case first_aid = 'first_aid';
     case search_rescue = 'search_rescue';
@@ -25,5 +24,17 @@ enum VolunteerSpecialization: string
     protected function labelKeyPrefix(): ?string
     {
         return 'volunteer.specialization';
+    }
+
+    public function getLabel(): ?string {
+        return match ($this) {
+            self::first_aid => __('volunteer.specialization.first_aid'),
+            self::search_rescue => __('volunteer.specialization.search_rescue'),
+            self::stretcher_bearer => __('volunteer.specialization.stretcher_bearer'),
+            self::cook => __('volunteer.specialization.cook'),
+            self::social_worker => __('volunteer.specialization.social_worker'),
+            self::mhpss => __('volunteer.specialization.mhpss'),
+            self::translator => __('volunteer.specialization.translator'),
+        };
     }
 }

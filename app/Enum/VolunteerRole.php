@@ -6,13 +6,12 @@ namespace App\Enum;
 
 use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\Comparable;
-use App\Concerns\Enums\HasLabel;
+use Filament\Support\Contracts\HasLabel;
 
-enum VolunteerRole: string
+enum VolunteerRole: string implements HasLabel
 {
     use Arrayable;
     use Comparable;
-    use HasLabel;
 
     case volunteer = 'volunteer';
     case coordinator = 'coordinator';
@@ -21,5 +20,14 @@ enum VolunteerRole: string
     protected function labelKeyPrefix(): ?string
     {
         return 'volunteer.role';
+    }
+
+    public function getLabel(): ?string
+    {
+        return match ($this) {
+            self::volunteer => __('volunteer.role.volunteer'),
+            self::coordinator => __('volunteer.role.coordinator'),
+            self::other => __('volunteer.role.other'),
+        };
     }
 }

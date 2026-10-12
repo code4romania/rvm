@@ -6,7 +6,7 @@ namespace App\Filament\Resources\OrganisationResource\Actions;
 
 use App\Models\Organisation;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions\Action;
+use Filament\Actions\Action;
 use Illuminate\Support\Facades\RateLimiter;
 
 class ResendInvitationAction extends Action
@@ -20,7 +20,7 @@ class ResendInvitationAction extends Action
     {
         parent::setUp();
 
-        $this->color('secondary');
+        $this->color('gray');
 
         $this->action(function (Organisation $record) {
             $key = $this->getRateLimiterKey($record);

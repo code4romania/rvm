@@ -6,7 +6,7 @@ namespace App\Filament\Resources\ProfileResource\Pages;
 
 use App\Filament\Resources\ProfileResource;
 use App\Filament\Resources\ProfileResource\Concerns\ResolvesRecord;
-use Filament\Pages\Actions\EditAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewProfile extends ViewRecord
@@ -20,7 +20,7 @@ class ViewProfile extends ViewRecord
         return $this->getRecord()->name;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             EditAction::make()
@@ -33,7 +33,7 @@ class ViewProfile extends ViewRecord
         return true;
     }
 
-    public function getFormTabLabel(): ?string
+    public function getContentTabLabel(): ?string
     {
         return __('organisation.section.profile');
     }

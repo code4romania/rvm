@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\NewsResource\Actions;
 
 use App\Models\News;
-use Filament\Pages\Actions\Action;
+use Filament\Actions\Action;
 
 class ArchiveNewsAction extends Action
 {

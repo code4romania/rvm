@@ -9,8 +9,8 @@ use App\Filament\Resources\OrganisationResource\Actions\ActivateOrganisationActi
 use App\Filament\Resources\OrganisationResource\Actions\DeactivateOrganisationAction;
 use App\Filament\Resources\OrganisationResource\Actions\ResendInvitationAction;
 use App\Models\Organisation;
-use Filament\Pages\Actions\DeleteAction;
-use Filament\Pages\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewOrganisation extends ViewRecord
@@ -22,7 +22,7 @@ class ViewOrganisation extends ViewRecord
         return $this->getRecord()->name;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             ActivateOrganisationAction::make()
@@ -48,7 +48,7 @@ class ViewOrganisation extends ViewRecord
         return true;
     }
 
-    public function getFormTabLabel(): ?string
+    public function getContentTabLabel(): ?string
     {
         return __('organisation.section.profile');
     }

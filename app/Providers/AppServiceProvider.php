@@ -10,7 +10,9 @@ use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Filament\Facades\Filament;
+use Filament\Navigation\MenuItem;
 use Filament\Navigation\UserMenuItem;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
@@ -45,21 +47,14 @@ class AppServiceProvider extends ServiceProvider
             Model::preventAccessingMissingAttributes($shouldBeEnabled);
         });
 
-        Filament::serving(function () {
-            Filament::registerViteTheme('resources/css/app.css');
-
-            Filament::registerUserMenuItems([
-                'account' => UserMenuItem::make()
-                    ->url(Settings::getUrl())
-                    ->label(__('auth.settings'))
-                    ->icon('heroicon-o-cog'),
-            ]);
-        });
-
-        Scramble::extendOpenApi(function (OpenApi $openApi) {
+        Scramble::afterOpenApiGenerated(function (OpenApi $openApi) {
             $openApi->secure(
                 SecurityScheme::http('bearer', 'JWT')
             );
+        });
+
+        ResetPassword::createUrlUsing(function ($user, string $token) {
+           return Filament::getPanel('admin')->getResetPasswordUrl($token, $user);
         });
     }
 

@@ -6,13 +6,12 @@ namespace App\Enum;
 
 use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\Comparable;
-use App\Concerns\Enums\HasLabel;
+use Filament\Support\Contracts\HasLabel;
 
-enum NGOType: string
+enum NGOType: string implements HasLabel
 {
     use Arrayable;
     use Comparable;
-    use HasLabel;
 
     case association = 'association';
     case foundation = 'foundation';
@@ -21,5 +20,14 @@ enum NGOType: string
     protected function labelKeyPrefix(): ?string
     {
         return 'organisation.field.ngo_types';
+    }
+
+    public function getLabel(): ?string
+    {
+        return match ($this) {
+            self::foundation => __('organisation.field.ngo_types.foundation'),
+            self::federation => __('organisation.field.ngo_types.federation'),
+            self::association => __('organisation.field.ngo_types.association'),
+        };
     }
 }

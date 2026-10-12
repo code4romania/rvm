@@ -6,7 +6,7 @@ namespace App\Filament\Resources\UserResource\Actions;
 
 use App\Models\User;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions\Action;
+use Filament\Actions\Action;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
 

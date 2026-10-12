@@ -27,9 +27,9 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -43,7 +43,7 @@ class OrganisationResource extends Resource
 {
     protected static ?string $model = Organisation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-office-building';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?int $navigationSort = 1;
 
@@ -405,18 +405,13 @@ class OrganisationResource extends Resource
 
                 TextColumn::make('type')
                     ->label(__('organisation.field.type'))
-                    ->formatStateUsing(fn ($record) => $record->type->label())
+                    ->formatStateUsing(fn ($record) => $record->type->getLabel())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\BadgeColumn::make('status')
-                    ->colors([
-                        'secondary' => OrganisationStatus::inactive->value,
-                        'warning' => OrganisationStatus::invited->value,
-                        'success' => OrganisationStatus::active->value,
-                    ])
-                    ->enum(OrganisationStatus::options()),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge(),
 
                 TextColumn::make('county.name')
                     ->label(__('organisation.field.hq'))
@@ -426,7 +421,6 @@ class OrganisationResource extends Resource
 
                 TextColumn::make('area')
                     ->label(__('organisation.section.area_of_activity'))
-                    ->enum(OrganisationAreaType::options())
                     ->description(
                         fn (Organisation $record) => $record
                             ->activityCounties
@@ -501,7 +495,7 @@ class OrganisationResource extends Resource
                     }),
 
             ])
-            ->filtersLayout(Layout::AboveContent)
+            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

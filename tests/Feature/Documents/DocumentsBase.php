@@ -18,7 +18,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
-use Livewire\Testing\TestableLivewire;
+use Livewire\Features\SupportTesting\Testable;
 use Tests\TestCase;
 
 abstract class DocumentsBase extends TestCase
@@ -83,7 +83,7 @@ abstract class DocumentsBase extends TestCase
             ->createQuietly();
     }
 
-    public function viewDocuments(): TestableLivewire
+    public function viewDocuments(): Testable
     {
         $documents = Document::all();
 
@@ -109,7 +109,7 @@ abstract class DocumentsBase extends TestCase
             ->assertCanSeeTableRecords($documents->sortBy('expires_at'), inOrder: true);
     }
 
-    public function viewProtocolDocumentByUser(Document $document): TestableLivewire
+    public function viewProtocolDocumentByUser(Document $document): Testable
     {
         return Livewire::test(ViewDocument::class, ['record' => $document->id])
             ->assertSuccessful()
@@ -122,7 +122,7 @@ abstract class DocumentsBase extends TestCase
             ->assertFormFieldIsVisible('document');
     }
 
-    public function viewDocumentByUser(Document $document): TestableLivewire
+    public function viewDocumentByUser(Document $document): Testable
     {
         return Livewire::test(ViewDocument::class, ['record' => $document->id])
             ->assertSuccessful()
@@ -135,7 +135,7 @@ abstract class DocumentsBase extends TestCase
             ->assertFormFieldIsVisible('document');
     }
 
-    public function editDocument(Document $document): TestableLivewire
+    public function editDocument(Document $document): Testable
     {
         return Livewire::test(EditDocument::class, ['record' => $document->id])
             ->assertSuccessful()

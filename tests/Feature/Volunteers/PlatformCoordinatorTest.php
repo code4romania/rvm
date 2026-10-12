@@ -81,8 +81,8 @@ class PlatformCoordinatorTest extends VolunteersBase
             ->resetTableFilters()
             ->filterTable('has_first_aid_accreditation', $hasFirstAid)
             ->assertCanSeeTableRecords($firstAidVolunteers)
-            ->assertPageActionHidden('create')
-            ->assertPageActionDisabled('create');
+            ->assertActionHidden('create')
+            ->assertActionDisabled('create');
     }
 
     public function testPlatformCoordinatorCanViewVolunteer()
@@ -91,6 +91,8 @@ class PlatformCoordinatorTest extends VolunteersBase
             ->whereJsonDoesntContain('specializations', VolunteerSpecialization::translator)
             ->inRandomOrder()
             ->first();
+
+//        dd(auth()->user()->can('edit', $volunteer));
 
         Livewire::test(ViewVolunteer::class, ['record' => $volunteer->id])
             ->assertSuccessful()
@@ -116,7 +118,7 @@ class PlatformCoordinatorTest extends VolunteersBase
             ->assertFormFieldIsDisabled('county_id')
             ->assertFormFieldIsVisible('city_id')
             ->assertFormFieldIsDisabled('city_id')
-            ->assertPageActionDoesNotExist('edit')
+            ->assertActionHidden('edit')
             ->assertFormFieldIsHidden('language');
 
         $volunteerTranslator = Volunteer::query()
@@ -150,7 +152,7 @@ class PlatformCoordinatorTest extends VolunteersBase
             ->assertFormFieldIsDisabled('county_id')
             ->assertFormFieldIsVisible('city_id')
             ->assertFormFieldIsDisabled('city_id')
-            ->assertPageActionDoesNotExist('edit');
+            ->assertActionHidden('edit');
     }
 
     public function testPlatformCoordinatorCanNotEditVolunteer()

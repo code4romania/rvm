@@ -11,7 +11,7 @@ class EditOrganisation extends EditRecord
 {
     protected static string $resource = OrganisationResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             //
@@ -23,7 +23,7 @@ class EditOrganisation extends EditRecord
         return $this->getRecord()->name;
     }
 
-    protected function getRelationManagers(): array
+    public function getRelationManagers(): array
     {
         return [
             //
@@ -37,10 +37,10 @@ class EditOrganisation extends EditRecord
 
     protected function getRedirectUrl(): ?string
     {
-        return static::getResource()::getUrl('view', $this->getRecord());
+        return static::getResource()::getUrl('view', [$this->getRecord()]);
     }
 
-    public function getFormTabLabel(): ?string
+    public function getContentTabLabel(): ?string
     {
         return __('organisation.section.profile');
     }
