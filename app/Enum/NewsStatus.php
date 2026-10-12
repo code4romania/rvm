@@ -32,7 +32,7 @@ enum NewsStatus: string implements HasLabel, HasColor
         };
     }
 
-    public function getColor(): ?string
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::drafted => 'secondary',

@@ -139,12 +139,10 @@ class NewsResource extends Resource
 
                 TextColumn::make('status')
                     ->label(__('news.field.status'))
+                    ->badge()
                     ->sortable()
                     ->toggleable()
                     ->searchable(),
-
-                Tables\Columns\TextColumn::make('status')
-                    ->badge(),
 
                 TextColumn::make('published_at')
                     ->label(__('news.field.published_at'))

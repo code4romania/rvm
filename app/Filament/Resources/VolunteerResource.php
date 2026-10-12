@@ -92,7 +92,7 @@ class VolunteerResource extends Resource
 
                         Select::make('role')
                             ->label(__('volunteer.field.role'))
-                            ->options(VolunteerRole::options())
+                            ->options(VolunteerRole::class)
                             ->enum(VolunteerRole::class)
                             ->required(),
 

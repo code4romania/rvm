@@ -71,7 +71,8 @@ class DocumentResource extends Resource
 
                         Select::make('type')
                             ->label(__('document.field.type'))
-                            ->options(DocumentType::options())
+                            ->options(DocumentType::class)
+                            ->enum(DocumentType::class)
                             ->reactive()
                             ->required(),
 

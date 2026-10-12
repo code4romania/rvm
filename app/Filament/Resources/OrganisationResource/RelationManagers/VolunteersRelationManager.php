@@ -119,7 +119,6 @@ class VolunteersRelationManager extends RelationManager
                     ->label(__('volunteer.field.specializations'))
                     ->formatStateUsing(
                         static fn ($state): ?string => collect($state)
-                            ->map(fn (VolunteerSpecialization $specialization) => $specialization->getLabel())
                             ->filter()
                             ->join(', ')
                     ),

@@ -21,7 +21,7 @@ use Illuminate\Support\Collection;
 
 class PlatformStatsWidget extends BaseWidget
 {
-//    protected static string $view = 'filament.widgets.platform-stats-widget';
+    protected static string $view = 'filament.widgets.platform-stats-widget';
 
     /**
      * County id to filter by.

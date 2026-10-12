@@ -45,11 +45,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->viteTheme('resources/css/app.css')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
-                CustomWidgets\AccountWidget::class,
-                CustomWidgets\OrganisationStatsWidget::class,
-                CustomWidgets\PlatformStatsWidget::class,
-            ])
             ->databaseNotifications()
             ->middleware([
                 EncryptCookies::class,
