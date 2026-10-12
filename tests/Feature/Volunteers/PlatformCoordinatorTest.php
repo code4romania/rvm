@@ -92,6 +92,8 @@ class PlatformCoordinatorTest extends VolunteersBase
             ->inRandomOrder()
             ->first();
 
+//        dd(auth()->user()->can('edit', $volunteer));
+
         Livewire::test(ViewVolunteer::class, ['record' => $volunteer->id])
             ->assertSuccessful()
             ->assertFormFieldIsVisible('organisation_id')
@@ -116,7 +118,7 @@ class PlatformCoordinatorTest extends VolunteersBase
             ->assertFormFieldIsDisabled('county_id')
             ->assertFormFieldIsVisible('city_id')
             ->assertFormFieldIsDisabled('city_id')
-            ->assertActionDoesNotExist('edit')
+            ->assertActionHidden('edit')
             ->assertFormFieldIsHidden('language');
 
         $volunteerTranslator = Volunteer::query()
@@ -150,7 +152,7 @@ class PlatformCoordinatorTest extends VolunteersBase
             ->assertFormFieldIsDisabled('county_id')
             ->assertFormFieldIsVisible('city_id')
             ->assertFormFieldIsDisabled('city_id')
-            ->assertActionDoesNotExist('edit');
+            ->assertActionHidden('edit');
     }
 
     public function testPlatformCoordinatorCanNotEditVolunteer()
