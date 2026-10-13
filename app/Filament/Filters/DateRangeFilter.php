@@ -62,7 +62,7 @@ class DateRangeFilter extends BaseFilter
 
                     if (! \is_null($value)) {
                         $value = __('general.filter.date_from', [
-                            'date' => Carbon::parse($value)->toFormattedDate(),
+                            'date' => Carbon::parse($value)->toFormattedDateString(),
                         ]);
                     }
 

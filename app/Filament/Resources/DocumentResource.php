@@ -165,7 +165,7 @@ class DocumentResource extends Resource
                             __('document.field.never_expires') :
                             null;
 
-                        return $state?->format(config('tables.date_format')) ?? $fallback;
+                        return $state?->format(config('tables.date_format') ?? '') ?? $fallback;
                     })
                     ->toggleable(),
             ])
