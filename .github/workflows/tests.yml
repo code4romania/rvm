@@ -7,6 +7,7 @@ jobs:
     name: PHP ${{ matrix.php-version }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     strategy:
       fail-fast: false
       matrix:
@@ -25,10 +26,10 @@ jobs:
         ports:
           - 3306/tcp
         options: >-
-            --health-cmd "mysqladmin ping"
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 3
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
 
     steps:
       - name: Checkout
@@ -68,13 +69,30 @@ jobs:
           key: dependencies-composer-${{ hashFiles('composer.lock') }}-php-${{ matrix.php-version }}
           restore-keys: dependencies-composer-
 
+      # Important: don't execute Laravel scripts yet.
       - name: Install composer dependencies
-        run: composer install --prefer-dist --no-interaction
+        run: composer install --prefer-dist --no-interaction --no-scripts
 
       - name: Setup env
-        run: |
-          cp .env.ci .env
-          php artisan key:generate --ansi
+        run: cp .env.ci .env
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Run Composer scripts
+        run: composer run-script post-autoload-dump
+
+      - name: Generate application key
+        run: php artisan key:generate --ansi
 
       - name: Run tests
         run: php artisan test
