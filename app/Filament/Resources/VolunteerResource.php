@@ -105,6 +105,7 @@ class VolunteerResource extends Resource
 
                         TextInput::make('language')
                             ->label(__('volunteer.field.language'))
+                            ->maxLength(200)
                             ->visible(
                                 fn (callable $get) => \in_array('translator', $get('specializations'))
                             ),

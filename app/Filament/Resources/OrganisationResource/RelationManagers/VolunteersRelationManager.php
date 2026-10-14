@@ -86,6 +86,7 @@ class VolunteersRelationManager extends RelationManager
 
                 TextInput::make('language')
                     ->label(__('volunteer.field.language'))
+                    ->maxLength(200)
                     ->visible(
                         fn (Get $get) => is_array($get('specializations')) && \in_array('translator', $get('specializations'))
                     ),
