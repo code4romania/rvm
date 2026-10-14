@@ -57,6 +57,7 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->brandLogo(Vite::asset('resources/images/logo.png'))
+            ->brandLogoHeight('2.5rem')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->databaseNotifications()
             ->middleware([
