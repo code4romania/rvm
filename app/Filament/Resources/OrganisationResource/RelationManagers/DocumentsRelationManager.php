@@ -58,7 +58,7 @@ class DocumentsRelationManager extends RelationManager
                     ->label(__('document.field.type'))
                     ->options(DocumentType::options())
                     ->enum(DocumentType::class)
-                    ->reactive()
+                    ->live()
                     ->required(),
 
                 Grid::make()
@@ -86,12 +86,12 @@ class DocumentsRelationManager extends RelationManager
                                         $set('expires_at', null);
                                     }
                                 })
-                                ->reactive(),
+                                ->live(),
                         ]),
                     ]),
 
                 SpatieMediaLibraryFileUpload::make('document')
-                    ->enableDownload()
+                    ->downloadable()
                     ->label(__('document.field.document'))
                     ->preserveFilenames()
                     ->visibility('private')

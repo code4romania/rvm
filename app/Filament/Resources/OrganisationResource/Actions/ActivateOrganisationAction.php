@@ -30,8 +30,8 @@ class ActivateOrganisationAction extends Action
         $this->label(__('organisation.action.change_status.inactive.button'));
 
         $this->modalHeading(__('organisation.action.change_status.inactive.heading'));
-        $this->modalSubheading(__('organisation.action.change_status.inactive.subheading'));
-        $this->modalButton(__('organisation.action.change_status.inactive.button'));
+        $this->modalDescription(__('organisation.action.change_status.inactive.subheading'));
+        $this->modalSubmitActionLabel(__('organisation.action.change_status.inactive.button'));
 
         $this->successNotificationTitle(__('organisation.action.change_status.inactive.success'));
     }

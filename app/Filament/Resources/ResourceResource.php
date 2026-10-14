@@ -65,7 +65,7 @@ class ResourceResource extends Resource
                         Select::make('category_id')
                             ->relationship('category', 'name', fn (Builder $query) => $query->orderBy('id'))
                             ->label(__('resource.fields.category'))
-                            ->reactive()
+                            ->live()
                             ->required()
                             ->afterStateUpdated(function (callable $set) {
                                 $set('subcategory_id', null);
@@ -87,7 +87,7 @@ class ResourceResource extends Resource
                                 }
                             )
                             ->disabled(fn (callable $get) => $get('category_id') === null)
-                            ->reactive()
+                            ->live()
                             ->required(),
                     ]),
 

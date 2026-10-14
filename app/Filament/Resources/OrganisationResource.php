@@ -85,7 +85,7 @@ class OrganisationResource extends Resource
                                     ->options(OrganisationType::options())
                                     ->enum(OrganisationType::class)
                                     ->required()
-                                    ->reactive(),
+                                    ->live(),
 
                                 Select::make('ngo_type')
                                     ->label(__('organisation.field.ngo_type'))
@@ -164,11 +164,11 @@ class OrganisationResource extends Resource
                         Section::make(__('organisation.field.logo'))
                             ->schema([
                                 SpatieMediaLibraryFileUpload::make('logo')
-                                    ->enableOpen()
+                                    ->openable()
                                     ->disk('s3-public')
                                     ->conversion('thumb')
                                     ->visibility('public')
-                                    ->disableLabel()
+                                    ->hiddenLabel()
                                     ->maxFiles(1)
                                     ->image(),
                             ]),
@@ -263,7 +263,7 @@ class OrganisationResource extends Resource
                         Select::make('area')
                             ->label(__('organisation.field.area'))
                             ->options(OrganisationAreaType::options())
-                            ->reactive()
+                            ->live()
                             ->afterStateUpdated(function (string $state, callable $set) {
                                 if (
                                     OrganisationAreaType::regional->isNot($state) &&
@@ -295,7 +295,7 @@ class OrganisationResource extends Resource
                                 OrganisationAreaType::regional->value,
                                 OrganisationAreaType::local->value,
                             ]))
-                            ->reactive(),
+                            ->live(),
 
                         Select::make('activity_cities')
                             ->label(__('general.city'))
@@ -326,7 +326,7 @@ class OrganisationResource extends Resource
                     ->schema([
                         Toggle::make('has_branches')
                             ->label(__('organisation.field.has_branches'))
-                            ->reactive(),
+                            ->live(),
 
                         Repeater::make('branches')
                             ->label(__('organisation.field.branches'))
@@ -365,7 +365,7 @@ class OrganisationResource extends Resource
                                     ->nullable(),
 
                             ])
-                            ->createItemButtonLabel(__('organisation.field.branch.add_area'))
+                            ->addActionLabel(__('organisation.field.branch.add_area'))
                             ->hidden(fn (callable $get) => ! $get('has_branches')),
                     ])
                     ->label(__('organisation.field.resources')),

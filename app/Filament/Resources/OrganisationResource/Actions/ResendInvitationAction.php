@@ -41,8 +41,8 @@ class ResendInvitationAction extends Action
         $this->label(__('organisation.action.resend_invitation.button'));
 
         $this->modalHeading(__('organisation.action.resend_invitation.heading'));
-        $this->modalSubheading(__('organisation.action.resend_invitation.subheading'));
-        $this->modalButton(__('organisation.action.resend_invitation.button'));
+        $this->modalDescription(__('organisation.action.resend_invitation.subheading'));
+        $this->modalSubmitActionLabel(__('organisation.action.resend_invitation.button'));
 
         $this->successNotificationTitle(__('organisation.action.resend_invitation.success'));
 

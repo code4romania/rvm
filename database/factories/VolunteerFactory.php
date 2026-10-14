@@ -22,6 +22,8 @@ class VolunteerFactory extends Factory
     public function definition()
     {
         $city = City::query()->inRandomOrder()->first();
+        $specializations = fake()->randomElements(VolunteerSpecialization::values(), fake()->numberBetween(1, 3));
+        $language = in_array('translator', $specializations) ? 'romana' : null;
 
         return [
             'first_name' => fake()->firstName(),
@@ -32,7 +34,8 @@ class VolunteerFactory extends Factory
             'phone' => fake()->phoneNumber(),
             'city_id' => $city->id,
             'county_id' => $city->county_id,
-            'specializations' => fake()->randomElements(VolunteerSpecialization::values(), fake()->numberBetween(1, 3)),
+            'specializations' => $specializations,
+            'language' => $language,
             'has_first_aid_accreditation' => fake()->boolean(),
         ];
     }

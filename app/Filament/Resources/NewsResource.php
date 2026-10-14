@@ -74,7 +74,7 @@ class NewsResource extends Resource
 
                         SpatieMediaLibraryFileUpload::make('cover_photo')
                             ->collection('cover_photos')
-                            ->enableOpen()
+                            ->openable()
                             ->disk('s3-public')
                             ->maxFiles(1)
                             ->conversion('thumb')
@@ -93,7 +93,7 @@ class NewsResource extends Resource
 
                         SpatieMediaLibraryFileUpload::make('media_files')
                             ->collection('media_files')
-                            ->enableOpen()
+                            ->openable()
                             ->disk('s3-public')
                             ->panelLayout('grid')
                             ->multiple()

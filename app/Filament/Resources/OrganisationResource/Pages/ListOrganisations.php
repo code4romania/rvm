@@ -29,7 +29,7 @@ class ListOrganisations extends ListRecords
         return [
             CreateAction::make()
                 ->modalHeading(__('organisation.modal.heading'))
-                ->modalSubheading(__('organisation.modal.subheading'))
+                ->modalDescription(__('organisation.modal.subheading'))
                 ->slideOver()
                 ->form([
                     TextInput::make('name')
@@ -66,7 +66,7 @@ class ListOrganisations extends ListRecords
                         ->required()
                         ->options(OrganisationType::options())
                         ->enum(OrganisationType::class)
-                        ->reactive()
+                        ->live()
                         ->inlineLabel(),
 
                     Select::make('ngo_type')

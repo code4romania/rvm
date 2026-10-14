@@ -77,7 +77,7 @@ class UserResource extends Resource
                             ->label(__('user.field.role'))
                             ->options(UserRole::options())
                             ->enum(UserRole::class)
-                            ->reactive()
+                            ->live()
                             ->required(),
 
                         Select::make('organisation_id')

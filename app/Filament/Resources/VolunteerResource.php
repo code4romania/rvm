@@ -88,7 +88,7 @@ class VolunteerResource extends Resource
                         TextInput::make('cnp')
                             ->label(__('volunteer.field.cnp'))
                             ->rule(new ValidCNP)
-                            ->unique(),
+                            ->unique(ignoreRecord: true),
 
                         Select::make('role')
                             ->label(__('volunteer.field.role'))
@@ -101,11 +101,10 @@ class VolunteerResource extends Resource
                             ->options(VolunteerSpecialization::options())
                             ->multiple()
                             ->required()
-                            ->reactive(),
+                            ->live(),
 
                         TextInput::make('language')
                             ->label(__('volunteer.field.language'))
-                            ->required()
                             ->visible(
                                 fn (callable $get) => \in_array('translator', $get('specializations'))
                             ),
