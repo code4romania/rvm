@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Pages;
 
 use Filament\Forms\Components\Grid;
@@ -12,7 +14,6 @@ class PersonalInfo extends BasePersonalInfo
 
     protected function getProfileFormSchema(): array
     {
-
         return [
             Grid::make(2)->schema([
                 TextInput::make('first_name')
@@ -28,7 +29,7 @@ class PersonalInfo extends BasePersonalInfo
                     ->email()
                     ->unique(config('filament-breezy.user_model'), ignorable: $this->user)
                     ->label(__('user.field.email')),
-                ])
+            ]),
         ];
     }
 }

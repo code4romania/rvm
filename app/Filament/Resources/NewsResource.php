@@ -17,12 +17,11 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 class NewsResource extends Resource
@@ -74,7 +73,7 @@ class NewsResource extends Resource
 
                         SpatieMediaLibraryFileUpload::make('cover_photo')
                             ->collection('cover_photos')
-                            ->enableOpen()
+                            ->openable()
                             ->disk('s3-public')
                             ->maxFiles(1)
                             ->conversion('thumb')
@@ -93,7 +92,7 @@ class NewsResource extends Resource
 
                         SpatieMediaLibraryFileUpload::make('media_files')
                             ->collection('media_files')
-                            ->enableOpen()
+                            ->openable()
                             ->disk('s3-public')
                             ->panelLayout('grid')
                             ->multiple()
@@ -184,7 +183,7 @@ class NewsResource extends Resource
                     }),
 
             ])
-            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
+            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

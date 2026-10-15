@@ -17,8 +17,8 @@ use Database\Seeders\ResourceCategorySeed;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
-use Livewire\Livewire;
 use Livewire\Features\SupportTesting\Testable;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 abstract class DocumentsBase extends TestCase

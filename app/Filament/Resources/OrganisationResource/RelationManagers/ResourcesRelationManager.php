@@ -15,11 +15,10 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 class ResourcesRelationManager extends RelationManager
@@ -56,7 +55,7 @@ class ResourcesRelationManager extends RelationManager
                 Select::make('category_id')
                     ->relationship('category', 'name', fn (Builder $query) => $query->orderBy('id'))
                     ->label(__('resource.fields.category'))
-                    ->reactive()
+                    ->live()
                     ->required()
                     ->afterStateUpdated(function (callable $set) {
                         $set('subcategory_id', null);
@@ -80,7 +79,7 @@ class ResourcesRelationManager extends RelationManager
                         }
                     )
                     ->disabled(fn (callable $get) => $get('category_id') === null)
-                    ->reactive()
+                    ->live()
                     ->required(),
 
                 // The logic that toggles the visibility of the field groups
@@ -161,7 +160,7 @@ class ResourcesRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->requiresConfirmation()
                     ->modalHeading(__('resource.modal.heading'))
-                    ->modalSubheading(__('resource.modal.subheading'))
+                    ->modalDescription(__('resource.modal.subheading'))
                     ->modalWidth('4xl')
                     ->slideOver(),
             ])
@@ -183,7 +182,7 @@ class ResourcesRelationManager extends RelationManager
 
     protected function getTableFiltersLayout(): ?string
     {
-        return \Filament\Tables\Enums\FiltersLayout::AboveContent;
+        return Tables\Enums\FiltersLayout::AboveContent;
     }
 
     protected function shouldPersistTableFiltersInSession(): bool

@@ -8,7 +8,6 @@ use App\Enum\DocumentType;
 use App\Filament\Resources\DocumentResource;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Document;
-use Closure;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
@@ -18,10 +17,10 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class DocumentsRelationManager extends RelationManager
 {
@@ -58,7 +57,7 @@ class DocumentsRelationManager extends RelationManager
                     ->label(__('document.field.type'))
                     ->options(DocumentType::options())
                     ->enum(DocumentType::class)
-                    ->reactive()
+                    ->live()
                     ->required(),
 
                 Grid::make()
@@ -86,12 +85,12 @@ class DocumentsRelationManager extends RelationManager
                                         $set('expires_at', null);
                                     }
                                 })
-                                ->reactive(),
+                                ->live(),
                         ]),
                     ]),
 
                 SpatieMediaLibraryFileUpload::make('document')
-                    ->enableDownload()
+                    ->downloadable()
                     ->label(__('document.field.document'))
                     ->preserveFilenames()
                     ->visibility('private')

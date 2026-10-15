@@ -13,10 +13,11 @@ use App\Rules\ValidCNP;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class VolunteersRelationManager extends RelationManager
 {
@@ -67,7 +68,7 @@ class VolunteersRelationManager extends RelationManager
                 TextInput::make('cnp')
                     ->label(__('volunteer.field.cnp'))
                     ->rule(new ValidCNP)
-                    ->unique()
+                    ->unique(ignoreRecord: true)
                     ->required(),
 
                 Select::make('role')
@@ -81,13 +82,13 @@ class VolunteersRelationManager extends RelationManager
                     ->options(VolunteerSpecialization::options())
                     ->multiple()
                     ->required()
-                    ->reactive(),
+                    ->live(),
 
                 TextInput::make('language')
                     ->label(__('volunteer.field.language'))
-                    ->required()
+                    ->maxLength(200)
                     ->visible(
-                        fn (callable $get) => \in_array('translator', $get('specializations'))
+                        fn (Get $get) => \is_array($get('specializations')) && \in_array('translator', $get('specializations'))
                     ),
 
                 Location::make()
@@ -133,7 +134,7 @@ class VolunteersRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->requiresConfirmation()
                     ->modalHeading(__('volunteer.modal.heading'))
-                    ->modalSubheading(__('volunteer.modal.subheading'))
+                    ->modalDescription(__('volunteer.modal.subheading'))
                     ->modalWidth('4xl')
                     ->slideOver(),
             ])
