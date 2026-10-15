@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\VolunteerResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\VolunteerResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -16,7 +17,7 @@ class ListVolunteers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

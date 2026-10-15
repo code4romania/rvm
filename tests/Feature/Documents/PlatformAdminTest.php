@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Documents;
 
+use Illuminate\Http\UploadedFile;
 use App\Enum\DocumentType;
 use App\Filament\Resources\DocumentResource\Pages\CreateDocument;
 use App\Filament\Resources\DocumentResource\Pages\ViewDocument;
@@ -89,7 +90,7 @@ class PlatformAdminTest extends DocumentsBase
 
     public function testPlatformAdminCanCreateDocument()
     {
-        $file = \Illuminate\Http\UploadedFile::fake()
+        $file = UploadedFile::fake()
             ->image(fake()->word() . '.jpg')
             ->store('tests');
 

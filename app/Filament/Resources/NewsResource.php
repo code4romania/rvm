@@ -4,18 +4,24 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Group;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Actions\ViewAction;
+use App\Filament\Resources\NewsResource\Pages\ListNews;
+use App\Filament\Resources\NewsResource\Pages\CreateNews;
+use App\Filament\Resources\NewsResource\Pages\ViewNews;
+use App\Filament\Resources\NewsResource\Pages\EditNews;
 use App\Enum\NewsStatus;
 use App\Filament\Resources\NewsResource\Pages;
 use App\Models\News;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
@@ -28,7 +34,7 @@ class NewsResource extends Resource
 {
     protected static ?string $model = News::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-newspaper';
 
     protected static ?int $navigationSort = 5;
 
@@ -42,10 +48,10 @@ class NewsResource extends Resource
         return __('news.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->heading('')
                     ->columns(1)
@@ -183,11 +189,11 @@ class NewsResource extends Resource
                     }),
 
             ])
-            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->filtersLayout(FiltersLayout::AboveContent)
+            ->recordActions([
+                ViewAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ])
             ->headerActions([
@@ -204,10 +210,10 @@ class NewsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListNews::route('/'),
-            'create' => Pages\CreateNews::route('/create'),
-            'view' => Pages\ViewNews::route('/{record}'),
-            'edit' => Pages\EditNews::route('/{record}/edit'),
+            'index' => ListNews::route('/'),
+            'create' => CreateNews::route('/create'),
+            'view' => ViewNews::route('/{record}'),
+            'edit' => EditNews::route('/{record}/edit'),
         ];
     }
 }

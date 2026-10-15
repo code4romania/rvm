@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Documents;
 
+use App\Filament\Resources\DocumentResource\Pages\EditDocument;
+use App\Filament\Resources\DocumentResource\Pages\CreateDocument;
 use App\Enum\DocumentType;
 use App\Filament\Resources\DocumentResource;
 use App\Models\Document;
@@ -63,13 +65,13 @@ class PlatformCoordinatorTest extends DocumentsBase
             ->inRandomOrder()
             ->first();
 
-        Livewire::test(DocumentResource\Pages\EditDocument::class, ['record' => $document->id])
+        Livewire::test(EditDocument::class, ['record' => $document->id])
             ->assertForbidden();
     }
 
     public function testPlatformCoordinatorCanNotCreateDocument(): void
     {
-        Livewire::test(DocumentResource\Pages\CreateDocument::class)
+        Livewire::test(CreateDocument::class)
             ->assertForbidden();
     }
 }

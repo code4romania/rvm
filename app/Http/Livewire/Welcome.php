@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire;
 
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Auth\Http\Responses\LoginResponse;
 use App\Models\User;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
@@ -11,7 +13,6 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Http\Responses\Auth\LoginResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -20,6 +21,7 @@ use Livewire\Component;
 
 class Welcome extends Component implements HasForms
 {
+    use InteractsWithActions;
     use InteractsWithForms;
     use WithRateLimiting;
 

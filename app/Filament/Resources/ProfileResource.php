@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use App\Filament\Resources\ProfileResource\Pages\ViewProfile;
+use App\Filament\Resources\ProfileResource\Pages\EditProfile;
 use App\Filament\Resources\ProfileResource\Pages;
 use App\Models\Organisation;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 
 class ProfileResource extends Resource
@@ -15,7 +17,7 @@ class ProfileResource extends Resource
 
     protected static ?string $slug = 'profile';
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?int $navigationSort = 1;
 
@@ -29,16 +31,16 @@ class ProfileResource extends Resource
         return self::getModelLabel();
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return OrganisationResource::form($form);
+        return OrganisationResource::form($schema);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ViewProfile::route('/'),
-            'edit' => Pages\EditProfile::route('/edit'),
+            'index' => ViewProfile::route('/'),
+            'edit' => EditProfile::route('/edit'),
         ];
     }
 

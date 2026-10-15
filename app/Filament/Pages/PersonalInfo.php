@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
-use Filament\Forms\Components\Grid;
+use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\TextInput;
 use Jeffgreco13\FilamentBreezy\Livewire\PersonalInfo as BasePersonalInfo;
 

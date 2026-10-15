@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Forms\FieldGroups;
 
+use Filament\Schemas\Components\Section;
 use App\Filament\Forms\Components\Location;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 
 class RadioFieldGroup extends FieldGroup
 {
-    public function getChildComponents(): array
+    public function getChildComponents(?string $key = null): array
     {
         return [
             Section::make(__('resource.fields.attributes'))

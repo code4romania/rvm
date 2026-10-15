@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Forms\Components;
 
+use Filament\Schemas\Components\Grid;
 use App\Models\City;
 use App\Models\County;
 use Filament\Forms\Components\Concerns\CanBeValidated;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\Cache;
 
@@ -24,7 +24,7 @@ class Location extends Grid
         return $this;
     }
 
-    public function getChildComponents(): array
+    public function getChildComponents(?string $key = null): array
     {
         $county = Select::make('county_id')
             ->label(__('general.county'))

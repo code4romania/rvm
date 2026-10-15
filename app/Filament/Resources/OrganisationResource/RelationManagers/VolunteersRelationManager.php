@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Actions\CreateAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use App\Enum\VolunteerRole;
 use App\Enum\VolunteerSpecialization;
 use App\Filament\Forms\Components\Location;
@@ -12,8 +18,6 @@ use App\Filament\Tables\Actions\ExportAction;
 use App\Rules\ValidCNP;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -40,10 +44,10 @@ class VolunteersRelationManager extends RelationManager
         return static::getResource()::getPluralModelLabel();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('last_name')
                     ->label(__('volunteer.field.last_name'))
                     ->maxLength(200)
@@ -131,19 +135,19 @@ class VolunteersRelationManager extends RelationManager
             ->headerActions([
                 ExportAction::make(),
 
-                Tables\Actions\CreateAction::make()
+                CreateAction::make()
                     ->requiresConfirmation()
                     ->modalHeading(__('volunteer.modal.heading'))
                     ->modalDescription(__('volunteer.modal.subheading'))
                     ->modalWidth('4xl')
                     ->slideOver(),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ]);
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use Filament\Pages\Dashboard;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\Settings;
 use App\Filament\Pages\PersonalInfo;
@@ -53,7 +54,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->brandLogo(fn () => Vite::asset('resources/images/logo.png'))
             ->brandLogoHeight('2.5rem')

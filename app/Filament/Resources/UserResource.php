@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\UserResource\Pages\ListUsers;
+use App\Filament\Resources\UserResource\Pages\CreateUser;
+use App\Filament\Resources\UserResource\Pages\ViewUser;
+use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Enum\UserRole;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\User;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -23,7 +30,7 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
     protected static ?int $navigationSort = 6;
 
@@ -37,10 +44,10 @@ class UserResource extends Resource
         return __('user.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->heading('')
                     ->columns()
@@ -144,12 +151,12 @@ class UserResource extends Resource
                     ->options(UserRole::options())
                     ->hidden(fn () => auth()->user()->belongsToOrganisation()),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ])
             ->headerActions([
@@ -161,10 +168,10 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'view' => Pages\ViewUser::route('/{record}'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'view' => ViewUser::route('/{record}'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }

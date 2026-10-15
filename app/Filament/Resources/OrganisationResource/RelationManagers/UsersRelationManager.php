@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\OrganisationResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\CreateAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use App\Enum\UserRole;
 use App\Filament\Resources\UserResource;
 use App\Filament\Tables\Actions\ExportAction;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -35,10 +39,10 @@ class UsersRelationManager extends RelationManager
         return static::getResource()::getPluralModelLabel();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('first_name')
                     ->label(__('user.field.first_name'))
                     ->maxLength(100)
@@ -99,19 +103,19 @@ class UsersRelationManager extends RelationManager
             ->headerActions([
                 ExportAction::make(),
 
-                Tables\Actions\CreateAction::make()
-                    ->mutateFormDataUsing(function (array $data) {
+                CreateAction::make()
+                    ->mutateDataUsing(function (array $data) {
                         $data['role'] = UserRole::ORG_ADMIN;
 
                         return $data;
                     }),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ]);
     }

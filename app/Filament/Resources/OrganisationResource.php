@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Actions\ViewAction;
+use App\Filament\Resources\OrganisationResource\Pages\ListOrganisations;
+use App\Filament\Resources\OrganisationResource\Pages\ViewOrganisation;
+use App\Filament\Resources\OrganisationResource\Pages\EditOrganisation;
 use App\Enum\NGOType;
 use App\Enum\OrganisationAreaType;
 use App\Enum\OrganisationType;
@@ -18,15 +26,12 @@ use App\Models\City;
 use App\Models\County;
 use App\Models\Organisation;
 use App\Rules\ValidCIF;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
@@ -41,7 +46,7 @@ class OrganisationResource extends Resource
 {
     protected static ?string $model = Organisation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?int $navigationSort = 1;
 
@@ -55,11 +60,11 @@ class OrganisationResource extends Resource
         return __('organisation.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns(3)
-            ->schema([
+            ->components([
                 Group::make()
                     ->columnSpan(2)
                     ->schema([
@@ -493,11 +498,11 @@ class OrganisationResource extends Resource
                     }),
 
             ])
-            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->filtersLayout(FiltersLayout::AboveContent)
+            ->recordActions([
+                ViewAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ])
             ->headerActions([
@@ -519,9 +524,9 @@ class OrganisationResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrganisations::route('/'),
-            'view' => Pages\ViewOrganisation::route('/{record}'),
-            'edit' => Pages\EditOrganisation::route('/{record}/edit'),
+            'index' => ListOrganisations::route('/'),
+            'view' => ViewOrganisation::route('/{record}'),
+            'edit' => EditOrganisation::route('/{record}/edit'),
         ];
     }
 }

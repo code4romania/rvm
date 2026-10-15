@@ -31,7 +31,7 @@ class ListOrganisations extends ListRecords
                 ->modalHeading(__('organisation.modal.heading'))
                 ->modalDescription(__('organisation.modal.subheading'))
                 ->slideOver()
-                ->form([
+                ->schema([
                     TextInput::make('name')
                         ->label(__('organisation.field.name'))
                         ->placeholder(__('organisation.placeholder.name'))
@@ -83,7 +83,7 @@ class ListOrganisations extends ListRecords
                         ->inlineLabel(),
 
                 ])
-                ->mutateFormDataUsing(function (array $data) {
+                ->mutateDataUsing(function (array $data) {
                     $data['contact_person'] = [
                         'email' => $data['email'],
                         'phone' => $data['phone'],

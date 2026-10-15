@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Forms\FieldGroups;
 
+use Filament\Schemas\Components\Grid;
 use App\Models\Resource\Subcategory;
-use Filament\Forms\Components\Grid;
 use Illuminate\Support\Facades\Cache;
 
 abstract class FieldGroup extends Grid

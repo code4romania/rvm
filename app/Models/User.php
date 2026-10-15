@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Filament\Panel;
 use App\Concerns\BelongsToOrganisation;
 use App\Concerns\HasRole;
 use App\Concerns\LimitsVisibility;
@@ -77,7 +78,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         });
     }
 
-    public function canAccessPanel(\Filament\Panel $panel): bool
+    public function canAccessPanel(Panel $panel): bool
     {
         return true;
     }

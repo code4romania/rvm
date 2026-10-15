@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\DocumentResource\Pages;
 
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\DocumentResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
@@ -15,8 +17,8 @@ class ViewDocument extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            'edit' => Actions\EditAction::make(),
-            'delete' => Actions\DeleteAction::make(),
+            'edit' => EditAction::make(),
+            'delete' => DeleteAction::make(),
         ];
     }
 }

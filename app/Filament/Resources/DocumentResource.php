@@ -4,6 +4,18 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Actions\ViewAction;
+use App\Filament\Resources\DocumentResource\Pages\ListDocuments;
+use App\Filament\Resources\DocumentResource\Pages\CreateDocument;
+use App\Filament\Resources\DocumentResource\Pages\ViewDocument;
+use App\Filament\Resources\DocumentResource\Pages\EditDocument;
 use App\Enum\DocumentType;
 use App\Filament\Filters\DateRangeFilter;
 use App\Filament\Resources\DocumentResource\Pages;
@@ -11,15 +23,9 @@ use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Document;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -30,7 +36,7 @@ class DocumentResource extends Resource
 {
     protected static ?string $model = Document::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?int $navigationSort = 2;
 
@@ -44,10 +50,10 @@ class DocumentResource extends Resource
         return __('document.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->heading('')
                     ->columns(2)
@@ -189,11 +195,11 @@ class DocumentResource extends Resource
                     ->label(__('document.field.expires_at'))
                     ->columns(),
             ])
-            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->filtersLayout(FiltersLayout::AboveContent)
+            ->recordActions([
+                ViewAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ])
             ->headerActions([
@@ -212,10 +218,10 @@ class DocumentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDocuments::route('/'),
-            'create' => Pages\CreateDocument::route('/create'),
-            'view' => Pages\ViewDocument::route('/{record}'),
-            'edit' => Pages\EditDocument::route('/{record}/edit'),
+            'index' => ListDocuments::route('/'),
+            'create' => CreateDocument::route('/create'),
+            'view' => ViewDocument::route('/{record}'),
+            'edit' => EditDocument::route('/{record}/edit'),
         ];
     }
 }

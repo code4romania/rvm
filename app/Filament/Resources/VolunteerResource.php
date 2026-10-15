@@ -4,6 +4,15 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Group;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Actions\ViewAction;
+use App\Filament\Resources\VolunteerResource\Pages\ListVolunteers;
+use App\Filament\Resources\VolunteerResource\Pages\CreateVolunteer;
+use App\Filament\Resources\VolunteerResource\Pages\ViewVolunteer;
+use App\Filament\Resources\VolunteerResource\Pages\EditVolunteer;
 use App\Enum\VolunteerRole;
 use App\Enum\VolunteerSpecialization;
 use App\Filament\Forms\Components\Location;
@@ -11,12 +20,9 @@ use App\Filament\Resources\VolunteerResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Volunteer;
 use App\Rules\ValidCNP;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -30,7 +36,7 @@ class VolunteerResource extends Resource
 {
     protected static ?string $model = Volunteer::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?int $navigationSort = 4;
 
@@ -44,10 +50,10 @@ class VolunteerResource extends Resource
         return __('volunteer.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->heading('')
                     ->columns()
@@ -185,11 +191,11 @@ class VolunteerResource extends Resource
                 TernaryFilter::make('has_first_aid_accreditation')
                     ->label(__('volunteer.field.has_first_aid_accreditation')),
             ])
-            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->filtersLayout(FiltersLayout::AboveContent)
+            ->recordActions([
+                ViewAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ])
             ->headerActions([
@@ -208,10 +214,10 @@ class VolunteerResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListVolunteers::route('/'),
-            'create' => Pages\CreateVolunteer::route('/create'),
-            'view' => Pages\ViewVolunteer::route('/{record}'),
-            'edit' => Pages\EditVolunteer::route('/{record}/edit'),
+            'index' => ListVolunteers::route('/'),
+            'create' => CreateVolunteer::route('/create'),
+            'view' => ViewVolunteer::route('/{record}'),
+            'edit' => EditVolunteer::route('/{record}/edit'),
         ];
     }
 }

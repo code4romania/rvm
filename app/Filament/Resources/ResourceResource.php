@@ -4,17 +4,32 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use App\Filament\Forms\FieldGroups\AircraftFieldGroup;
+use App\Filament\Forms\FieldGroups\BoatFieldGroup;
+use App\Filament\Forms\FieldGroups\BroadcastFieldGroup;
+use App\Filament\Forms\FieldGroups\RadioFieldGroup;
+use App\Filament\Forms\FieldGroups\RescueDogFieldGroup;
+use App\Filament\Forms\FieldGroups\TentFieldGroup;
+use App\Filament\Forms\FieldGroups\TrailerFieldGroup;
+use App\Filament\Forms\FieldGroups\TvFieldGroup;
+use App\Filament\Forms\FieldGroups\VehicleFieldGroup;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Actions\ViewAction;
+use App\Filament\Resources\ResourceResource\Pages\ListResources;
+use App\Filament\Resources\ResourceResource\Pages\CreateResource;
+use App\Filament\Resources\ResourceResource\Pages\ViewResource;
+use App\Filament\Resources\ResourceResource\Pages\EditResource;
 use App\Filament\Filters\ResourceTreeFilter;
 use App\Filament\Forms\FieldGroups;
 use App\Filament\Resources\ResourceResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Resource as ResourceModel;
 use App\Models\Resource\Subcategory;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -26,7 +41,7 @@ class ResourceResource extends Resource
 {
     protected static ?string $model = ResourceModel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = 3;
 
@@ -40,10 +55,10 @@ class ResourceResource extends Resource
         return __('resource.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->heading('')
                     ->columns(2)
@@ -90,15 +105,15 @@ class ResourceResource extends Resource
                             ->required(),
                     ]),
 
-                FieldGroups\AircraftFieldGroup::make(),
-                FieldGroups\BoatFieldGroup::make(),
-                FieldGroups\BroadcastFieldGroup::make(),
-                FieldGroups\RadioFieldGroup::make(),
-                FieldGroups\RescueDogFieldGroup::make(),
-                FieldGroups\TentFieldGroup::make(),
-                FieldGroups\TrailerFieldGroup::make(),
-                FieldGroups\TvFieldGroup::make(),
-                FieldGroups\VehicleFieldGroup::make(),
+                AircraftFieldGroup::make(),
+                BoatFieldGroup::make(),
+                BroadcastFieldGroup::make(),
+                RadioFieldGroup::make(),
+                RescueDogFieldGroup::make(),
+                TentFieldGroup::make(),
+                TrailerFieldGroup::make(),
+                TvFieldGroup::make(),
+                VehicleFieldGroup::make(),
 
                 Section::make(__('resource.fields.contact'))
                     ->columns()
@@ -174,11 +189,11 @@ class ResourceResource extends Resource
                     ->columns(3)
                     ->columnSpan(3), //remove this
             ])
-            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->filtersLayout(FiltersLayout::AboveContent)
+            ->recordActions([
+                ViewAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ])
             ->headerActions([
@@ -190,10 +205,10 @@ class ResourceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListResources::route('/'),
-            'create' => Pages\CreateResource::route('/create'),
-            'view' => Pages\ViewResource::route('/{record}'),
-            'edit' => Pages\EditResource::route('/{record}/edit'),
+            'index' => ListResources::route('/'),
+            'create' => CreateResource::route('/create'),
+            'view' => ViewResource::route('/{record}'),
+            'edit' => EditResource::route('/{record}/edit'),
         ];
     }
 }

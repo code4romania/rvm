@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Filament\Forms\FieldGroups;
 
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Group;
 use App\Filament\Forms\Components\Location;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 
 class RescueDogFieldGroup extends FieldGroup
 {
-    public function getChildComponents(): array
+    public function getChildComponents(?string $key = null): array
     {
         return [
             Section::make(__('resource.fields.attributes'))
