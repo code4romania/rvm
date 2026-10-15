@@ -30,8 +30,8 @@ class PublishNewsAction extends Action
         $this->label(__('news.action.change_status.publish.button'));
 
         $this->modalHeading(__('news.action.change_status.publish.heading'));
-        $this->modalSubheading(__('news.action.change_status.publish.subheading'));
-        $this->modalButton(__('news.action.change_status.publish.button'));
+        $this->modalDescription(__('news.action.change_status.publish.subheading'));
+        $this->modalSubmitActionLabel(__('news.action.change_status.publish.button'));
 
         $this->successNotificationTitle(__('news.action.change_status.publish.success'));
     }

@@ -29,6 +29,7 @@ class Volunteer extends Model
         'county_id',
         'city_id',
         'specializations',
+        'language',
         'has_first_aid_accreditation',
         'cnp',
     ];

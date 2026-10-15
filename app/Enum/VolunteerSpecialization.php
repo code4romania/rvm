@@ -26,7 +26,8 @@ enum VolunteerSpecialization: string implements HasLabel
         return 'volunteer.specialization';
     }
 
-    public function getLabel(): ?string {
+    public function getLabel(): ?string
+    {
         return match ($this) {
             self::first_aid => __('volunteer.specialization.first_aid'),
             self::search_rescue => __('volunteer.specialization.search_rescue'),

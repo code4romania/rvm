@@ -18,13 +18,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 class VolunteerResource extends Resource
@@ -88,7 +87,7 @@ class VolunteerResource extends Resource
                         TextInput::make('cnp')
                             ->label(__('volunteer.field.cnp'))
                             ->rule(new ValidCNP)
-                            ->unique(),
+                            ->unique(ignoreRecord: true),
 
                         Select::make('role')
                             ->label(__('volunteer.field.role'))
@@ -101,11 +100,11 @@ class VolunteerResource extends Resource
                             ->options(VolunteerSpecialization::options())
                             ->multiple()
                             ->required()
-                            ->reactive(),
+                            ->live(),
 
                         TextInput::make('language')
                             ->label(__('volunteer.field.language'))
-                            ->required()
+                            ->maxLength(200)
                             ->visible(
                                 fn (callable $get) => \in_array('translator', $get('specializations'))
                             ),
@@ -186,7 +185,7 @@ class VolunteerResource extends Resource
                 TernaryFilter::make('has_first_aid_accreditation')
                     ->label(__('volunteer.field.has_first_aid_accreditation')),
             ])
-            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
+            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

@@ -9,7 +9,6 @@ use App\Filament\Filters\DateRangeFilter;
 use App\Filament\Resources\DocumentResource\Pages;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Document;
-use Closure;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
@@ -19,12 +18,13 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 
 class DocumentResource extends Resource
 {
@@ -73,7 +73,7 @@ class DocumentResource extends Resource
                             ->label(__('document.field.type'))
                             ->options(DocumentType::class)
                             ->enum(DocumentType::class)
-                            ->reactive()
+                            ->live()
                             ->required(),
 
                         Grid::make()
@@ -88,9 +88,9 @@ class DocumentResource extends Resource
                                         DatePicker::make('expires_at')
                                             ->label(__('document.field.expires_at'))
                                             ->after('signed_at')
-                                            ->required(fn (\Filament\Forms\Get $get) => ! $get('never_expires'))
-                                            ->disabled(fn (\Filament\Forms\Get $get) => (bool) $get('never_expires'))
-                                            ->afterStateHydrated(function (\Filament\Forms\Set $set, $state) {
+                                            ->required(fn (Get $get) => ! $get('never_expires'))
+                                            ->disabled(fn (Get $get) => (bool) $get('never_expires'))
+                                            ->afterStateHydrated(function (Set $set, $state) {
                                                 if (blank($state)) {
                                                     $set('never_expires', true);
                                                 }
@@ -98,12 +98,12 @@ class DocumentResource extends Resource
 
                                         Checkbox::make('never_expires')
                                             ->label(__('document.field.never_expires'))
-                                            ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+                                            ->afterStateUpdated(function (Set $set, $state) {
                                                 if ($state === true) {
                                                     $set('expires_at', null);
                                                 }
                                             })
-                                            ->reactive(),
+                                            ->live(),
                                     ]),
                             ]),
                     ]),
@@ -111,8 +111,8 @@ class DocumentResource extends Resource
                 Section::make(__('document.field.document'))
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('document')
-                            ->enableDownload()
-                            ->disableLabel()
+                            ->downloadable()
+                            ->hiddenLabel()
                             ->preserveFilenames()
                             ->visibility('private')
                             ->columnSpanFull(),
@@ -189,7 +189,7 @@ class DocumentResource extends Resource
                     ->label(__('document.field.expires_at'))
                     ->columns(),
             ])
-            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
+            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

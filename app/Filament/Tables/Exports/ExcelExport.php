@@ -12,7 +12,7 @@ class ExcelExport extends BaseExcelExport
     public function setUp(): void
     {
         $this->withFilename(
-            fn ($resource) => sprintf(
+            fn ($resource) => \sprintf(
                 '%s-%s',
                 now()->format('Y_m_d-H_i_s'),
                 Str::slug($resource::getPluralModelLabel())

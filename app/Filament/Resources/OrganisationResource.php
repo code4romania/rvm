@@ -6,7 +6,6 @@ namespace App\Filament\Resources;
 
 use App\Enum\NGOType;
 use App\Enum\OrganisationAreaType;
-use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
 use App\Filament\Forms\Components\Location;
 use App\Filament\Resources\OrganisationResource\Pages;
@@ -29,12 +28,11 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
@@ -85,7 +83,7 @@ class OrganisationResource extends Resource
                                     ->options(OrganisationType::options())
                                     ->enum(OrganisationType::class)
                                     ->required()
-                                    ->reactive(),
+                                    ->live(),
 
                                 Select::make('ngo_type')
                                     ->label(__('organisation.field.ngo_type'))
@@ -164,11 +162,11 @@ class OrganisationResource extends Resource
                         Section::make(__('organisation.field.logo'))
                             ->schema([
                                 SpatieMediaLibraryFileUpload::make('logo')
-                                    ->enableOpen()
+                                    ->openable()
                                     ->disk('s3-public')
                                     ->conversion('thumb')
                                     ->visibility('public')
-                                    ->disableLabel()
+                                    ->hiddenLabel()
                                     ->maxFiles(1)
                                     ->image(),
                             ]),
@@ -263,7 +261,7 @@ class OrganisationResource extends Resource
                         Select::make('area')
                             ->label(__('organisation.field.area'))
                             ->options(OrganisationAreaType::options())
-                            ->reactive()
+                            ->live()
                             ->afterStateUpdated(function (string $state, callable $set) {
                                 if (
                                     OrganisationAreaType::regional->isNot($state) &&
@@ -295,7 +293,7 @@ class OrganisationResource extends Resource
                                 OrganisationAreaType::regional->value,
                                 OrganisationAreaType::local->value,
                             ]))
-                            ->reactive(),
+                            ->live(),
 
                         Select::make('activity_cities')
                             ->label(__('general.city'))
@@ -326,7 +324,7 @@ class OrganisationResource extends Resource
                     ->schema([
                         Toggle::make('has_branches')
                             ->label(__('organisation.field.has_branches'))
-                            ->reactive(),
+                            ->live(),
 
                         Repeater::make('branches')
                             ->label(__('organisation.field.branches'))
@@ -365,7 +363,7 @@ class OrganisationResource extends Resource
                                     ->nullable(),
 
                             ])
-                            ->createItemButtonLabel(__('organisation.field.branch.add_area'))
+                            ->addActionLabel(__('organisation.field.branch.add_area'))
                             ->hidden(fn (callable $get) => ! $get('has_branches')),
                     ])
                     ->label(__('organisation.field.resources')),
@@ -410,7 +408,7 @@ class OrganisationResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge(),
 
                 TextColumn::make('county.name')
@@ -495,7 +493,7 @@ class OrganisationResource extends Resource
                     }),
 
             ])
-            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
+            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

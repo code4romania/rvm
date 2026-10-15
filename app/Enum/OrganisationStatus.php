@@ -6,8 +6,8 @@ namespace App\Enum;
 
 use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\Comparable;
-use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasLabel;
 
 enum OrganisationStatus: string implements HasLabel, HasColor
 {

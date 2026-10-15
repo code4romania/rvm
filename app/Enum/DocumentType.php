@@ -7,6 +7,7 @@ namespace App\Enum;
 use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\Comparable;
 use Filament\Support\Contracts\HasLabel;
+
 enum DocumentType: string implements HasLabel
 {
     use Arrayable;

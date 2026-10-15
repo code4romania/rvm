@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Filament\Pages\Auth\Settings;
 use Carbon\Carbon;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Filament\Facades\Filament;
-use Filament\Navigation\MenuItem;
-use Filament\Navigation\UserMenuItem;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -54,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         ResetPassword::createUrlUsing(function ($user, string $token) {
-           return Filament::getPanel('admin')->getResetPasswordUrl($token, $user);
+            return Filament::getPanel('admin')->getResetPasswordUrl($token, $user);
         });
     }
 

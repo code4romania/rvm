@@ -35,7 +35,7 @@ class OrganisationController extends Controller
                     'expertises',
                     'resourceTypes',
                     'county',
-                    'media'
+                    'media',
                 ])
                 ->withCount('volunteers')
                 ->get()

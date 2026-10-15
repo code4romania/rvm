@@ -218,6 +218,7 @@ class OrganisationAdminTest extends VolunteersBase
                 'cnp' => fake()->word,
                 'role' => fake()->randomElement(VolunteerRole::values()),
                 'specializations' => [VolunteerSpecialization::translator->value],
+                'language' => fake()->realTextBetween(256, 300),
                 'has_first_aid_accreditation' => fake()->word,
                 'county_id' => null,
                 'city_id' => null,

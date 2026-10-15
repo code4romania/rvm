@@ -16,11 +16,10 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 class ResourceResource extends Resource
@@ -65,7 +64,7 @@ class ResourceResource extends Resource
                         Select::make('category_id')
                             ->relationship('category', 'name', fn (Builder $query) => $query->orderBy('id'))
                             ->label(__('resource.fields.category'))
-                            ->reactive()
+                            ->live()
                             ->required()
                             ->afterStateUpdated(function (callable $set) {
                                 $set('subcategory_id', null);
@@ -87,10 +86,9 @@ class ResourceResource extends Resource
                                 }
                             )
                             ->disabled(fn (callable $get) => $get('category_id') === null)
-                            ->reactive()
+                            ->live()
                             ->required(),
                     ]),
-
 
                 FieldGroups\AircraftFieldGroup::make(),
                 FieldGroups\BoatFieldGroup::make(),
@@ -176,7 +174,7 @@ class ResourceResource extends Resource
                     ->columns(3)
                     ->columnSpan(3), //remove this
             ])
-            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
+            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])
