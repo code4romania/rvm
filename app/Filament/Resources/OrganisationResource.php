@@ -6,7 +6,6 @@ namespace App\Filament\Resources;
 
 use App\Enum\NGOType;
 use App\Enum\OrganisationAreaType;
-use App\Enum\OrganisationStatus;
 use App\Enum\OrganisationType;
 use App\Filament\Forms\Components\Location;
 use App\Filament\Resources\OrganisationResource\Pages;
@@ -29,12 +28,11 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
@@ -410,7 +408,7 @@ class OrganisationResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge(),
 
                 TextColumn::make('county.name')
@@ -495,7 +493,7 @@ class OrganisationResource extends Resource
                     }),
 
             ])
-            ->filtersLayout(\Filament\Tables\Enums\FiltersLayout::AboveContent)
+            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

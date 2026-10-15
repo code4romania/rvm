@@ -23,7 +23,7 @@ class VolunteerFactory extends Factory
     {
         $city = City::query()->inRandomOrder()->first();
         $specializations = fake()->randomElements(VolunteerSpecialization::values(), fake()->numberBetween(1, 3));
-        $language = in_array('translator', $specializations) ? 'romana' : null;
+        $language = \in_array('translator', $specializations) ? 'romana' : null;
 
         return [
             'first_name' => fake()->firstName(),

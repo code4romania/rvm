@@ -15,11 +15,10 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Layout;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 class ResourcesRelationManager extends RelationManager
@@ -183,7 +182,7 @@ class ResourcesRelationManager extends RelationManager
 
     protected function getTableFiltersLayout(): ?string
     {
-        return \Filament\Tables\Enums\FiltersLayout::AboveContent;
+        return Tables\Enums\FiltersLayout::AboveContent;
     }
 
     protected function shouldPersistTableFiltersInSession(): bool

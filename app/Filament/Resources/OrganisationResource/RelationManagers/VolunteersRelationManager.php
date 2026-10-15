@@ -15,9 +15,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class VolunteersRelationManager extends RelationManager
 {
@@ -88,7 +88,7 @@ class VolunteersRelationManager extends RelationManager
                     ->label(__('volunteer.field.language'))
                     ->maxLength(200)
                     ->visible(
-                        fn (Get $get) => is_array($get('specializations')) && \in_array('translator', $get('specializations'))
+                        fn (Get $get) => \is_array($get('specializations')) && \in_array('translator', $get('specializations'))
                     ),
 
                 Location::make()

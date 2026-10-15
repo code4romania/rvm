@@ -1,23 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\Settings;
 use App\Filament\Pages\PersonalInfo;
-use App\Filament\Widgets as CustomWidgets;
-use App\Http\Middleware\CheckOrganisationIsActive;
 use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\CheckOrganisationIsActive;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
-use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -38,16 +37,16 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->colors([
                 'primary' => [
-                    50=> '#EFF2FB',
-                    100=> '#CED9F3',
-                    200=> '#9DB3E7',
-                    300=> '#3B67CE',
-                    400=> '#264998',
-                    500=> '#213E83',
-                    600=> '#182F62',
-                    700=> '#101F41',
-                    800=> '#0C1731',
-                    900=> '#040810',
+                    50 => '#EFF2FB',
+                    100 => '#CED9F3',
+                    200 => '#9DB3E7',
+                    300 => '#3B67CE',
+                    400 => '#264998',
+                    500 => '#213E83',
+                    600 => '#182F62',
+                    700 => '#101F41',
+                    800 => '#0C1731',
+                    900 => '#040810',
                 ],
                 'secondary' => Color::Gray,
             ])

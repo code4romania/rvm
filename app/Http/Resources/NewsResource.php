@@ -38,7 +38,7 @@ class NewsResource extends JsonResource
                 'url' => $coverPhoto->getUrl(),
                 'thumb' => $coverPhoto->getUrl('thumb'),
             ] : null,
-            'media_files' => $this->getMedia('media_files')->map(fn($media) => [
+            'media_files' => $this->getMedia('media_files')->map(fn ($media) => [
                 'id' => $media->id,
                 'name' => $media->name,
                 'url' => $media->getUrl(),

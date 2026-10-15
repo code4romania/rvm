@@ -43,7 +43,7 @@ class ProcessProtocolsCommand extends Command implements Isolatable
         $this->loadPlatformAdmins();
         $this->loadActiveOrganisations();
 
-        logger()->info(sprintf(
+        logger()->info(\sprintf(
             'ProcessProtocols: starting check on %d active organisations...',
             $this->organisations->count()
         ));
@@ -83,7 +83,7 @@ class ProcessProtocolsCommand extends Command implements Isolatable
     {
         $checkDate = today()->addDays(30);
 
-        logger()->info(sprintf(
+        logger()->info(\sprintf(
             'ProcessProtocols: checking for protocols expiring in 30 days (%s)...',
             $checkDate->format('Y-m-d')
         ));
@@ -98,7 +98,7 @@ class ProcessProtocolsCommand extends Command implements Isolatable
                 $this->sendNotification(ExpiringProtocol::class, $organisation);
             })
             ->tap(function (Collection $organisations) {
-                logger()->info(sprintf(
+                logger()->info(\sprintf(
                     'ProcessProtocols: found %d organisations with expiring protocols: %s',
                     $organisations->count(),
                     $organisations->pluck('id')->join(', ')
@@ -112,7 +112,7 @@ class ProcessProtocolsCommand extends Command implements Isolatable
     {
         $checkDate = today();
 
-        logger()->info(sprintf(
+        logger()->info(\sprintf(
             'ProcessProtocols: checking for protocols expiring today (%s)...',
             $checkDate->format('Y-m-d')
         ));
@@ -129,7 +129,7 @@ class ProcessProtocolsCommand extends Command implements Isolatable
                 $this->sendNotification(ExpiredProtocol::class, $organisation);
             })
             ->tap(function (Collection $organisations) {
-                logger()->info(sprintf(
+                logger()->info(\sprintf(
                     'ProcessProtocols: found %d organisations with expired protocols: %s',
                     $organisations->count(),
                     $organisations->pluck('id')->join(', ')

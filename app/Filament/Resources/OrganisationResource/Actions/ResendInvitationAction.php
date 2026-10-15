@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Resources\OrganisationResource\Actions;
 
 use App\Models\Organisation;
-use Filament\Notifications\Notification;
 use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\RateLimiter;
 
 class ResendInvitationAction extends Action

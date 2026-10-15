@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         ResetPassword::createUrlUsing(function ($user, string $token) {
-           return Filament::getPanel('admin')->getResetPasswordUrl($token, $user);
+            return Filament::getPanel('admin')->getResetPasswordUrl($token, $user);
         });
     }
 

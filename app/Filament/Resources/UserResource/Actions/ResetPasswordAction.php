@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Resources\UserResource\Actions;
 
 use App\Models\User;
-use Filament\Notifications\Notification;
 use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
 
