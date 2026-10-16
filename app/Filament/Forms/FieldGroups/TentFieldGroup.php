@@ -6,14 +6,14 @@ namespace App\Filament\Forms\FieldGroups;
 
 use App\Filament\Forms\Components\Location;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Illuminate\Database\Eloquent\Builder;
 
 class TentFieldGroup extends FieldGroup
 {
-    public function getChildComponents(): array
+    public function getChildComponents(?string $key = null): array
     {
         return [
             Section::make(__('resource.fields.attributes'))

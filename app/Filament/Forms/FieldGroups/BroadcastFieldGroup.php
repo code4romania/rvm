@@ -6,12 +6,12 @@ namespace App\Filament\Forms\FieldGroups;
 
 use App\Enum\Coverage;
 use App\Filament\Forms\Components\Location;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Section;
 
 class BroadcastFieldGroup extends FieldGroup
 {
-    public function getChildComponents(): array
+    public function getChildComponents(?string $key = null): array
     {
         return [
             Section::make(__('resource.fields.attributes'))

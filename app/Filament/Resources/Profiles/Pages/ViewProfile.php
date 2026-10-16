@@ -1,0 +1,40 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Resources\Profiles\Pages;
+
+use App\Filament\Resources\Profiles\Concerns\ResolvesRecord;
+use App\Filament\Resources\Profiles\ProfileResource;
+use Filament\Actions\EditAction;
+use Filament\Resources\Pages\ViewRecord;
+
+class ViewProfile extends ViewRecord
+{
+    use ResolvesRecord;
+
+    protected static string $resource = ProfileResource::class;
+
+    public function getTitle(): string
+    {
+        return $this->getRecord()->name;
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            EditAction::make()
+                ->url(static::getResource()::getUrl('edit')),
+        ];
+    }
+
+    public function hasCombinedRelationManagerTabsWithForm(): bool
+    {
+        return true;
+    }
+
+    public function getContentTabLabel(): ?string
+    {
+        return __('organisation.section.profile');
+    }
+}

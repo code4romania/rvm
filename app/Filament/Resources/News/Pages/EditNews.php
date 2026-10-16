@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Resources\News\Pages;
+
+use App\Filament\Resources\News\NewsResource;
+use Filament\Resources\Pages\EditRecord;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\HtmlString;
+
+class EditNews extends EditRecord
+{
+    protected static string $resource = NewsResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    protected function getRedirectUrl(): ?string
+    {
+        return static::getResource()::getUrl('view', [$this->getRecord()]);
+    }
+
+    public function getSubheading(): Htmlable
+    {
+        return new HtmlString(__('news.disclaimer'));
+    }
+}

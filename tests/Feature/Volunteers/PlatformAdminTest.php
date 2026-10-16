@@ -6,10 +6,10 @@ namespace Tests\Feature\Volunteers;
 
 use App\Enum\VolunteerRole;
 use App\Enum\VolunteerSpecialization;
-use App\Filament\Resources\VolunteerResource\Pages\CreateVolunteer;
-use App\Filament\Resources\VolunteerResource\Pages\EditVolunteer;
-use App\Filament\Resources\VolunteerResource\Pages\ListVolunteers;
-use App\Filament\Resources\VolunteerResource\Pages\ViewVolunteer;
+use App\Filament\Resources\Volunteers\Pages\CreateVolunteer;
+use App\Filament\Resources\Volunteers\Pages\EditVolunteer;
+use App\Filament\Resources\Volunteers\Pages\ListVolunteers;
+use App\Filament\Resources\Volunteers\Pages\ViewVolunteer;
 use App\Models\City;
 use App\Models\County;
 use App\Models\Organisation;

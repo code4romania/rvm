@@ -1,5 +1,8 @@
 @import '../../vendor/filament/filament/resources/css/theme.css';
 
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
 .filament-header-subheading {
     width: 100% !important;
     max-width: 100% !important;
