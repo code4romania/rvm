@@ -1,7 +1,23 @@
 @php
+    use Filament\Support\View\ComponentAttributeBag;
+
     $columns = $this->getColumns();
+    $pollingInterval = $this->getPollingInterval();
 @endphp
-<x-filament-widgets::widget class="flex flex-col gap-4 filament-stats-overview-widget lg:gap-8">
+<x-filament-widgets::widget class="flex flex-col gap-4 filament-stats-overview-widget lg:gap-8"
+                            :attributes="
+        (new ComponentAttributeBag)
+            ->merge([
+                'wire:poll.' . $pollingInterval => $pollingInterval ? true : null,
+            ], escape: false)
+            ->class([
+            'fi-wi-stats-overview-stats-ctn grid gap-6',
+            'md:grid-cols-1' => $columns === 1,
+            'md:grid-cols-2' => $columns === 2,
+            'md:grid-cols-3' => $columns === 3,
+            'md:grid-cols-2 xl:grid-cols-4' => $columns === 4,
+        ])
+    ">
     @if ($counties)
         <div class="filament-forms-field-wrapper">
             <div class="space-y-2">
@@ -30,21 +46,8 @@
         </div>
     @endif
 
-    <div
-        @if ($pollingInterval = $this->getPollingInterval())
-            wire:poll.{{ $pollingInterval }}
-        @endif
-        @class([
-            'fi-wi-stats-overview-stats-ctn grid gap-6',
-            'md:grid-cols-1' => $columns === 1,
-            'md:grid-cols-2' => $columns === 2,
-            'md:grid-cols-3' => $columns === 3,
-            'md:grid-cols-2 xl:grid-cols-4' => $columns === 4,
-        ])
-    >
-        @foreach ($this->getCachedStats() as $stat)
-            {{ $stat }}
-        @endforeach
+    <div>
+        {{ $this->content }}
     </div>
 
 </x-filament-widgets::widget>
