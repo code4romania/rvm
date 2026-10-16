@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\News\Pages;
 
-use App\Filament\Resources\News\NewsResource;
 use App\Filament\Resources\News\Actions\ArchiveNewsAction;
 use App\Filament\Resources\News\Actions\DraftNewsAction;
 use App\Filament\Resources\News\Actions\PublishNewsAction;
+use App\Filament\Resources\News\NewsResource;
 use App\Models\News;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;

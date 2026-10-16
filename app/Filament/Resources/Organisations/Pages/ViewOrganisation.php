@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Organisations\Pages;
 
-use App\Filament\Resources\Organisations\OrganisationResource;
 use App\Filament\Resources\Organisations\Actions\ActivateOrganisationAction;
 use App\Filament\Resources\Organisations\Actions\DeactivateOrganisationAction;
 use App\Filament\Resources\Organisations\Actions\ResendInvitationAction;
+use App\Filament\Resources\Organisations\OrganisationResource;
 use App\Models\Organisation;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;

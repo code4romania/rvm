@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\Forms\FieldGroups;
 
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Group;
 use App\Filament\Forms\Components\Location;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
 use Illuminate\Database\Eloquent\Builder;
 
 class RescueDogFieldGroup extends FieldGroup

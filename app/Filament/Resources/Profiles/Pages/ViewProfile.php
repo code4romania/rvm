@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Profiles\Pages;
 
-use App\Filament\Resources\Profiles\ProfileResource;
 use App\Filament\Resources\Profiles\Concerns\ResolvesRecord;
+use App\Filament\Resources\Profiles\ProfileResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 

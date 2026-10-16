@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Documents;
 
-use Illuminate\Http\UploadedFile;
 use App\Enum\DocumentType;
 use App\Filament\Resources\Documents\Pages\CreateDocument;
 use App\Filament\Resources\Documents\Pages\ViewDocument;
 use App\Models\Document;
 use App\Models\Organisation;
+use Illuminate\Http\UploadedFile;
 use Livewire\Livewire;
 use Tests\Traits\ActingAsPlatformAdmin;
 

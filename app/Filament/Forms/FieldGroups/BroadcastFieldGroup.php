@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Forms\FieldGroups;
 
-use Filament\Schemas\Components\Section;
 use App\Enum\Coverage;
 use App\Filament\Forms\Components\Location;
 use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Section;
 
 class BroadcastFieldGroup extends FieldGroup
 {

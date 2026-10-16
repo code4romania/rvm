@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Profiles;
 
 use App\Filament\Resources\Organisations\OrganisationResource;
-use Filament\Schemas\Schema;
-use App\Filament\Resources\Profiles\Pages\ViewProfile;
 use App\Filament\Resources\Profiles\Pages\EditProfile;
-use App\Filament\Resources\ProfileResource\Pages;
+use App\Filament\Resources\Profiles\Pages\ViewProfile;
 use App\Models\Organisation;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 
 class ProfileResource extends Resource
 {

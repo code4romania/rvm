@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Filament\Panel;
 use App\Concerns\BelongsToOrganisation;
 use App\Concerns\HasRole;
 use App\Concerns\LimitsVisibility;
@@ -13,6 +12,7 @@ use App\Enum\OrganisationStatus;
 use App\Enum\UserRole;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;

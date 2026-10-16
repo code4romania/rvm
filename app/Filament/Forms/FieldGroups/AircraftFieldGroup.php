@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Forms\FieldGroups;
 
-use Filament\Schemas\Components\Section;
 use App\Filament\Forms\Components\Location;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 
 class AircraftFieldGroup extends FieldGroup
 {

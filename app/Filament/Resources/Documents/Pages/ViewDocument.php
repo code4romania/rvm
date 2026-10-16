@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Documents\Pages;
 
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\Documents\DocumentResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewDocument extends ViewRecord
