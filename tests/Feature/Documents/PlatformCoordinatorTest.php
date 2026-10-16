@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Documents;
 
-use App\Filament\Resources\DocumentResource\Pages\EditDocument;
-use App\Filament\Resources\DocumentResource\Pages\CreateDocument;
+use App\Filament\Resources\Documents\Pages\EditDocument;
+use App\Filament\Resources\Documents\Pages\CreateDocument;
 use App\Enum\DocumentType;
-use App\Filament\Resources\DocumentResource;
+use App\Filament\Resources\Documents\DocumentResource;
 use App\Models\Document;
 use App\Models\User;
 use Livewire\Livewire;

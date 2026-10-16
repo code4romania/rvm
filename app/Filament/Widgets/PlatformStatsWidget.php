@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Resources\OrganisationResource;
-use App\Filament\Resources\ResourceResource;
-use App\Filament\Resources\UserResource;
-use App\Filament\Resources\VolunteerResource;
+use App\Filament\Resources\Organisations\OrganisationResource;
+use App\Filament\Resources\Resources\ResourceResource;
+use App\Filament\Resources\Users\UserResource;
+use App\Filament\Resources\Volunteers\VolunteerResource;
 use App\Models\County;
 use App\Models\Organisation;
 use App\Models\Resource;

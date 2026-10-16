@@ -1,0 +1,52 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Resources\News\Pages;
+
+use App\Filament\Resources\News\NewsResource;
+use App\Filament\Resources\News\Actions\ArchiveNewsAction;
+use App\Filament\Resources\News\Actions\DraftNewsAction;
+use App\Filament\Resources\News\Actions\PublishNewsAction;
+use App\Models\News;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\HtmlString;
+
+class ViewNews extends ViewRecord
+{
+    protected static string $resource = NewsResource::class;
+
+    public function getTitle(): string
+    {
+        return $this->getRecord()->title;
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            PublishNewsAction::make()
+                ->hidden(fn (News $record) => $record->isPublished())
+                ->record($this->getRecord()),
+
+            DraftNewsAction::make()
+                ->hidden(fn (News $record) => $record->isDrafted())
+                ->record($this->getRecord()),
+
+            ArchiveNewsAction::make()
+                ->hidden(fn (News $record) => $record->isArchived())
+                ->record($this->getRecord()),
+
+            EditAction::make(),
+
+            DeleteAction::make(),
+        ];
+    }
+
+    public function getSubheading(): Htmlable
+    {
+        return new HtmlString(__('news.disclaimer'));
+    }
+}
