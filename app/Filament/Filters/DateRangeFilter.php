@@ -33,7 +33,7 @@ class DateRangeFilter extends BaseFilter
 
         $this->schema(fn () => [
             Fieldset::make($this->getLabel())
-                ->columns($this->getColumns())
+                ->columns()
                 ->schema([
                     DatePicker::make('date_from')
                         ->label(__('general.filter.date_from'))

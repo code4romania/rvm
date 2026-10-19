@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Filament\Pages\PersonalInfo;
 use Carbon\Carbon;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
@@ -13,6 +14,7 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,6 +41,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->app->booted(function () {
+            Livewire::component('personal_info', PersonalInfo::class);
+        });
+
         tap($this->app->isLocal(), function (bool $shouldBeEnabled) {
             Model::preventLazyLoading($shouldBeEnabled);
             Model::preventAccessingMissingAttributes($shouldBeEnabled);

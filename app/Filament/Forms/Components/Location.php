@@ -24,8 +24,10 @@ class Location extends Grid
         return $this;
     }
 
-    public function getChildComponents(?string $key = null): array
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $county = Select::make('county_id')
             ->label(__('general.county'))
             ->options(function () {
@@ -71,6 +73,6 @@ class Location extends Grid
                 );
         }
 
-        return $components;
+        $this->schema($components);
     }
 }

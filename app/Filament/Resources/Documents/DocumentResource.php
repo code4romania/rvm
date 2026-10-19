@@ -29,6 +29,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DocumentResource extends Resource
 {
@@ -151,7 +153,18 @@ class DocumentResource extends Resource
 
                 TextColumn::make('media.file_name')
                     ->label(__('document.field.document'))
-                    ->sortable()
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderBy(
+                            Media::query()
+                                ->select('file_name')
+                                ->whereColumn('media.model_id', 'documents.id')
+                                ->where('media.model_type', (new Document)->getMorphClass())
+                                // ->where('media.collection_name', 'documents')  // if you use a specific collection
+                                ->orderBy('media.order_column')
+                                ->limit(1),
+                            $direction,
+                        );
+                    })
                     ->toggleable(),
 
                 TextColumn::make('signed_at')
@@ -186,12 +199,10 @@ class DocumentResource extends Resource
                     ->multiple(),
 
                 DateRangeFilter::make('signed_at')
-                    ->label(__('document.field.signed_at'))
-                    ->columns(),
+                    ->label(__('document.field.signed_at')),
 
                 DateRangeFilter::make('expires_at')
-                    ->label(__('document.field.expires_at'))
-                    ->columns(),
+                    ->label(__('document.field.expires_at')),
             ])
             ->filtersLayout(FiltersLayout::AboveContent)
             ->recordActions([
