@@ -204,6 +204,7 @@ class OrganisationResource extends Resource
                     ]),
 
                 Section::make(__('organisation.section.contact_person_in_teams'))
+                    ->columnSpanFull()
                     ->columns()
                     ->schema([
                         TextInput::make('contact_person_in_teams.first_name')
@@ -231,6 +232,7 @@ class OrganisationResource extends Resource
                     ]),
 
                 Section::make(__('organisation.section.activity'))
+                    ->columnSpanFull()
                     ->columns()
                     ->schema([
                         Select::make('expertises')
@@ -259,6 +261,7 @@ class OrganisationResource extends Resource
                     ]),
 
                 Section::make(__('organisation.section.area_of_activity'))
+                    ->columnSpanFull()
                     ->columns(3)
                     ->schema([
                         Select::make('area')
@@ -324,6 +327,7 @@ class OrganisationResource extends Resource
                     ]),
 
                 Section::make(__('organisation.section.branches'))
+                    ->columnSpanFull()
                     ->schema([
                         Toggle::make('has_branches')
                             ->label(__('organisation.field.has_branches'))
@@ -372,6 +376,7 @@ class OrganisationResource extends Resource
                     ->label(__('organisation.field.resources')),
 
                 Section::make(__('organisation.section.other_information'))
+                    ->columnSpanFull()
                     ->schema([
                         Toggle::make('social_services_accreditation')
                             ->label(__('organisation.field.social_services_accreditation')),

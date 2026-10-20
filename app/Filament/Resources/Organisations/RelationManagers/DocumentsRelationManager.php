@@ -116,8 +116,7 @@ class DocumentsRelationManager extends RelationManager
                     ->sortable(),
 
                 TextColumn::make('type')
-                    ->label(__('document.field.type'))
-                    ->enum(DocumentType::options()),
+                    ->label(__('document.field.type')),
 
                 IconColumn::make('media.id')
                     ->label(__('document.field.document'))
@@ -138,7 +137,7 @@ class DocumentsRelationManager extends RelationManager
                             __('document.field.never_expires') :
                             null;
 
-                        return $state?->format(config('tables.date_format')) ?? $fallback;
+                        return $state?->format(config('tables.date_format') ?? '') ?? $fallback;
                     }),
             ])
             ->filters([

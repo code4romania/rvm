@@ -120,12 +120,7 @@ class VolunteersRelationManager extends RelationManager
                     ->sortable(),
 
                 TextColumn::make('specializations')
-                    ->label(__('volunteer.field.specializations'))
-                    ->formatStateUsing(
-                        static fn ($state): ?string => collect($state)
-                            ->filter()
-                            ->join(', ')
-                    ),
+                    ->label(__('volunteer.field.specializations')),
             ])
             ->defaultSort('id', 'desc')
             ->filters([

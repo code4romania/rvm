@@ -16,7 +16,7 @@ abstract class FieldGroup extends Grid
 
         $this->columns();
 
-        $this->visible(function (array $state, $livewire) {
+        $this->visible(function (?array $state, $livewire) {
             $id = data_get($state, 'subcategory_id');
 
             if (blank($id)) {
