@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
+     * Run the migration only on local environments,
+     * matching the TelescopeServiceProvider config.
+     */
+    public function shouldRun(): bool
+    {
+        return app()->isLocal();
+    }
+
+    /**
      * Get the migration connection name.
      */
     public function getConnection(): ?string
