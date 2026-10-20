@@ -29,8 +29,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DocumentResource extends Resource
 {
@@ -153,43 +151,17 @@ class DocumentResource extends Resource
 
                 TextColumn::make('media.file_name')
                     ->label(__('document.field.document'))
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderBy(
-                            Media::query()
-                                ->select('file_name')
-                                ->whereColumn('media.model_id', 'documents.id')
-                                ->where('media.model_type', (new Document)->getMorphClass())
-                                ->orderBy('media.order_column')
-                                ->limit(1),
-                            $direction,
-                        )
-                            ->orderBy('documents.id', $direction);
-                    })
                     ->toggleable(),
 
                 TextColumn::make('signed_at')
                     ->label(__('document.field.signed_at'))
                     ->date()
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderBy('signed_at', $direction)
-                            ->orderBy('documents.id', $direction);
-                    })
+                    ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('expires_at')
                     ->label(__('document.field.expires_at'))
-                    ->date()
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderBy('expires_at', $direction)
-                            ->orderBy('documents.id', $direction);
-                    })
-                    ->formatStateUsing(function (Document $record, $state) {
-                        $fallback = DocumentType::protocol->is($record->type) ?
-                            __('document.field.never_expires') :
-                            null;
-
-                        return $state?->format(config('tables.date_format') ?? '') ?? $fallback;
-                    })
+                    ->sortable()
                     ->toggleable(),
             ])
             ->filters([
