@@ -13,7 +13,8 @@ use App\Models\Organisation;
 use App\Models\Resource;
 use App\Models\User;
 use App\Models\Volunteer;
-use Filament\Forms\Components\Select;
+use Filament\Actions\SelectAction;
+use Filament\Schemas\Components\Component;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,7 +22,7 @@ use Illuminate\Support\Collection;
 
 class PlatformStatsWidget extends BaseWidget
 {
-    protected string $view = 'filament.widgets.platform-stats-widget';
+    protected ?string $pollingInterval = null;
 
     /**
      * County id to filter by.
@@ -39,13 +40,24 @@ class PlatformStatsWidget extends BaseWidget
 
     public function mount()
     {
-        $this->counties = County::all();
+        $this->counties = County::query()
+            ->pluck('name', 'id');
     }
 
     public static function canView(): bool
     {
         return auth()->user()->isPlatformAdmin()
             || auth()->user()->isPlatformCoordinator();
+    }
+
+    public function getSectionContentComponent(): Component
+    {
+        return parent::getSectionContentComponent()
+            ->headerActions([
+                SelectAction::make('county')
+                    ->placeholder('–')
+                    ->options($this->counties),
+            ]);
     }
 
     protected function getCards(): array
