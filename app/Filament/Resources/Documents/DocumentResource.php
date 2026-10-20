@@ -159,24 +159,30 @@ class DocumentResource extends Resource
                                 ->select('file_name')
                                 ->whereColumn('media.model_id', 'documents.id')
                                 ->where('media.model_type', (new Document)->getMorphClass())
-                                // ->where('media.collection_name', 'documents')  // if you use a specific collection
                                 ->orderBy('media.order_column')
                                 ->limit(1),
                             $direction,
-                        );
+                        )
+                            ->orderBy('documents.id', $direction);
                     })
                     ->toggleable(),
 
                 TextColumn::make('signed_at')
                     ->label(__('document.field.signed_at'))
                     ->date()
-                    ->sortable()
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderBy('signed_at', $direction)
+                            ->orderBy('documents.id', $direction);
+                    })
                     ->toggleable(),
 
                 TextColumn::make('expires_at')
                     ->label(__('document.field.expires_at'))
                     ->date()
-                    ->sortable()
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderBy('expires_at', $direction)
+                            ->orderBy('documents.id', $direction);
+                    })
                     ->formatStateUsing(function (Document $record, $state) {
                         $fallback = DocumentType::protocol->is($record->type) ?
                             __('document.field.never_expires') :
