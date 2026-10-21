@@ -8,6 +8,9 @@ use Carbon\Carbon;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Table;
@@ -45,7 +48,14 @@ class FilamentServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Fieldset::configureUsing(fn (Fieldset $fieldset) => $fieldset
+            ->columnSpanFull());
+
+        Grid::configureUsing(fn (Grid $grid) => $grid
+            ->columnSpanFull());
+
+        Section::configureUsing(fn (Section $section) => $section
+            ->columnSpanFull());
     }
 
     protected function configureActions(): void

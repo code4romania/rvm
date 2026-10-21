@@ -55,7 +55,6 @@ class VolunteerResource extends Resource
                 Section::make()
                     ->heading('')
                     ->columns()
-                    ->columnSpanFull()
                     ->schema([
                         Group::make()
                             ->hidden(fn () => auth()->user()->belongsToOrganisation())
@@ -119,8 +118,7 @@ class VolunteerResource extends Resource
                             ->columnSpanFull(),
 
                         Location::make()
-                            ->required()
-                            ->columnSpanFull(),
+                            ->required(),
                     ]),
             ]);
     }

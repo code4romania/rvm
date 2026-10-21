@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Auth;
 
+use Filament\Auth\Pages\Login as BaseLogin;
 use Illuminate\Validation\ValidationException;
 
-class Login extends \Filament\Auth\Pages\Login
+class Login extends BaseLogin
 {
     public function mount(): void
     {

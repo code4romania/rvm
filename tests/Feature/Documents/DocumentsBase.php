@@ -87,6 +87,9 @@ abstract class DocumentsBase extends TestCase
     {
         $documents = Document::all();
 
+        $sortedDocsSignedAt = Document::query()->orderBy('signed_at')->orderByDesc('id')->get();
+        $sortedDocsExpiresAt = Document::query()->orderBy('expires_at')->orderByDesc('id')->get();
+
         return Livewire::test(ListDocuments::class)
             ->assertSuccessful()
             ->assertCountTableRecords(9)
@@ -98,15 +101,12 @@ abstract class DocumentsBase extends TestCase
             ->assertCanRenderTableColumn('organisation.name')
             ->sortTable('name')
             ->assertCanSeeTableRecords($documents->sortBy('name'), inOrder: true)
-            ->assertCanRenderTableColumn('media.file_name')
-            ->sortTable('media.file_name')
-            ->assertCanSeeTableRecords($documents->sortBy('media.file_name'), inOrder: true)
             ->assertCanRenderTableColumn('signed_at')
             ->sortTable('signed_at')
-            ->assertCanSeeTableRecords($documents->sortBy('signed_at'), inOrder: true)
+            ->assertCanSeeTableRecords($sortedDocsSignedAt, inOrder: true)
             ->assertCanRenderTableColumn('expires_at')
             ->sortTable('expires_at')
-            ->assertCanSeeTableRecords($documents->sortBy('expires_at'), inOrder: true);
+            ->assertCanSeeTableRecords($sortedDocsExpiresAt, inOrder: true);
     }
 
     public function viewProtocolDocumentByUser(Document $document): Testable

@@ -93,7 +93,7 @@ class DocumentResource extends Resource
                                             ->label(__('document.field.expires_at'))
                                             ->after('signed_at')
                                             ->required(fn (Get $get) => ! $get('never_expires'))
-                                            ->disabled(fn (Get $get) => (bool) $get('never_expires'))
+                                            ->readOnly(fn (Get $get) => (bool) $get('never_expires'))
                                             ->afterStateHydrated(function (Set $set, $state) {
                                                 if (blank($state)) {
                                                     $set('never_expires', true);

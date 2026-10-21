@@ -37,11 +37,11 @@ class DateRangeFilter extends BaseFilter
                 ->schema([
                     DatePicker::make('date_from')
                         ->label(__('general.filter.date_from'))
-                        ->placeholder(today()->subYear()->toFormattedDateString()),
+                        ->placeholder(today()->subYear()->toFormattedDate()),
 
                     DatePicker::make('date_until')
                         ->label(__('general.filter.date_until'))
-                        ->placeholder(today()->toFormattedDateString()),
+                        ->placeholder(today()->toFormattedDate()),
                 ]),
         ]);
 
@@ -62,7 +62,7 @@ class DateRangeFilter extends BaseFilter
 
                     if (! \is_null($value)) {
                         $value = __('general.filter.date_from', [
-                            'date' => Carbon::parse($value)->toFormattedDateString(),
+                            'date' => Carbon::parse($value)->toFormattedDate(),
                         ]);
                     }
 
