@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Volunteers;
 
 use App\Enum\VolunteerSpecialization;
-use App\Filament\Resources\VolunteerResource\Pages\CreateVolunteer;
-use App\Filament\Resources\VolunteerResource\Pages\EditVolunteer;
-use App\Filament\Resources\VolunteerResource\Pages\ListVolunteers;
-use App\Filament\Resources\VolunteerResource\Pages\ViewVolunteer;
+use App\Filament\Resources\Volunteers\Pages\CreateVolunteer;
+use App\Filament\Resources\Volunteers\Pages\EditVolunteer;
+use App\Filament\Resources\Volunteers\Pages\ListVolunteers;
+use App\Filament\Resources\Volunteers\Pages\ViewVolunteer;
 use App\Models\Organisation;
 use App\Models\User;
 use App\Models\Volunteer;

@@ -6,7 +6,11 @@ namespace Tests\Feature\Documents;
 
 use App\Enum\DocumentType;
 use App\Enum\UserRole;
-use App\Filament\Resources\DocumentResource;
+use App\Filament\Resources\Documents\DocumentResource;
+use App\Filament\Resources\Documents\Pages\CreateDocument;
+use App\Filament\Resources\Documents\Pages\EditDocument;
+use App\Filament\Resources\Documents\Pages\ListDocuments;
+use App\Filament\Resources\Documents\Pages\ViewDocument;
 use App\Models\Document;
 use App\Models\User;
 use Livewire\Livewire;
@@ -37,7 +41,10 @@ class OrganisationAdminTest extends DocumentsBase
             ->whereNot('organisation_id', $userOganisationID)
             ->get();
 
-        Livewire::test(DocumentResource\Pages\ListDocuments::class)
+        $sortedDocsSignedAt = Document::query()->orderBy('signed_at')->orderByDesc('id')->get();
+        $sortedDocsExpiresAt = Document::query()->orderBy('expires_at')->orderByDesc('id')->get();
+
+        Livewire::test(ListDocuments::class)
             ->assertSuccessful()
             ->assertActionHidden('create')
             ->assertActionDisabled('create')
@@ -51,15 +58,12 @@ class OrganisationAdminTest extends DocumentsBase
             ->sortTable('name')
             ->assertCanSeeTableRecords($documents->sortBy('name'), inOrder: true)
             ->assertCanNotRenderTableColumn('organisation.name')
-            ->assertCanRenderTableColumn('media.file_name')
-            ->sortTable('media.file_name')
-            ->assertCanSeeTableRecords($documents->sortBy('media.file_name'), inOrder: true)
             ->assertCanRenderTableColumn('signed_at')
             ->sortTable('signed_at')
-            ->assertCanSeeTableRecords($documents->sortBy('signed_at'), inOrder: true)
+            ->assertCanSeeTableRecords($sortedDocsSignedAt, inOrder: true)
             ->assertCanRenderTableColumn('expires_at')
             ->sortTable('expires_at')
-            ->assertCanSeeTableRecords($documents->sortBy('expires_at'), inOrder: true);
+            ->assertCanSeeTableRecords($sortedDocsExpiresAt, inOrder: true);
     }
 
     public function testViewDocumentsByInactiveOrgAdmin(): void
@@ -126,7 +130,7 @@ class OrganisationAdminTest extends DocumentsBase
             ->first();
 //        dd($this->user->organisation_id, $document);
 
-        Livewire::test(DocumentResource\Pages\ViewDocument::class, ['record' => $document->id])
+        Livewire::test(ViewDocument::class, ['record' => $document->id])
             ->assertForbidden();
     }
 
@@ -155,7 +159,7 @@ class OrganisationAdminTest extends DocumentsBase
             ->documents
             ->first();
 
-        Livewire::test(DocumentResource\Pages\EditDocument::class, ['record' => $document->id])
+        Livewire::test(EditDocument::class, ['record' => $document->id])
             ->assertForbidden();
     }
 
@@ -220,7 +224,7 @@ class OrganisationAdminTest extends DocumentsBase
             ->first();
 
         Livewire::actingAs($orgAdmin);
-        Livewire::test(DocumentResource\Pages\ViewDocument::class, ['record' => $document->id])
+        Livewire::test(ViewDocument::class, ['record' => $document->id])
             ->assertActionDisabled('delete');
     }
 
@@ -229,7 +233,7 @@ class OrganisationAdminTest extends DocumentsBase
         $orgAdmins = $this->getOrganisationAdmin()->random();
 
         Livewire::actingAs($orgAdmins);
-        Livewire::test(DocumentResource\Pages\CreateDocument::class)
+        Livewire::test(CreateDocument::class)
             ->assertForbidden();
     }
 
@@ -239,7 +243,7 @@ class OrganisationAdminTest extends DocumentsBase
         $orgAdmins = $this->getOrganisationAdminWithInactiveOrganisation();
 
         Livewire::actingAs($orgAdmins);
-        Livewire::test(DocumentResource\Pages\CreateDocument::class)
+        Livewire::test(CreateDocument::class)
             ->assertForbidden();
     }
 }

@@ -6,6 +6,8 @@ namespace App\Models;
 
 use App\Concerns\LimitsVisibility;
 use App\Enum\DocumentType;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,5 +47,16 @@ class Document extends Model implements HasMedia
     public function organisation(): BelongsTo
     {
         return $this->belongsTo(Organisation::class);
+    }
+
+    public function expiresAt(): Attribute
+    {
+        return Attribute::make(function ($value, array $attributes) {
+            if (blank($value) && DocumentType::protocol->is($attributes['type'])) {
+                return __('document.field.never_expires');
+            }
+
+            return Carbon::parse($value)->toFormattedDate();
+        });
     }
 }

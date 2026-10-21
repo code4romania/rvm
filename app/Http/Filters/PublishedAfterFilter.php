@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Filters;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Spatie\QueryBuilder\Filters\Filter;
@@ -14,7 +15,7 @@ class PublishedAfterFilter implements Filter
     {
         try {
             $date = Carbon::parse($value);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $query;
         }
 

@@ -7,7 +7,7 @@ namespace App\Filament\Filters;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Fieldset;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Tables\Filters\BaseFilter;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -31,17 +31,17 @@ class DateRangeFilter extends BaseFilter
     {
         parent::setUp();
 
-        $this->form(fn () => [
+        $this->schema(fn () => [
             Fieldset::make($this->getLabel())
-                ->columns($this->getColumns())
+                ->columns()
                 ->schema([
                     DatePicker::make('date_from')
                         ->label(__('general.filter.date_from'))
-                        ->placeholder(today()->subYear()->toFormattedDateString()),
+                        ->placeholder(today()->subYear()->toFormattedDate()),
 
                     DatePicker::make('date_until')
                         ->label(__('general.filter.date_until'))
-                        ->placeholder(today()->toFormattedDateString()),
+                        ->placeholder(today()->toFormattedDate()),
                 ]),
         ]);
 

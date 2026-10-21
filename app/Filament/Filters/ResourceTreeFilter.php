@@ -39,7 +39,7 @@ class ResourceTreeFilter extends BaseFilter
                     ->get()
             );
 
-        $this->form(fn () => [
+        $this->schema(fn () => [
             Select::make('category')
                 ->label(__('resource.fields.category'))
                 ->options($categories->pluck('name', 'id'))

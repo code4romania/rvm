@@ -7,8 +7,8 @@ namespace App\Filament\Forms\Components;
 use App\Models\City;
 use App\Models\County;
 use Filament\Forms\Components\Concerns\CanBeValidated;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Grid;
 use Illuminate\Support\Facades\Cache;
 
 class Location extends Grid
@@ -24,8 +24,10 @@ class Location extends Grid
         return $this;
     }
 
-    public function getChildComponents(): array
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $county = Select::make('county_id')
             ->label(__('general.county'))
             ->options(function () {
@@ -38,7 +40,7 @@ class Location extends Grid
             ->searchable()
             ->preload()
             ->reactive()
-            ->required($this->isRequired())
+            ->required(fn (): bool => $this->isRequired())
             ->afterStateUpdated(fn (callable $set) => $set('city_id', null));
 
         $components = [
@@ -51,7 +53,7 @@ class Location extends Grid
             $components[] = Select::make('city_id')
                 ->label(__('general.city'))
                 ->searchable()
-                ->required($this->isRequired())
+                ->required(fn (): bool => $this->isRequired())
                 ->getSearchResultsUsing(function (string $search, callable $get) {
                     $countyId = (int) $get('county_id');
 
@@ -71,6 +73,6 @@ class Location extends Grid
                 );
         }
 
-        return $components;
+        $this->schema($components);
     }
 }
