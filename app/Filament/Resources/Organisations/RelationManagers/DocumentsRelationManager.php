@@ -7,7 +7,6 @@ namespace App\Filament\Resources\Organisations\RelationManagers;
 use App\Enum\DocumentType;
 use App\Filament\Resources\Documents\DocumentResource;
 use App\Filament\Tables\Actions\ExportAction;
-use App\Models\Document;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
