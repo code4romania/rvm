@@ -7,7 +7,8 @@ export default defineConfig({
         laravel({
             refresh: true,
             detectTls: true,
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['resources/css/app.css'],
+            assets: ['resources/images/**'],
         }),
         tailwindcss(),
     ],
