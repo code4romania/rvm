@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Spatie\Image\Manipulations;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -40,7 +40,7 @@ class Document extends Model implements HasMedia
     {
         $this
             ->addMediaConversion('thumb')
-            ->fit(Manipulations::FIT_CROP, 300, 300)
+            ->fit(Fit::Crop, 300, 300)
             ->nonQueued();
     }
 
