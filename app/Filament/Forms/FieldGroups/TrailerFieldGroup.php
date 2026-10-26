@@ -13,8 +13,8 @@ class TrailerFieldGroup extends FieldGroup
 {
     protected function setUp(): void
     {
-
         parent::setUp();
+
         $this->schema([
             Section::make(__('resource.fields.attributes'))
                 ->columns(3)
