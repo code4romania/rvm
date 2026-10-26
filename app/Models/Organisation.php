@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
-use Spatie\Image\Manipulations;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -44,7 +44,7 @@ class Organisation extends Model implements HasMedia
     {
         $this
             ->addMediaConversion('thumb')
-            ->fit(Manipulations::FIT_CONTAIN, 80, 40)
+            ->fit(Fit::Contain, 80, 40)
             ->nonQueued();
     }
 
