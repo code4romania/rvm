@@ -11,9 +11,11 @@ use Filament\Schemas\Components\Section;
 
 class TvFieldGroup extends FieldGroup
 {
-    public function getChildComponents(?string $key = null): array
+    protected function setUp(): void
     {
-        return [
+
+        parent::setUp();
+        $this->schema([
             Section::make(__('resource.fields.attributes'))
                 ->columns(2)
                 ->schema([
@@ -31,6 +33,6 @@ class TvFieldGroup extends FieldGroup
                         ->withoutCity()
                         ->required(),
                 ]),
-        ];
+        ]);
     }
 }

@@ -6,6 +6,7 @@ namespace App\Filament\Forms\FieldGroups;
 
 use App\Models\Resource\Subcategory;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Facades\Cache;
 
 abstract class FieldGroup extends Grid
@@ -16,8 +17,8 @@ abstract class FieldGroup extends Grid
 
         $this->columns();
 
-        $this->visible(function (?array $state, $livewire) {
-            $id = data_get($state, 'subcategory_id');
+        $this->visible(function (Get $get) {
+            $id = $get('subcategory_id');
 
             if (blank($id)) {
                 return false;

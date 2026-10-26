@@ -13,9 +13,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TentFieldGroup extends FieldGroup
 {
-    public function getChildComponents(?string $key = null): array
+    protected function setUp(): void
     {
-        return [
+
+        parent::setUp();
+        $this->schema([
             Section::make(__('resource.fields.attributes'))
                 ->columns(3)
                 ->schema([
@@ -63,6 +65,6 @@ class TentFieldGroup extends FieldGroup
                     Checkbox::make('properties.transportable')
                         ->label(__('resource.attributes.location.transportable')),
                 ]),
-        ];
+        ]);
     }
 }
