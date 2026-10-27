@@ -10,6 +10,8 @@ use App\Filament\Resources\Documents\Pages\CreateDocument;
 use App\Filament\Resources\Documents\Pages\EditDocument;
 use App\Filament\Resources\Documents\Pages\ListDocuments;
 use App\Filament\Resources\Documents\Pages\ViewDocument;
+use App\Filament\Resources\Documents\Schemas\DocumentForm;
+use App\Filament\Resources\Documents\Schemas\DocumentInfolist;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Document;
 use Filament\Actions\ViewAction;
@@ -50,78 +52,12 @@ class DocumentResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Section::make()
-                    ->heading('')
-                    ->columns(2)
-                    ->schema([
-                        Grid::make()
-                            ->columnSpanFull()
-                            ->schema([
-                                Select::make('organisation_id')
-                                    ->label(__('document.field.organisation'))
-                                    ->relationship('organisation', 'name')
-                                    ->searchable()
-                                    ->preload()
-                                    ->required(),
-                            ]),
+        return DocumentForm::configure($schema);
+    }
 
-                        TextInput::make('name')
-                            ->label(__('document.field.name'))
-                            ->placeholder(__('document.placeholder.name'))
-                            ->maxLength(255)
-                            ->required(),
-
-                        Select::make('type')
-                            ->label(__('document.field.type'))
-                            ->options(DocumentType::class)
-                            ->enum(DocumentType::class)
-                            ->live()
-                            ->required(),
-
-                        Grid::make()
-                            ->visible(fn (callable $get) => DocumentType::protocol->is($get('type')))
-                            ->schema([
-                                DatePicker::make('signed_at')
-                                    ->label(__('document.field.signed_at'))
-                                    ->required(),
-
-                                Group::make()
-                                    ->schema([
-                                        DatePicker::make('expires_at')
-                                            ->label(__('document.field.expires_at'))
-                                            ->after('signed_at')
-                                            ->required(fn (Get $get) => ! $get('never_expires'))
-                                            ->readOnly(fn (Get $get) => (bool) $get('never_expires'))
-                                            ->afterStateHydrated(function (Set $set, $state) {
-                                                if (blank($state)) {
-                                                    $set('never_expires', true);
-                                                }
-                                            }),
-
-                                        Checkbox::make('never_expires')
-                                            ->label(__('document.field.never_expires'))
-                                            ->afterStateUpdated(function (Set $set, $state) {
-                                                if ($state === true) {
-                                                    $set('expires_at', null);
-                                                }
-                                            })
-                                            ->live(),
-                                    ]),
-                            ]),
-                    ]),
-
-                Section::make(__('document.field.document'))
-                    ->schema([
-                        SpatieMediaLibraryFileUpload::make('document')
-                            ->downloadable()
-                            ->hiddenLabel()
-                            ->preserveFilenames()
-                            ->visibility('private')
-                            ->columnSpanFull(),
-                    ]),
-            ]);
+    public static function infolist(Schema $schema): Schema
+    {
+        return DocumentInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
