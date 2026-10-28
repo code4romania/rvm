@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -35,9 +37,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware(config('filament.middleware.base'))
-                ->domain(config('filament.domain'))
-                ->prefix(config('filament.path'))
+            Route::middleware([
+                'web',
+                DisableBladeIconComponents::class,
+                DispatchServingFilamentEvent::class,
+            ])
                 ->name('filament.')
                 ->group(base_path('routes/filament.php'));
 
