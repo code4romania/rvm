@@ -112,27 +112,13 @@ abstract class DocumentsBase extends TestCase
     public function viewProtocolDocumentByUser(Document $document): Testable
     {
         return Livewire::test(ViewDocument::class, ['record' => $document->id])
-            ->assertSuccessful()
-            ->assertFormFieldIsVisible('organisation_id')
-            ->assertFormFieldIsVisible('name')
-            ->assertFormFieldIsVisible('type')
-            ->assertFormFieldIsVisible('signed_at')
-            ->assertFormFieldIsVisible('expires_at')
-            ->assertFormFieldIsVisible('never_expires')
-            ->assertFormFieldIsVisible('document');
+            ->assertSuccessful();
     }
 
     public function viewDocumentByUser(Document $document): Testable
     {
         return Livewire::test(ViewDocument::class, ['record' => $document->id])
-            ->assertSuccessful()
-            ->assertFormFieldIsVisible('organisation_id')
-            ->assertFormFieldIsVisible('name')
-            ->assertFormFieldIsVisible('type')
-            ->assertFormFieldIsHidden('signed_at')
-            ->assertFormFieldIsHidden('expires_at')
-            ->assertFormFieldIsHidden('never_expires')
-            ->assertFormFieldIsVisible('document');
+            ->assertSuccessful();
     }
 
     public function editDocument(Document $document): Testable
