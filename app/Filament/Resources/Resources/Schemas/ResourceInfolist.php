@@ -13,6 +13,7 @@ use App\Filament\Infolists\EntryGroups\TentEntryGroup;
 use App\Filament\Infolists\EntryGroups\TrailerEntryGroup;
 use App\Filament\Infolists\EntryGroups\TvEntryGroup;
 use App\Filament\Infolists\EntryGroups\VehicleEntryGroup;
+use App\Filament\Resources\Organisations\RelationManagers\ResourcesRelationManager;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -32,7 +33,8 @@ class ResourceInfolist
 
                         TextEntry::make('organisation.name')
                             ->label(__('resource.fields.organisation'))
-                            ->hidden(fn () => auth()->user()->belongsToOrganisation()),
+                            ->hidden(fn () => auth()->user()->belongsToOrganisation())
+                            ->hiddenOn(ResourcesRelationManager::class),
 
                         TextEntry::make('category.name')
                             ->label(__('resource.fields.category'))

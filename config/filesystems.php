@@ -60,7 +60,7 @@ return [
         ],
 
         's3-public' => [
-            'driver' => 's3',
+            'driver' => 'local',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
@@ -69,7 +69,7 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
-            'root' => (string) env('AWS_BUCKET_PUBLIC_ROOT'),
+            'root' => storage_path('app/public'),
             'visibility' => 'public',
         ],
 

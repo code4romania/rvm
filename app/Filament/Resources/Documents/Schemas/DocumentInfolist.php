@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Documents\Schemas;
 
+use App\Filament\Resources\Organisations\RelationManagers\DocumentsRelationManager;
 use App\Models\Document;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\TextEntry;
@@ -22,7 +23,9 @@ class DocumentInfolist
                     ->columnSpan(1)
                     ->schema([
                         TextEntry::make('organisation.name')
-                            ->label(__('document.field.organisation')),
+                            ->label(__('document.field.organisation'))
+
+                            ->hiddenOn(DocumentsRelationManager::class),
 
                         TextEntry::make('name')
                             ->label(__('document.field.name')),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Filament\Resources\Organisations\RelationManagers\UsersRelationManager;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -34,6 +35,7 @@ class UserInfolist
                 Section::make()
                     ->heading('')
                     ->columns()
+                    ->hiddenOn(UsersRelationManager::class)
                     ->schema([
                         TextEntry::make('role')
                             ->label(__('user.field.role')),
