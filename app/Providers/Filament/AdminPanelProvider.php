@@ -55,6 +55,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
+            ->readOnlyRelationManagersOnResourceViewPagesByDefault(false)
             ->brandLogo(fn () => Vite::asset('resources/images/logo.png'))
             ->brandLogoHeight('2.5rem')
             ->viteTheme('resources/css/app.css')

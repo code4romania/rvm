@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Resources\Schemas;
 
 use App\Filament\Forms\FieldGroups\AircraftFieldGroup;

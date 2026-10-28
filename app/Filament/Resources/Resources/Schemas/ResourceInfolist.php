@@ -1,23 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Resources\Schemas;
 
-use App\Filament\Forms\FieldGroups\AircraftFieldGroup;
-use App\Filament\Forms\FieldGroups\BoatFieldGroup;
-use App\Filament\Forms\FieldGroups\BroadcastFieldGroup;
-use App\Filament\Forms\FieldGroups\RadioFieldGroup;
-use App\Filament\Forms\FieldGroups\RescueDogFieldGroup;
-use App\Filament\Forms\FieldGroups\TentFieldGroup;
-use App\Filament\Forms\FieldGroups\TrailerFieldGroup;
-use App\Filament\Forms\FieldGroups\TvFieldGroup;
-use App\Filament\Forms\FieldGroups\VehicleFieldGroup;
-use App\Models\Resource\Subcategory;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
+use App\Filament\Infolists\EntryGroups\AircraftEntryGroup;
+use App\Filament\Infolists\EntryGroups\BoatEntryGroup;
+use App\Filament\Infolists\EntryGroups\BroadcastEntryGroup;
+use App\Filament\Infolists\EntryGroups\RadioEntryGroup;
+use App\Filament\Infolists\EntryGroups\RescueDogEntryGroup;
+use App\Filament\Infolists\EntryGroups\TentEntryGroup;
+use App\Filament\Infolists\EntryGroups\TrailerEntryGroup;
+use App\Filament\Infolists\EntryGroups\TvEntryGroup;
+use App\Filament\Infolists\EntryGroups\VehicleEntryGroup;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Illuminate\Database\Eloquent\Builder;
 
 class ResourceInfolist
 {
@@ -29,75 +27,55 @@ class ResourceInfolist
                     ->heading('')
                     ->columns(2)
                     ->schema([
-                        TextInput::make('name')
-                            ->label(__('resource.fields.name'))
-                            ->maxLength(255)
-                            ->required(),
+                        TextEntry::make('name')
+                            ->label(__('resource.fields.name')),
 
-                        Select::make('organisation_id')
-                            ->relationship('organisation', 'name')
+                        TextEntry::make('organisation.name')
                             ->label(__('resource.fields.organisation'))
-                            ->hidden(fn () => auth()->user()->belongsToOrganisation())
-                            ->searchable()
-                            ->preload()
-                            ->required(),
+                            ->hidden(fn () => auth()->user()->belongsToOrganisation()),
 
-                        Select::make('category_id')
-                            ->relationship('category', 'name', fn (Builder $query) => $query->orderBy('id'))
+                        TextEntry::make('category.name')
                             ->label(__('resource.fields.category'))
                             ->live()
-                            ->required()
                             ->afterStateUpdated(function (callable $set) {
                                 $set('subcategory_id', null);
                                 $set('types', null);
                                 $set('properties', []);
                             }),
 
-                        Select::make('subcategory_id')
-                            ->label(__('resource.fields.subcategory'))
-                            ->options(
-                                function (callable $get, callable $set) {
-                                    if (! $get('category_id')) {
-                                        return;
-                                    }
+                        TextEntry::make('subcategory.name')
+                            ->label(__('resource.fields.subcategory')),
 
-                                    return Subcategory::query()
-                                        ->inCategory($get('category_id'))
-                                        ->pluck('name', 'id');
-                                }
-                            )
-                            ->disabled(fn (callable $get) => $get('category_id') === null)
-                            ->live()
-                            ->required(),
+                        TextEntry::make('subcategory.id')
+                            ->label(__('resource.fields.subcategory'))
+                            ->hidden()
+                            ->live(),
                     ]),
 
-                AircraftFieldGroup::make(),
-                BoatFieldGroup::make(),
-                BroadcastFieldGroup::make(),
-                RadioFieldGroup::make(),
-                RescueDogFieldGroup::make(),
-                TentFieldGroup::make(),
-                TrailerFieldGroup::make(),
-                TvFieldGroup::make(),
-                VehicleFieldGroup::make(),
+                AircraftEntryGroup::make(),
+                BoatEntryGroup::make(),
+                BroadcastEntryGroup::make(),
+                RadioEntryGroup::make(),
+                RescueDogEntryGroup::make(),
+                TentEntryGroup::make(),
+                TrailerEntryGroup::make(),
+                TvEntryGroup::make(),
+                VehicleEntryGroup::make(),
 
                 Section::make(__('resource.fields.contact'))
                     ->columns()
                     ->schema([
-                        TextInput::make('contact_name')
-                            ->label(__('resource.fields.contact'))
-                            ->required(),
+                        TextEntry::make('contact_name')
+                            ->label(__('resource.fields.contact')),
 
-                        TextInput::make('contact_phone')
-                            ->label(__('resource.fields.contact_phone'))
-                            ->tel()
-                            ->required(),
+                        TextEntry::make('contact_phone')
+                            ->label(__('resource.fields.contact_phone')),
                     ]),
 
                 Section::make()
                     ->heading('')
                     ->schema([
-                        Textarea::make('comments')
+                        TextEntry::make('comments')
                             ->label(__('resource.fields.comments'))
                             ->columnSpanFull(),
                     ]),

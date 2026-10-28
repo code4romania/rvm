@@ -11,6 +11,7 @@ use App\Filament\Resources\Volunteers\Pages\CreateVolunteer;
 use App\Filament\Resources\Volunteers\Pages\EditVolunteer;
 use App\Filament\Resources\Volunteers\Pages\ListVolunteers;
 use App\Filament\Resources\Volunteers\Pages\ViewVolunteer;
+use App\Filament\Resources\Volunteers\Schemas\VolunteerInfolist;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Volunteer;
 use App\Rules\ValidCNP;
@@ -121,6 +122,11 @@ class VolunteerResource extends Resource
                             ->required(),
                     ]),
             ]);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return VolunteerInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

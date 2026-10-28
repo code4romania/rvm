@@ -18,6 +18,7 @@ use App\Filament\Resources\Resources\Pages\CreateResource;
 use App\Filament\Resources\Resources\Pages\EditResource;
 use App\Filament\Resources\Resources\Pages\ListResources;
 use App\Filament\Resources\Resources\Pages\ViewResource;
+use App\Filament\Resources\Resources\Schemas\ResourceInfolist;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Resource as ResourceModel;
 use App\Models\Resource\Subcategory;
@@ -133,6 +134,11 @@ class ResourceResource extends Resource
                             ->columnSpanFull(),
                     ]),
             ]);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return ResourceInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
