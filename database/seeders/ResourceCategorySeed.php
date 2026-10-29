@@ -25,11 +25,11 @@ class ResourceCategorySeed extends Seeder
                         'Neutilat',
                         'Altul',
                     ],
-                    'field_group' => FieldGroups\TentFieldGroup::class,
+                    'field_group' => 'tent',
                 ],
                 [
                     'name' => 'Rulote',
-                    'field_group' => FieldGroups\TrailerFieldGroup::class,
+                    'field_group' => 'trailer',
                 ],
                 [
                     'name' => 'Cazare',
@@ -50,18 +50,18 @@ class ResourceCategorySeed extends Seeder
                         'Camion',
                         'Altul',
                     ],
-                    'field_group' => FieldGroups\VehicleFieldGroup::class,
+                    'field_group' => 'vehicle',
                 ],
                 [
                     'name' => 'Maritim',
-                    'field_group' => FieldGroups\BoatFieldGroup::class,
+                    'field_group' => 'boat',
                 ],
                 [
                     'name' => 'Feroviar',
                 ],
                 [
                     'name' => 'Aerian',
-                    'field_group' => FieldGroups\AircraftFieldGroup::class,
+                    'field_group' => 'aircraft',
                 ],
                 [
                     'name' => 'Altul',
@@ -79,7 +79,7 @@ class ResourceCategorySeed extends Seeder
                         'Căutare în mediu natural',
                         'Altul',
                     ],
-                    'field_group' => FieldGroups\RescueDogFieldGroup::class,
+                    'field_group' => 'rescueDog',
                 ],
             ],
         ],
@@ -88,7 +88,7 @@ class ResourceCategorySeed extends Seeder
             'children' => [
                 [
                     'name' => 'Radiocomunicații',
-                    'field_group' => FieldGroups\RadioFieldGroup::class,
+                    'field_group' => 'radio',
                     'custom_attributes' => [
                         [
                             'name' => 'tech_type',
@@ -98,7 +98,7 @@ class ResourceCategorySeed extends Seeder
                 ],
                 [
                     'name' => 'Televiziune',
-                    'field_group' => FieldGroups\TvFieldGroup::class,
+                    'field_group' => 'tv',
                     'custom_attributes' => [
                         [
                             'name' => 'area',
@@ -112,7 +112,7 @@ class ResourceCategorySeed extends Seeder
                 ],
                 [
                     'name' => 'Radiodifuziune',
-                    'field_group' => FieldGroups\BroadcastFieldGroup::class,
+                    'field_group' => 'broadcast',
                 ],
                 [
                     'name' => 'Altele',
