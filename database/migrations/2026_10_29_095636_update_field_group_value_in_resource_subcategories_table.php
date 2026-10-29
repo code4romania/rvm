@@ -24,6 +24,7 @@ return new class extends Migration
                     Subcategory::query()->where('id', $subcategory->id)->update(['field_group' => $value]);
                 }
             } catch (Exception $exception) {
+                Log::info($exception->getMessage());
             }
         }
     }
