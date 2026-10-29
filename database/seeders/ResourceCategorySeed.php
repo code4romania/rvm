@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Filament\Forms\FieldGroups;
 use App\Models\Resource\Category;
 use Illuminate\Database\Seeder;
 
