@@ -7,6 +7,7 @@ namespace App\Filament\Resources\Volunteers\Pages;
 use App\Filament\Resources\Volunteers\VolunteerResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListVolunteers extends ListRecords
@@ -20,8 +21,9 @@ class ListVolunteers extends ListRecords
         ];
     }
 
-    protected function getTableQuery(): Builder
+    public function table(Table $table): Table
     {
-        return parent::getTableQuery()->with('organisation');
+        return parent::table($table)
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('organisation'));
     }
 }

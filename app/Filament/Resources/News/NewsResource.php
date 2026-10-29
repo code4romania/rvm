@@ -72,7 +72,7 @@ class NewsResource extends Resource
                         'class' => 'object-contain',
                     ])
                     ->width(80)
-                    ->height(40)
+                    ->imageHeight(40)
                     ->visibility('public')
                     ->toggleable(),
 

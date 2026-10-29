@@ -9,10 +9,10 @@ use App\Filament\Pages\Auth\Settings;
 use App\Filament\Pages\PersonalInfo;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\CheckOrganisationIsActive;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -77,7 +77,7 @@ class AdminPanelProvider extends PanelProvider
                 CheckOrganisationIsActive::class,
             ])
             ->userMenuItems([
-                MenuItem::make()
+                Action::make('settings')
                     ->sort(1)
                     ->icon('heroicon-o-cog')
                     ->label(__('auth.settings'))

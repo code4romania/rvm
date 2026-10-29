@@ -12,16 +12,17 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListOrganisations extends ListRecords
 {
     protected static string $resource = OrganisationResource::class;
 
-    protected function getTableQuery(): Builder
+    public function table(Table $table): Table
     {
-        return parent::getTableQuery()
-            ->with('media', 'activityCounties');
+        return parent::table($table)
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('organisation'));
     }
 
     protected function getHeaderActions(): array
@@ -92,7 +93,7 @@ class ListOrganisations extends ListRecords
                     return $data;
                 })
                 ->successRedirectUrl(fn ($record) => OrganisationResource::getUrl('view', $record))
-                ->disableCreateAnother(),
+                ->createAnother(false),
         ];
     }
 }
