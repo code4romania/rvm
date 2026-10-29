@@ -18,7 +18,6 @@ class NewsInfolist
         return $schema
             ->components([
                 Section::make()
-                    ->heading('')
                     ->columns(1)
                     ->schema([
                         TextEntry::make('published_at')

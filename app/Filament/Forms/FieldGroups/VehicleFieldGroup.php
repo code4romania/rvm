@@ -13,6 +13,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class VehicleFieldGroup extends FieldGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'vehicle';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

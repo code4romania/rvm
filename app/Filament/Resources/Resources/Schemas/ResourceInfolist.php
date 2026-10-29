@@ -25,7 +25,6 @@ class ResourceInfolist
         return $schema
             ->components([
                 Section::make()
-                    ->heading('')
                     ->columns(2)
                     ->schema([
                         TextEntry::make('name')
@@ -75,7 +74,6 @@ class ResourceInfolist
                     ]),
 
                 Section::make()
-                    ->heading('')
                     ->schema([
                         TextEntry::make('comments')
                             ->label(__('resource.fields.comments'))

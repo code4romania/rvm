@@ -10,6 +10,11 @@ use Filament\Schemas\Components\Section;
 
 class BroadcastEntryGroup extends EntryGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'broadcast';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

@@ -10,6 +10,11 @@ use Filament\Schemas\Components\Section;
 
 class RadioEntryGroup extends EntryGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'radio';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

@@ -13,6 +13,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TentFieldGroup extends FieldGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'tent';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

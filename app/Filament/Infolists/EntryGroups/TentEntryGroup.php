@@ -11,6 +11,11 @@ use Filament\Schemas\Components\Section;
 
 class TentEntryGroup extends EntryGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'tent';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

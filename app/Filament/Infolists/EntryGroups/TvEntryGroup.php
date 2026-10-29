@@ -10,6 +10,11 @@ use Filament\Schemas\Components\Section;
 
 class TvEntryGroup extends EntryGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'tv';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

@@ -11,6 +11,11 @@ use Filament\Schemas\Components\Section;
 
 class BroadcastFieldGroup extends FieldGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'broadcast';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

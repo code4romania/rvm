@@ -11,6 +11,11 @@ use Filament\Schemas\Components\Section;
 
 class TrailerFieldGroup extends FieldGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'trailer';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

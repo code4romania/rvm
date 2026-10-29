@@ -11,6 +11,11 @@ use Filament\Schemas\Components\Section;
 
 class AircraftFieldGroup extends FieldGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'aircraft';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

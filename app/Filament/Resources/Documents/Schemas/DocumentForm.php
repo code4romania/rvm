@@ -24,7 +24,6 @@ class DocumentForm
         return $schema
             ->components([
                 Section::make()
-                    ->heading('')
                     ->columns(2)
                     ->schema([
                         Grid::make()

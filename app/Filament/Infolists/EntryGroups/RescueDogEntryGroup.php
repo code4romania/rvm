@@ -12,6 +12,11 @@ use Filament\Schemas\Components\Section;
 
 class RescueDogEntryGroup extends EntryGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'rescueDog';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

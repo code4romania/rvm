@@ -18,7 +18,6 @@ class UserForm
         return $schema
             ->components([
                 Section::make()
-                    ->heading('')
                     ->columns()
                     ->schema([
                         TextInput::make('first_name')
@@ -46,7 +45,6 @@ class UserForm
                     ]),
 
                 Section::make()
-                    ->heading('')
                     ->columns()
                     ->schema([
                         Select::make('role')

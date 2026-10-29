@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Cache;
 
 abstract class EntryGroup extends Grid
 {
+    abstract public function getGroupKey(): string;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,11 +32,7 @@ abstract class EntryGroup extends Grid
                     fn () => Subcategory::find($id)
                 );
 
-            return str_replace(
-                'Forms',
-                'Infolists',
-                str_replace('Field', 'Entry', $subcategory->field_group ?? '')
-            ) === \get_class($this);
+            return $subcategory->field_group === $this->getGroupKey();
         });
     }
 }

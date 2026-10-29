@@ -23,7 +23,6 @@ class NewsForm
         return $schema
             ->components([
                 Section::make()
-                    ->heading('')
                     ->columns(1)
                     ->schema([
 

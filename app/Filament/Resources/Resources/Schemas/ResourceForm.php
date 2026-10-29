@@ -28,7 +28,6 @@ class ResourceForm
         return $schema
             ->components([
                 Section::make()
-                    ->heading('')
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
@@ -97,7 +96,6 @@ class ResourceForm
                     ]),
 
                 Section::make()
-                    ->heading('')
                     ->schema([
                         Textarea::make('comments')
                             ->label(__('resource.fields.comments'))

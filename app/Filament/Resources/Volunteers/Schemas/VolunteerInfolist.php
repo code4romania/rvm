@@ -20,7 +20,6 @@ class VolunteerInfolist
         return $schema
             ->components([
                 Section::make()
-                    ->heading('')
                     ->columns()
                     ->schema([
                         Group::make()

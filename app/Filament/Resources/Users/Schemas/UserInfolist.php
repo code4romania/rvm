@@ -16,7 +16,6 @@ class UserInfolist
         return $schema
             ->components([
                 Section::make()
-                    ->heading('')
                     ->columns()
                     ->schema([
                         TextEntry::make('first_name')
@@ -33,7 +32,6 @@ class UserInfolist
                     ]),
 
                 Section::make()
-                    ->heading('')
                     ->columns()
                     ->hiddenOn(UsersRelationManager::class)
                     ->schema([

@@ -11,6 +11,11 @@ use Filament\Schemas\Components\Section;
 
 class VehicleEntryGroup extends EntryGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'vehicle';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

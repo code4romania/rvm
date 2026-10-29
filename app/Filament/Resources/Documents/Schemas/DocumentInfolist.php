@@ -19,7 +19,6 @@ class DocumentInfolist
             ->columns()
             ->components([
                 Section::make()
-                    ->heading('')
                     ->columnSpan(1)
                     ->schema([
                         TextEntry::make('organisation.name')
