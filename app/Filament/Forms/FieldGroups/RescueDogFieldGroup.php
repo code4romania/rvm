@@ -14,6 +14,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class RescueDogFieldGroup extends FieldGroup
 {
+    public function getGroupKey(): string
+    {
+        return 'rescueDog';
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

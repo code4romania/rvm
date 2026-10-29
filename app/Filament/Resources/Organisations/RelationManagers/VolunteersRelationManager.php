@@ -7,6 +7,7 @@ namespace App\Filament\Resources\Organisations\RelationManagers;
 use App\Enum\VolunteerRole;
 use App\Enum\VolunteerSpecialization;
 use App\Filament\Forms\Components\Location;
+use App\Filament\Resources\Volunteers\Schemas\VolunteerInfolist;
 use App\Filament\Resources\Volunteers\VolunteerResource;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Rules\ValidCNP;
@@ -97,6 +98,11 @@ class VolunteersRelationManager extends RelationManager
                 Location::make()
                     ->required(),
             ]);
+    }
+
+    public function infolist(Schema $schema): Schema
+    {
+        return VolunteerInfolist::configure($schema);
     }
 
     public function table(Table $table): Table

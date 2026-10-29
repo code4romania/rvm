@@ -17,6 +17,7 @@ return [
         'expires_at' => 'Dată expirare',
         'document' => 'Document',
         'never_expires' => 'Încheiat pe perioadă nedeterminată',
+        'download' => 'Descarcă document',
     ],
 
     'type' => [

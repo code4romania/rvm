@@ -6,6 +6,7 @@ namespace App\Filament\Resources\Organisations\RelationManagers;
 
 use App\Enum\DocumentType;
 use App\Filament\Resources\Documents\DocumentResource;
+use App\Filament\Resources\Documents\Schemas\DocumentInfolist;
 use App\Filament\Tables\Actions\ExportAction;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -100,6 +101,11 @@ class DocumentsRelationManager extends RelationManager
                     ->visibility('private')
                     ->columnSpanFull(),
             ]);
+    }
+
+    public function infolist(Schema $schema): Schema
+    {
+        return DocumentInfolist::configure($schema);
     }
 
     public function table(Table $table): Table

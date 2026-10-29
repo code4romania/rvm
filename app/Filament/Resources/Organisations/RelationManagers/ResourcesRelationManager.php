@@ -15,6 +15,7 @@ use App\Filament\Forms\FieldGroups\TrailerFieldGroup;
 use App\Filament\Forms\FieldGroups\TvFieldGroup;
 use App\Filament\Forms\FieldGroups\VehicleFieldGroup;
 use App\Filament\Resources\Resources\ResourceResource;
+use App\Filament\Resources\Resources\Schemas\ResourceInfolist;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Resource\Subcategory;
 use Filament\Actions\CreateAction;
@@ -123,6 +124,11 @@ class ResourcesRelationManager extends RelationManager
                     ->columnSpanFull(),
 
             ]);
+    }
+
+    public function infolist(Schema $schema): Schema
+    {
+        return ResourceInfolist::configure($schema);
     }
 
     public function table(Table $table): Table

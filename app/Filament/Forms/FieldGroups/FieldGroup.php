@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Cache;
 
 abstract class FieldGroup extends Grid
 {
+    abstract public function getGroupKey(): string;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,7 +32,7 @@ abstract class FieldGroup extends Grid
                     fn () => Subcategory::find($id)
                 );
 
-            return $subcategory->field_group === \get_class($this);
+            return $subcategory->field_group === $this->getGroupKey();
         });
     }
 }

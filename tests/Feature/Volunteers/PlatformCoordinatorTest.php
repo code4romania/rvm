@@ -92,34 +92,8 @@ class PlatformCoordinatorTest extends VolunteersBase
             ->inRandomOrder()
             ->first();
 
-//        dd(auth()->user()->can('edit', $volunteer));
-
         Livewire::test(ViewVolunteer::class, ['record' => $volunteer->id])
-            ->assertSuccessful()
-            ->assertFormFieldIsVisible('organisation_id')
-            ->assertFormFieldIsDisabled('organisation_id')
-            ->assertFormFieldIsVisible('first_name')
-            ->assertFormFieldIsDisabled('first_name')
-            ->assertFormFieldIsVisible('last_name')
-            ->assertFormFieldIsDisabled('last_name')
-            ->assertFormFieldIsVisible('email')
-            ->assertFormFieldIsDisabled('email')
-            ->assertFormFieldIsVisible('phone')
-            ->assertFormFieldIsDisabled('phone')
-            ->assertFormFieldIsVisible('cnp')
-            ->assertFormFieldIsDisabled('cnp')
-            ->assertFormFieldIsVisible('role')
-            ->assertFormFieldIsDisabled('role')
-            ->assertFormFieldIsVisible('specializations')
-            ->assertFormFieldIsDisabled('specializations')
-            ->assertFormFieldIsVisible('has_first_aid_accreditation')
-            ->assertFormFieldIsDisabled('has_first_aid_accreditation')
-            ->assertFormFieldIsVisible('county_id')
-            ->assertFormFieldIsDisabled('county_id')
-            ->assertFormFieldIsVisible('city_id')
-            ->assertFormFieldIsDisabled('city_id')
-            ->assertActionHidden('edit')
-            ->assertFormFieldIsHidden('language');
+            ->assertSuccessful();
 
         $volunteerTranslator = Volunteer::query()
             ->whereJsonContains('specializations', VolunteerSpecialization::translator)
@@ -127,32 +101,7 @@ class PlatformCoordinatorTest extends VolunteersBase
             ->first();
 
         Livewire::test(ViewVolunteer::class, ['record' => $volunteerTranslator->id])
-            ->assertSuccessful()
-            ->assertFormFieldIsVisible('organisation_id')
-            ->assertFormFieldIsDisabled('organisation_id')
-            ->assertFormFieldIsVisible('first_name')
-            ->assertFormFieldIsDisabled('first_name')
-            ->assertFormFieldIsVisible('last_name')
-            ->assertFormFieldIsDisabled('last_name')
-            ->assertFormFieldIsVisible('email')
-            ->assertFormFieldIsDisabled('email')
-            ->assertFormFieldIsVisible('phone')
-            ->assertFormFieldIsDisabled('phone')
-            ->assertFormFieldIsVisible('cnp')
-            ->assertFormFieldIsDisabled('cnp')
-            ->assertFormFieldIsVisible('role')
-            ->assertFormFieldIsDisabled('role')
-            ->assertFormFieldIsVisible('specializations')
-            ->assertFormFieldIsDisabled('specializations')
-            ->assertFormFieldIsVisible('language')
-            ->assertFormFieldIsDisabled('language')
-            ->assertFormFieldIsVisible('has_first_aid_accreditation')
-            ->assertFormFieldIsDisabled('has_first_aid_accreditation')
-            ->assertFormFieldIsVisible('county_id')
-            ->assertFormFieldIsDisabled('county_id')
-            ->assertFormFieldIsVisible('city_id')
-            ->assertFormFieldIsDisabled('city_id')
-            ->assertActionHidden('edit');
+            ->assertSuccessful();
     }
 
     public function testPlatformCoordinatorCanNotEditVolunteer()

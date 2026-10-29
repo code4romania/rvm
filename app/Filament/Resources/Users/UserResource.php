@@ -9,20 +9,18 @@ use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\Pages\ViewUser;
+use App\Filament\Resources\Users\Schemas\UserForm;
+use App\Filament\Resources\Users\Schemas\UserInfolist;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class UserResource extends Resource
 {
@@ -44,58 +42,12 @@ class UserResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Section::make()
-                    ->heading('')
-                    ->columns()
-                    ->schema([
-                        TextInput::make('first_name')
-                            ->label(__('user.field.first_name'))
-                            ->maxLength(100)
-                            ->required(),
+        return UserForm::configure($schema);
+    }
 
-                        TextInput::make('last_name')
-                            ->label(__('user.field.last_name'))
-                            ->maxLength(100)
-                            ->required(),
-
-                        TextInput::make('email')
-                            ->label(__('user.field.email'))
-                            ->unique(ignoreRecord: true)
-                            ->maxLength(200)
-                            ->email()
-                            ->required(),
-
-                        TextInput::make('phone')
-                            ->label(__('user.field.phone'))
-                            ->maxLength(14)
-                            ->tel()
-                            ->required(),
-                    ]),
-
-                Section::make()
-                    ->heading('')
-                    ->columns()
-                    ->schema([
-                        Select::make('role')
-                            ->label(__('user.field.role'))
-                            ->options(UserRole::options())
-                            ->enum(UserRole::class)
-                            ->live()
-                            ->required(),
-
-                        Select::make('organisation_id')
-                            ->relationship('organisation', 'name', fn (Builder $query) => $query->whereActive())
-                            ->label(__('user.field.organisation'))
-                            ->visible(fn (callable $get) => UserRole::ORG_ADMIN->is($get('role')))
-                            ->searchable()
-                            ->required(),
-                    ])
-                    ->visible(
-                        fn () => auth()->user()->isPlatformAdmin(),
-                    ),
-            ]);
+    public static function infolist(Schema $schema): Schema
+    {
+        return UserInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

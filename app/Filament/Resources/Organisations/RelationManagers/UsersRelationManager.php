@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Organisations\RelationManagers;
 
 use App\Enum\UserRole;
+use App\Filament\Resources\Users\Schemas\UserInfolist;
 use App\Filament\Resources\Users\UserResource;
 use App\Filament\Tables\Actions\ExportAction;
 use Filament\Actions\CreateAction;
@@ -66,6 +67,11 @@ class UsersRelationManager extends RelationManager
                     ->required(),
 
             ]);
+    }
+
+    public function infolist(Schema $schema): Schema
+    {
+        return UserInfolist::configure($schema);
     }
 
     public function table(Table $table): Table
