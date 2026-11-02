@@ -22,7 +22,7 @@ class ListOrganisations extends ListRecords
     public function table(Table $table): Table
     {
         return parent::table($table)
-            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('organisation'));
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('media', 'activityCounties'));
     }
 
     protected function getHeaderActions(): array
