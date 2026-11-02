@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Tables\Actions;
 
 use App\Filament\Tables\Exports\ExcelExport;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction as BaseAction;
+use pxlrbt\FilamentExcel\Actions\ExportAction as BaseAction;
 
 class ExportAction extends BaseAction
 {
