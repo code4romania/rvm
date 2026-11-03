@@ -138,7 +138,8 @@ class VolunteerResource extends Resource
                         'organisation_id' => auth()->user()->organisation_id,
                     ])
                     ->visible(fn (): bool => auth()->user()->can('create', Volunteer::class))
-                    ->authorize(fn (): bool => auth()->user()->can('create', Volunteer::class)),
+                    ->authorize(fn (): bool => auth()->user()->can('create', Volunteer::class))
+                    ->csvDelimiter(';'),
             ])
             ->defaultSort('id', 'desc');
     }

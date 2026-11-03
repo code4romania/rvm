@@ -6,6 +6,7 @@ namespace App\Filament\Imports;
 
 use App\Enum\VolunteerRole;
 use App\Enum\VolunteerSpecialization;
+use App\Filament\Forms\Components\Location;
 use App\Models\Volunteer;
 use App\Rules\ValidCNP;
 use Filament\Actions\Imports\ImportColumn;
@@ -21,11 +22,17 @@ class VolunteerImporter extends Importer
 
     public static function getOptionsFormComponents(): array
     {
-        return [Select::make('organisation_id')
-            ->relationship('organisation', 'name')
-            ->placeholder('–')
-            ->label(__('volunteer.field.organisation'))
-            ->hidden(fn () => auth()->user()->belongsToOrganisation())];
+        return [
+            Select::make('organisation_id')
+                ->relationship('organisation', 'name')
+                ->placeholder('–')
+                ->label(__('volunteer.field.organisation'))
+                ->hidden(fn () => auth()->user()->belongsToOrganisation())
+                ->required(),
+
+            Location::make()
+                ->required(),
+        ];
     }
 
     public static function getColumns(): array
@@ -41,10 +48,6 @@ class VolunteerImporter extends Importer
                 ->requiredMapping()
                 ->enum(VolunteerRole::class)
                 ->rules(['required', 'max:200']),
-            ImportColumn::make('city')
-                ->relationship(),
-            ImportColumn::make('county')
-                ->relationship(),
             ImportColumn::make('email')
                 ->rules(['email', 'max:200']),
             ImportColumn::make('phone')
@@ -69,6 +72,8 @@ class VolunteerImporter extends Importer
     {
         $record = new Volunteer();
         $record->organisation_id = $this->options['organisation_id'];
+        $record->county_id = $this->options['county_id'];
+        $record->city_id = $this->options['city_id'];
 
         return $record;
     }
