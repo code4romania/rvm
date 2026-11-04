@@ -7,10 +7,15 @@ namespace App\Providers;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\Configuration\ApplicationBuilder;
+use Illuminate\Foundation\Events\DiagnosingHealth;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
+use ReflectionClass;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -33,6 +38,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
+            $this->registerHealthRoute();
+
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
@@ -47,6 +54,36 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
+        });
+    }
+
+    /**
+     * Register Laravel's health route outside the web middleware group.
+     *
+     * @return void
+     */
+    protected function registerHealthRoute()
+    {
+        Route::get('/up', function () {
+            $exception = null;
+
+            try {
+                Event::dispatch(new DiagnosingHealth);
+            } catch (\Throwable $e) {
+                if (app()->hasDebugModeEnabled()) {
+                    throw $e;
+                }
+
+                report($e);
+
+                $exception = $e->getMessage();
+            }
+
+            $view = dirname((new ReflectionClass(ApplicationBuilder::class))->getFileName(), 2) . '/resources/health-up.blade.php';
+
+            return response(View::file($view, [
+                'exception' => $exception,
+            ]), status: $exception ? 500 : 200);
         });
     }
 
