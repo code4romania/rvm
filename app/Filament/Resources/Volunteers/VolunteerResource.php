@@ -34,8 +34,6 @@ class VolunteerResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
-    public string $organisation_import;
-
     public static function getModelLabel(): string
     {
         return __('volunteer.label.singular');
@@ -133,6 +131,7 @@ class VolunteerResource extends Resource
                 ExportAction::make(),
 
                 ImportAction::make('import')
+                    ->icon('heroicon-o-arrow-up-tray')
                     ->importer(VolunteerImporter::class)
                     ->options(fn (): array => [
                         'organisation_id' => auth()->user()->organisation_id,
