@@ -79,7 +79,7 @@ class RouteServiceProvider extends ServiceProvider
                 $exception = $e->getMessage();
             }
 
-            $view = dirname((new ReflectionClass(ApplicationBuilder::class))->getFileName(), 2) . '/resources/health-up.blade.php';
+            $view = \dirname((new ReflectionClass(ApplicationBuilder::class))->getFileName(), 2) . '/resources/health-up.blade.php';
 
             return response(View::file($view, [
                 'exception' => $exception,
