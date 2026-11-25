@@ -7,13 +7,16 @@ namespace App\Filament\Resources\Organisations\RelationManagers;
 use App\Enum\VolunteerRole;
 use App\Enum\VolunteerSpecialization;
 use App\Filament\Forms\Components\Location;
+use App\Filament\Imports\VolunteerImporter;
 use App\Filament\Resources\Volunteers\Schemas\VolunteerInfolist;
 use App\Filament\Resources\Volunteers\VolunteerResource;
 use App\Filament\Tables\Actions\ExportAction;
+use App\Models\Volunteer;
 use App\Rules\ValidCNP;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -141,6 +144,14 @@ class VolunteersRelationManager extends RelationManager
                     ->modalDescription(__('volunteer.modal.subheading'))
                     ->modalWidth('4xl')
                     ->slideOver(),
+
+                ImportAction::make('import')
+                    ->importer(VolunteerImporter::class)
+                    ->options(fn (): array => [
+                        'organisation_id' => $this->getOwnerRecord()->getKey(),
+                    ])
+                    ->visible(fn (): bool => auth()->user()->can('create', Volunteer::class))
+                    ->authorize(fn (): bool => auth()->user()->can('create', Volunteer::class)),
             ])
             ->recordActions([
                 ViewAction::make(),

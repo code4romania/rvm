@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Volunteers;
 
 use App\Enum\VolunteerSpecialization;
+use App\Filament\Imports\VolunteerImporter;
 use App\Filament\Resources\Volunteers\Pages\CreateVolunteer;
 use App\Filament\Resources\Volunteers\Pages\EditVolunteer;
 use App\Filament\Resources\Volunteers\Pages\ListVolunteers;
@@ -13,6 +14,7 @@ use App\Filament\Resources\Volunteers\Schemas\VolunteerForm;
 use App\Filament\Resources\Volunteers\Schemas\VolunteerInfolist;
 use App\Filament\Tables\Actions\ExportAction;
 use App\Models\Volunteer;
+use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -127,6 +129,16 @@ class VolunteerResource extends Resource
             ])
             ->headerActions([
                 ExportAction::make(),
+
+                ImportAction::make('import')
+                    ->icon('heroicon-o-arrow-up-tray')
+                    ->importer(VolunteerImporter::class)
+                    ->options(fn (): array => [
+                        'organisation_id' => auth()->user()->organisation_id,
+                    ])
+                    ->visible(fn (): bool => auth()->user()->can('create', Volunteer::class))
+                    ->authorize(fn (): bool => auth()->user()->can('create', Volunteer::class))
+                    ->csvDelimiter(';'),
             ])
             ->defaultSort('id', 'desc');
     }
