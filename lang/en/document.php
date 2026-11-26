@@ -12,6 +12,7 @@ return [
         'expires_at' => 'Expiration date',
         'document' => 'Document',
         'never_expires' => 'Ended indefinitely',
+        'download' => 'Download document',
     ],
     'type' => [
         'protocol' => 'Collaboration protocol',
