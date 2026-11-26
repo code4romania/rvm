@@ -32,7 +32,7 @@
         "friendsofphp/php-cs-fixer": "^3.95",
         "fruitcake/laravel-debugbar": "^4.4",
         "itsgoingd/clockwork": "^5.3",
-        "laravel/sail": "^1.52",
+        "laravel/sail": "^1.71",
         "laravel/telescope": "^5.0",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
