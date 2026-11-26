@@ -19,7 +19,7 @@
         "guzzlehttp/guzzle": "^7.10",
         "jeffgreco13/filament-breezy": "^3.0",
         "laravel/framework": "^13.0",
-        "laravel/sanctum": "^4.0",
+        "laravel/sanctum": "^4.5",
         "laravel/tinker": "^3.0",
         "league/flysystem-aws-s3-v3": "^3.30",
         "pxlrbt/filament-excel": "^3.0",
